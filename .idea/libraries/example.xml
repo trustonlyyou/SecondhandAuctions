@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="example">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/java-sdk-2.2-http-cv52/example" />
+      <root url="file://$USER_HOME$/Downloads/java-sdk-2.2-http-cv52/example/GroupMessage" />
+      <root url="file://$USER_HOME$/Downloads/java-sdk-2.2-http-cv52/example/Image" />
+      <root url="file://$USER_HOME$/Downloads/java-sdk-2.2-http-cv52/example/Message" />
+      <root url="file://$USER_HOME$/Downloads/java-sdk-2.2-http-cv52/example/SenderID" />
+    </SOURCES>
+  </library>
+</component>

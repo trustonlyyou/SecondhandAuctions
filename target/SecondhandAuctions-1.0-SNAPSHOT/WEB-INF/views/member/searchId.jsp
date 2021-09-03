@@ -62,7 +62,6 @@
                         <div id="phoneCheckForm" class="input-group input-group-lg">
                             <input type="text" id="inputNum" name="inputNum" placeholder="인증번호를 입력해주세요." class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
                             <input type="button" id="checkResult" name="checkPhone" value="확인" disabled>
-                            <div id="phone_timer"></div>
                         </div>
 
                         <br>
@@ -278,9 +277,6 @@
 
                 $("#checkResult").click(function () {
                     var inputNum = $("#inputNum").val();
-
-                    alert("inputNum :: " + inputNum);
-                    alert(checkKey);
 
                     if (inputNum === checkKey) {
                         alert('인증번호가 일치합니다.');

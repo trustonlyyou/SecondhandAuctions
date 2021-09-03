@@ -29,5 +29,8 @@ public interface MemberDao {
     public String getPasswordFromPhone(Map<String, Object> params) throws Exception;
 
     public String getPasswordFromEmail(Map<String, Object> params) throws Exception;
+
+    //Test
+    public int checkMemberEmail(String memberEmail) throws Exception;
 }
 

@@ -53,7 +53,7 @@
                         <div class="form-label-group">
                             비밀번호 재확인<img src="/resources/image/check.gif" alt="필수 입력사항">
                             <input type="password" id="memberPasswordCheck" name="memberPasswordCheck"
-                                   class="form-control" placeholder="Confirm Password" required>
+                                   class="form-control" placeholder="비밀번호 재확인" required>
                         </div>
                         <div name="pwd2CheckMsg" id="pwd2CheckMsg" class="check_font"></div>
 
@@ -202,9 +202,9 @@
 
         $.ajax({
             // url: "/join/emailCheck?email" + email,
-            url: '/member/join/emailCheck',
+            url: '/member/sendEmail',
             type: 'POST',
-            datType: 'json',
+            dataType: 'json',
             contentType: 'application/json; charset=UTF-8',
             data: email,
 

@@ -7,12 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>비밀번호 찾기 | 중고 경매의 세계</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 </head>
+
 <body>
 <div class="container">
     <div class="row">
@@ -44,8 +46,8 @@
                     <form class="form-signin" id="phoneForm" action="/member/search/id/phone/action" method="post">
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberId" name="memberId" class="form-control"
-                                   placeholder="아이드를 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm"
-                                   maxlength="20">
+                                   placeholder="아이드를 입력해주세요." aria-label="Large"
+                                   aria-describedby="inputGroup-sizing-sm" maxlength="20">
                         </div>
                         <div name="IdCheckMsg" id="IdCheckMsg"></div>
 
@@ -53,7 +55,8 @@
 
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberName" name="memberName" class="form-control"
-                                   placeholder="이름를 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                                   placeholder="이름를 입력해주세요." aria-label="Large"
+                                   aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div name="nameCheckMsg" id="nameCheckMsg" class="check_font"></div>
 
@@ -70,9 +73,10 @@
                         <br>
 
                         <div id="phoneCheckForm" class="input-group input-group-lg">
-                            <input type="text" id="inputNum" name="inputNum" placeholder="인증번호를 입력해주세요."
+                            <input type="text" id="phoneInputNum" name="inputNum" placeholder="인증번호를 입력해주세요."
                                    class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-                            <input type="button" id="checkResult" name="checkPhone" value="확인" disabled>
+                            <input type="button" id="phoneInputNumCheck" name="phoneInputNumCheck" value="확인"
+                                   disabled>
                             <div id="phone_timer"></div>
                         </div>
 
@@ -80,18 +84,18 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="searchIdSubmitPhone" name="searchIdSubmitPhone"
+                            <input type="submit" id="searchPwdSubmitPhone" name="searchPwdSubmitPhone"
                                    class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
                         </div>
                     </form>
 
 
-                    <!-- 이메일 인증  -->
+                    <!-- ====================이메일 인증==================  -->
                     <form action="/member/search/password/email/action" method="post" id="emailForm">
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberIdEmail" name="memberIdEmail" class="form-control"
-                                   placeholder="아이드를 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm"
-                                   maxlength="20">
+                                   placeholder="아이디를 입력해주세요." aria-label="Large"
+                                   aria-describedby="inputGroup-sizing-sm" maxlength="20">
                         </div>
                         <div name="IdCheckMsgEmail" id="IdCheckMsgEmail"></div>
 
@@ -101,16 +105,24 @@
                             <input type="text" id="memberEmail" name="memberEmail" class="form-control"
                                    placeholder="이메일 번호를 입력해주세요." aria-label="Large"
                                    aria-describedby="inputGroup-sizing-sm">
+                            <input type="button" id="checkEmail" name="checkEmail" value="인증요청" disabled>
                         </div>
                         <div name="emailCheckMsg" id="emailCheckMsg" class="check_font"></div>
                         <br>
+
+                        <div id="emailCheckForm" class="input-group input-group-lg">
+                            <input type="text" id="emailInputNum" name="emailInputNum" placeholder="인증번호를 입력해주세요."
+                                   class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                            <input type="button" id="emailInputNumCheck" name="emailInputNumCheck" value="확인"
+                                   disabled>
+                        </div>
 
 
                         <br>
                         <br>
 
                         <div>
-                            <input type="submit" id="searchIdSubmitEmail" name="searchIdSubmitEmail"
+                            <input type="submit" id="searchPwdSubmitEmail" name="searchPwdSubmitEmail"
                                    class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
                         </div>
 
@@ -120,12 +132,12 @@
                     <br>
 
                     <span>
-                        <a href="/member/login/form">로그인</a>&nbsp;
-                    </span>
+                            <a href="/member/login/form">로그인</a>&nbsp;
+                        </span>
 
                     <span>
-                        <a href="/member/search/id">아이디 찾기</a>
-                    </span>
+                            <a href="/member/search/id">아이디 찾기</a>
+                        </span>
 
                     <hr>
 
@@ -142,6 +154,9 @@
 </body>
 
 <script>
+
+    var code = ""; // 이메일 코드 저장
+
     $("#checkPhone").click(function () {
 
         $.ajax({
@@ -152,20 +167,63 @@
             success: function (data) {
                 var checkKey = data.key;
 
-                $("#checkResult").click(function () {
-                    var inputNum = $("#inputNum").val();
-
-                    alert("inputNum :: " + inputNum);
-                    alert(checkKey);
+                $("#phoneInputNumCheck").click(function () {
+                    var inputNum = $("#phoneInputNum").val();
 
                     if (inputNum === checkKey) {
                         alert('인증번호가 일치합니다.');
-                        $("#searchIdSubmitPhone").attr('disabled', false);
+                        $("#searchPwdSubmitPhone").attr('disabled', false);
                     } else {
                         alert('인증번호가 틀립니다.');
-                        $("#searchIdSubmitPhone").attr('disabled', true);
+                        $("#searchPwdSubmitPhone").attr('disabled', true);
                     }
                 });
+            }
+        });
+    });
+
+    $("#checkEmail").click(function () {
+        // $.ajax({
+        //     url: '/member/sendEmail',
+        //     type: 'POST',
+        //     dataType: 'json',
+        //     contentType: 'application/json; charset=UTF-8',
+        //     data: email,
+        //
+        //     success: function (data) {
+        //         var inputNum = $("#phoneInputNum").val();
+        //         code = data;
+        //
+        //         if (inputNum === checkKey) {
+        //             alert('인증번호가 일치합니다.');
+        //             $("#searchPwdSubmitEmail").attr('disabled', false);
+        //         } else {
+        //             alert('인증번호가 틀립니다.');
+        //             $("#searchPwdSubmitEmail").attr('disabled', true);
+        //         }
+        //     }
+        // });
+
+        var email = $("#memberEmail").val();
+
+        $.ajax({
+            // url: "/join/emailCheck?email" + email,
+            url: '/member/sendEmail',
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: email,
+
+            success: function (data) {
+                $("#input_mail").attr("disabled", false);
+                code = data;
+
+                $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
+                $("#emailCheckMsg").css('color','green');
+            },
+
+            error: function (error) {
+                alert(error);
             }
         });
     });
@@ -192,7 +250,7 @@
         var nameFlag = false;
         var phoneFlag = false;
 
-        var idEamilFlag = false;
+        var idEmailFlag = false;
         var emailFlag = false;
 
 
@@ -287,10 +345,7 @@
 
                 return false;
 
-            } else { // Ajax Phone Check (중복확인)
-
-                // phone = phone.replace(/ /gi, "").replace(/-/gi, "");
-                // $("#phone").val(phone);
+            } else {
 
                 $("#phoneCheckMsg").text("");
 
@@ -305,9 +360,8 @@
             }
         });
 
+
         // ====================================== 이메일로 인증 ======================================
-
-
         $("#memberIdEmail").on('keyup', function () {
             var id = $("#memberIdEmail").val();
             var isID = /^[a-z0-9]{4,19}$/;
@@ -316,7 +370,7 @@
                 $("#IdCheckMsgEmail").text('아이디는 필수 입력입니다.');
                 $("#IdCheckMsgEmail").css('color', 'red');
 
-                idEamilFlag = false;
+                idEmailFlag = false;
 
                 return false;
             }
@@ -325,7 +379,7 @@
                 $("#IdCheckMsgEmail").text('5~20자의 영문 소문자, 숫자만 사용 가능합니다.');
                 $("#IdCheckMsgEmail").css('color', 'red');
 
-                idEamilFlag = false;
+                idEmailFlag = false;
 
                 return false;
 
@@ -333,9 +387,9 @@
 
                 $("#IdCheckMsgEmail").text("");
 
-                idEamilFlag = true;
+                idEmailFlag = true;
 
-                if ((idEamilFlag && emailFlag) == true) {
+                if ((idEmailFlag && emailFlag) == true) {
                     $("#searchIdSubmitEmail").attr('disabled', false);
                 }
 
@@ -367,17 +421,38 @@
 
             } else {
                 $("#emailCheckMsg").text("");
-
-                emailFlag = true;
-
-                if ((idEamilFlag && emailFlag) == true) {
-                    $("#searchIdSubmitEmail").attr('disabled', false);
-                }
-
+                $("#checkEmail").attr('disabled', false);
 
                 return true
             }
 
+        });
+
+        $("#emailInputNum").on('keyup', function () {
+            $("#emailInputNumCheck").attr('disabled', false);
+
+        });
+
+        $("#emailInputNumCheck").click(function () {
+            var inputCode = $("#emailInputNum").val();
+
+            console.log("input_mailCheck :: " + code);
+
+            if (inputCode != code) {
+                alert("인증번호가 일치하지 않습니다.");
+
+                emailFlag = false;
+
+                return false;
+            } else {
+                alert("인증번호가 일치합니다.");
+
+                emailFlag = true;
+
+                if ((idEmailFlag && emailFlag) == true) {
+                    $("#searchPwdSubmitEmail").attr('disabled', false);//
+                }
+            }
         });
 
 
@@ -393,5 +468,5 @@
 
     })
 </script>
-</html>
 
+</html>

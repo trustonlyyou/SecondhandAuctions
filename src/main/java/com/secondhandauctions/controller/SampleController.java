@@ -161,16 +161,16 @@ public class SampleController {
 
 
 //    https://kimvampa.tistory.com/90
-    @PostMapping(value = "/check/email")
-    @ResponseBody
-    public String check(@RequestBody String memberEmail) throws Exception {
-        int check = memberDao.isMemberEmail(memberEmail);
-
-        if (check == 1) { // 사용 불가
-            return "fail";
-        } else { // 사용 가능
-            return "success";
-        }
-    }
+//    @PostMapping(value = "/check/email")
+//    @ResponseBody
+//    public String check(@RequestBody String memberEmail) throws Exception {
+//        int check = memberDao.isMemberEmail(memberEmail);
+//
+//        if (check == 1) { // 사용 불가
+//            return "fail";
+//        } else { // 사용 가능
+//            return "success";
+//        }
+//    }
 
 }

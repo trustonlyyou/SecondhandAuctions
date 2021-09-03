@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +71,7 @@ public class MemberController {
         return isCheck;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/join/emailCheck", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/sendEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String emailCheck(@RequestBody String email) throws Exception {
         String toEmail = "";
@@ -86,8 +87,8 @@ public class MemberController {
         logger.info("인증번호 " + checkNum);
 
         toEmail = email;
-        title = "회원가입 인증 이메일 입니다.";
-        content = "회원가입을 해주셔서 감사합니다." +
+        title = "중고 경매의 세계 인증 이메일 입니다.";
+        content = "중고 경매의 세계를 이용해 주셔서 감사합니다." +
                 "<br><br>" +
                 "인증번호는 " + checkNum + " 입니다. <br>" +
                 "해당 인증번호를 인증번호 확인란에 기입해 주세요.";
@@ -245,37 +246,6 @@ public class MemberController {
             logger.error("error :: " + e);
         }
 
-
-
-
-//        try {
-//            id = memberService.getMemberId(email);
-//        } catch (Exception e) {
-//            logger.error("error :: " + e);
-//        }
-//
-//        String setFrom = "SecondhandAuctions";
-//        String toEmail = email;
-//        String title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
-//        String content = "아이디 찾기 서비스를 이용해 해주셔서 감사합니다." +
-//                "<br><br>" +
-//                "아이디는 " + id + " 입니다. <br>";
-//
-//        try {
-//            MimeMessage message = javaMailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-//            helper.setFrom(setFrom);
-//            helper.setTo(toEmail);
-//            helper.setSubject(title);
-//            helper.setText(content, true);
-//            javaMailSender.send(message);
-//        } catch (Exception e) {
-//            logger.error("error :: " + e);
-//        }
-//
-//
-//        logger.info("inputEmail :: " + email);
-
         return "member/searchIdResult";
     }
 
@@ -292,24 +262,6 @@ public class MemberController {
         }
 
         map.put("key", strNum);
-
-
-//      TEST
-//        String strNum = "";
-//
-//        // 난수 생성
-//        Random random = new Random();
-//
-//        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111를 사용하였습니다.
-//        int checkNum = random.nextInt(888888) + 11111;
-//
-//        logger.info("인증번호 " + checkNum);
-//
-//        strNum = Integer.toString(checkNum);
-//
-//        Map map = new HashMap();
-//        map.put("key", strNum);
-
 
         return map;
     }
@@ -339,20 +291,73 @@ public class MemberController {
     }
 
 
-
+    // 비밀번호 찾기
     @GetMapping(value = "/search/password")
     public String searchPasswordForm() {
         return "member/searchPassword";
     }
 
     @PostMapping(value = "/search/password/phone/action")
-    public String searchPasswordPhone(HttpServletRequest request, HttpServletResponse response) {
+    public String searchPasswordPhone(String memberId, String memberName, String memberPhone, RedirectAttributes redirectAttributes) {
+        Map<String, Object> memberInfo = new HashMap<>();
+        int check = 0;
 
-        return "";
+        try {
+            memberInfo.put("memberId", memberId);
+            memberInfo.put("memberName", memberName);
+            memberInfo.put("memberPhone", memberPhone);
+
+            check = memberService.isMemberPasswordPhone(memberInfo);
+
+        } catch (Exception e) {
+            logger.info("error :: " + e);
+        }
+
+        if (check == 0) {
+            return "member/searchPasswordResult";
+        }
+
+        return "redirect:";
     }
 
+    // 이메일로 패스워드 찾기
     @PostMapping(value = "/search/password/email/action")
-    public String searchPasswordEmail() {
+    public String searchPasswordEmail(String memberIdEmail, String memberEmail, RedirectAttributes redirectAttributes) {
+        Map<String, Object> memberInfo = new HashMap<>();
+        int check = 0;
+
+        try {
+            memberInfo.put("memberId", memberIdEmail);
+            memberInfo.put("memberEmail", memberEmail);
+
+            check = memberService.isMemberPasswordEmail(memberInfo);
+
+            logger.info("check :: " + check);
+
+        } catch (Exception e) {
+            logger.error("error :: " + e);
+        }
+
+        if (check == 0) {
+            return "member/searchPasswordResult";
+        }
+
+        redirectAttributes.addFlashAttribute("memberId", memberIdEmail);
+
+        logger.info("Member :: " + memberIdEmail);
+
+        // TODO: 2021/09/03 404 발생 여기서 부터 시작!
+        return "redirect:member/modifyPassword";
+    }
+
+    @PostMapping(value = "/modify/password")
+    public String modifyPassword(String memberPassword, RedirectAttributes redirectAttributes) {
+        String memberId = "";
+
+        memberId = (String) redirectAttributes.getAttribute("memberId");
+
+        logger.info("memberId :: " + memberId);
+
         return "";
     }
 }

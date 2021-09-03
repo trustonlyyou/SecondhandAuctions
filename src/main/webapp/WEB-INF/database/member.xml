@@ -30,7 +30,7 @@
     </insert>
 
     <!--  로그인  -->
-    <select id="login" parameterType="Map" resultType="int">
+    <select id="login" parameterType="java.util.Map" resultType="int">
         select
             count(*)
         from
@@ -64,7 +64,7 @@
     </select>
 
     <!--  회원 존재 확인(핸드폰)  -->
-    <select id="isMemberPhone" parameterType="Map" resultType="int">
+    <select id="isMemberPhone" parameterType="java.util.Map" resultType="int">
         select
             count(*)
         from
@@ -87,7 +87,7 @@
             isMemberCheck = 1;
     </select>
 
-    <select id="searchIdPhone" parameterType="Map" resultType="String">
+    <select id="searchIdPhone" parameterType="java.util.Map" resultType="String">
         select
             memberId
         from
@@ -99,7 +99,7 @@
     </select>
 
     <!--  비밀번호 찾기  -->
-    <select id="checkSearchPwdPhone" parameterMap="Map" resultType="int">
+    <select id="checkSearchPwdPhone" parameterType="java.util.Map" resultType="int">
         select
             count(*)
         from
@@ -111,7 +111,7 @@
             isMemberCheck = 1;
     </select>
 
-    <select id="checkSearchPwdEmail" parameterMap="Map" resultType="int">
+    <select id="checkSearchPwdEmail" parameterType="java.util.Map" resultType="int">
         select
             count(*)
         from
@@ -123,7 +123,7 @@
     </select>
 
 
-    <select id="getPasswordFromPhone" parameterMap="Map" resultType="String">
+    <select id="getPasswordFromPhone" parameterType="java.util.Map" resultType="String">
         select
             memberPassword
         from
@@ -135,7 +135,7 @@
             isMemberCheck = 1;
     </select>
 
-    <select id="getPasswordFromEmail" parameterMap="Map" resultType="String">
+    <select id="getPasswordFromEmail" parameterType="java.util.Map" resultType="String">
         select
             memberPassword
         from

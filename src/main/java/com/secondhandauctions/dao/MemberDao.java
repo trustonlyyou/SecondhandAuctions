@@ -26,11 +26,10 @@ public interface MemberDao {
 
     public int checkSearchPwdEmail(Map<String, Object> params) throws Exception;
 
-    public String getPasswordFromPhone(Map<String, Object> params) throws Exception;
+//    public String getPasswordFromPhone(Map<String, Object> params) throws Exception;
+//
+//    public String getPasswordFromEmail(Map<String, Object> params) throws Exception;
 
-    public String getPasswordFromEmail(Map<String, Object> params) throws Exception;
-
-    //Test
-    public int checkMemberEmail(String memberEmail) throws Exception;
+    public void modifyPassword(Map<String, Object> params) throws Exception;
 }
 

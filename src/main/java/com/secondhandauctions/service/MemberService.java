@@ -99,5 +99,8 @@ public class MemberService {
         return check;
     }
 
+    public void setPassword(Map<String, Object> memberInfo) throws Exception {
+        memberDao.modifyPassword(memberInfo);
+    }
 
 }

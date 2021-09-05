@@ -33,9 +33,9 @@
 
           <form class="form-signin" id="phoneForm" action="/member/modify/password" method="post">
             <div class="input-group input-group-lg">
-              <input type="text" id="memberId" name="memberId" class="form-control"
-                     placeholder="아아디 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm"
-                     maxlength="20">
+<%--              <input type="text" id="memberId" name="memberId" class="form-control"--%>
+<%--                     placeholder="아아디 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm"--%>
+<%--                     maxlength="20">--%>
             </div>
             <div id="IdCheckMsg" name="IdCheckMsg" class="check_font"></div>
 
@@ -94,7 +94,8 @@
 <script>
   $(document).ready(function () {
 
-    var idFlag = false;
+    // todo :: false 로 수정, input 주석 해제.
+    var idFlag = true;
     var passwordFlag = false;
 
 

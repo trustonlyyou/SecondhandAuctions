@@ -43,10 +43,10 @@
                     <br>
 
                     <!-- 핸드폰 인증 -->
-                    <form class="form-signin" id="phoneForm" action="/member/search/id/phone/action" method="post">
+                    <form class="form-signin" id="phoneForm" action="/member/search/password/phone/action" method="post">
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberId" name="memberId" class="form-control"
-                                   placeholder="아이드를 입력해주세요." aria-label="Large"
+                                   placeholder="아이디를 입력해주세요." aria-label="Large"
                                    aria-describedby="inputGroup-sizing-sm" maxlength="20">
                         </div>
                         <div name="IdCheckMsg" id="IdCheckMsg"></div>
@@ -55,8 +55,7 @@
 
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberName" name="memberName" class="form-control"
-                                   placeholder="이름를 입력해주세요." aria-label="Large"
-                                   aria-describedby="inputGroup-sizing-sm">
+                                   placeholder="이름를 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div name="nameCheckMsg" id="nameCheckMsg" class="check_font"></div>
 
@@ -77,7 +76,6 @@
                                    class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
                             <input type="button" id="phoneInputNumCheck" name="phoneInputNumCheck" value="확인"
                                    disabled>
-                            <div id="phone_timer"></div>
                         </div>
 
                         <br>
@@ -85,7 +83,7 @@
 
                         <div>
                             <input type="submit" id="searchPwdSubmitPhone" name="searchPwdSubmitPhone"
-                                   class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
+                                   class="btn btn-dark btn-lg btn-block" value="비밀번호 찾기" disabled>
                         </div>
                     </form>
 
@@ -123,7 +121,7 @@
 
                         <div>
                             <input type="submit" id="searchPwdSubmitEmail" name="searchPwdSubmitEmail"
-                                   class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
+                                   class="btn btn-dark btn-lg btn-block" value="비밀번호 찾기" disabled>
                         </div>
 
                     </form>
@@ -136,10 +134,10 @@
                         </span>
 
                     <span>
-                            <a href="/member/search/id">아이디 찾기</a>
+                            <a href="/member/search/id">비밀번호 찾기</a>
                         </span>
 
-                    <hr>
+                    <hr>e
 
                     <br>
 
@@ -166,6 +164,8 @@
 
             success: function (data) {
                 var checkKey = data.key;
+
+                $("#phoneInputNumCheck").attr('disabled', false);
 
                 $("#phoneInputNumCheck").click(function () {
                     var inputNum = $("#phoneInputNum").val();

@@ -36,6 +36,7 @@ public class SmsService {
 
         numStr = String.valueOf(random.nextInt(888888) + 111111);
 
+        // 유료 서비스
 //        params.put("to", toPhoneNumber);
 //        params.put("from", fromPhoneNumber);
 //        params.put("type", "SMS");

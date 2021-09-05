@@ -84,8 +84,6 @@ public class MemberController {
         // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111를 사용하였습니다.
         int checkNum = random.nextInt(888888) + 11111;
 
-        logger.info("인증번호 " + checkNum);
-
         toEmail = email;
         title = "중고 경매의 세계 인증 이메일 입니다.";
         content = "중고 경매의 세계를 이용해 주셔서 감사합니다." +
@@ -96,6 +94,8 @@ public class MemberController {
         emailService.sendEmail(toEmail, title, content);
 
         String num = Integer.toString(checkNum);
+
+        logger.info("인증번호 " + checkNum);
 
         // TODO: 2021/08/21 이메일 중복 체크해야함.
 
@@ -147,7 +147,7 @@ public class MemberController {
             logger.info("Success join");
             logger.info("New User is {}", memberVo.getMemberId());
 
-            return "member/join_result";
+            return "redirect:member/join_result";
         }
 
     }
@@ -234,7 +234,7 @@ public class MemberController {
             if ((id == null) || id.equals("")) {
                 model.addAttribute("msg", "fail");
 
-                return "member/searchIdResult";
+                return "searchIdResultEmail";
             }
 
             title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
@@ -246,7 +246,12 @@ public class MemberController {
             logger.error("error :: " + e);
         }
 
-        return "member/searchIdResult";
+        return "member/searchIdResultEmail";
+    }
+
+    @GetMapping(value = "/searchIdResult")
+    public String IdResultEmail() {
+        return "searchIdResultEmail";
     }
 
     @PostMapping(value = "/check/phone/sendSms")
@@ -267,7 +272,7 @@ public class MemberController {
     }
 
     @PostMapping(value = "/search/id/phone/action")
-    public String searchIdFromPhone(HttpServletRequest request, String memberName, String memberPhone, Model model) {
+    public String searchIdFromPhone(HttpServletRequest request, String memberName, String memberPhone, RedirectAttributes redirectAttributes) {
         Map<String, Object> memberInfo = new HashMap<>();
         String memberId = "";
 
@@ -285,6 +290,19 @@ public class MemberController {
 
         logger.info("ID :: " + memberId);
 
+        redirectAttributes.addFlashAttribute("memberId", memberId);
+
+        return "redirect:/member/searchIdResultPhone";
+    }
+
+    @GetMapping(value = "/searchIdResultPhone")
+    public String IdResultPhone(Model model) {
+        String memberId = "";
+
+        memberId = (String) model.getAttribute("memberId");
+
+        logger.info("memberId :: " + memberId);
+
         model.addAttribute("memberId", memberId);
 
         return "member/searchIdResultPhone";
@@ -297,6 +315,7 @@ public class MemberController {
         return "member/searchPassword";
     }
 
+    // 핸드폰으로 패스워드 찾기
     @PostMapping(value = "/search/password/phone/action")
     public String searchPasswordPhone(String memberId, String memberName, String memberPhone, RedirectAttributes redirectAttributes) {
         Map<String, Object> memberInfo = new HashMap<>();
@@ -317,7 +336,9 @@ public class MemberController {
             return "member/searchPasswordResult";
         }
 
-        return "redirect:";
+        redirectAttributes.addFlashAttribute("memberId", memberId);
+
+        return "redirect:/member/modify/form";
     }
 
     // 이메일로 패스워드 찾기
@@ -346,18 +367,52 @@ public class MemberController {
 
         logger.info("Member :: " + memberIdEmail);
 
-        // TODO: 2021/09/03 404 발생 여기서 부터 시작!
-        return "redirect:member/modifyPassword";
+        return "redirect:/member/modify/form";
     }
 
-    @PostMapping(value = "/modify/password")
-    public String modifyPassword(String memberPassword, RedirectAttributes redirectAttributes) {
+    @GetMapping(value = "/modify/form")
+    public String modifyPassword(HttpServletRequest request, Model model) {
         String memberId = "";
 
-        memberId = (String) redirectAttributes.getAttribute("memberId");
+        memberId = (String) model.getAttribute("memberId");
+
+        HttpSession session = request.getSession();
+        session.setAttribute("memberId", memberId);
 
         logger.info("memberId :: " + memberId);
 
-        return "";
+        return "member/modifyPassword";
+    }
+
+    @PostMapping(value = "/modify/password")
+    public String modifyPassword(HttpServletRequest request, String memberPassword, Model model) {
+        Map<String, Object> memberInfo = new HashMap<>();
+        String memberId = "";
+        String encryptionPwd = "";
+
+        HttpSession session = request.getSession();
+        memberId = (String) session.getAttribute("memberId");
+
+        logger.info("memberId :: " + memberId);
+
+        if ((memberId == null || "".equals(memberId))) {
+            return "redirect:/";
+        }
+
+        encryptionPwd = EncryptionSHA256.encrypt(memberPassword);
+
+        memberInfo.put("memberId", memberId);
+        memberInfo.put("memberPassword", encryptionPwd);
+
+        try {
+            memberService.setPassword(memberInfo);
+
+        } catch (Exception e) {
+            logger.error("error :: " + e);
+        }
+
+        session.removeAttribute("memberId");
+
+        return "member/modifyPasswordResult";
     }
 }

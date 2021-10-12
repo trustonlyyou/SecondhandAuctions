@@ -9,7 +9,7 @@
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/secondhandauctions?serverTimezone=UTC"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/auction?serverTimezone=UTC"/>
 		<property name="username" value="root"/>
 		<property name="password" value="jung344524"/>
 		<property name="minimumIdle" value="50"/>

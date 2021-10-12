@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.ProductDao">
+
+<!--  상품 등록  -->
+    <insert id="registerProduct" useGeneratedKeys="true" keyProperty="productId" parameterType="com.secondhandauctions.vo.ProductVo" >
+
+        insert into product
+        (
+            memberId, categoryName, productTitle, productContent, startPrice, imagePath
+        )
+        values
+        (
+            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}, #{imagePath}
+        )
+
+    </insert>
+
+    <insert id="registerImg" parameterType="java.util.List">
+        insert into image
+        (
+            fileName, productId, fileSize
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.fileName}, #{item.productId}, #{item.fileSize}
+            )
+        </foreach>
+    </insert>
+
+
+    <insert id="setListTet" parameterType="java.util.List">
+        insert into test
+        (
+        name, age
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.name}, #{item.age}
+            )
+        </foreach>
+
+    </insert>
+
+    <insert id="registerCategory" parameterType="com.secondhandauctions.vo.TestVo" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into category
+        (
+            categoryName
+        )
+        values
+        (
+            #{categoryName}
+        )
+
+    </insert>
+
+    <select id="getCategory" resultType="String" parameterType="int">
+        select
+            categoryName
+        from
+            category
+        where
+            categoryName = #{categoryName}
+    </select>
+
+
+</mapper>

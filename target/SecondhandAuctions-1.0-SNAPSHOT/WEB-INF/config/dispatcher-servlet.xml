@@ -31,6 +31,8 @@
 
     <context:property-placeholder location="WEB-INF/properties/*.properties"/>
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+
     <!-- Ajax 주석문 허가 -->
     <mvc:annotation-driven/>
     <!-- 스프링에서 처리할 수 없는 요청은 tomcat에 위임 -->

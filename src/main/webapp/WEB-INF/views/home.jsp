@@ -38,7 +38,7 @@
                 <nav class="navbar navbar-dark bg-dark">
                     <div class="container-fluid">
                         <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">
+                            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;
                             <button class="btn btn-outline-light" type="submit">검색</button>
                         </form>
                     </div>

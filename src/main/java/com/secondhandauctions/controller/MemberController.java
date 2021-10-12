@@ -147,9 +147,13 @@ public class MemberController {
             logger.info("Success join");
             logger.info("New User is {}", memberVo.getMemberId());
 
-            return "redirect:member/join_result";
+            return "redirect:/member/join/result";
         }
+    }
 
+    @GetMapping(value = "join/result")
+    public String join_result() {
+        return "member/join_result";
     }
 
     @GetMapping(value = "/login/form")
@@ -165,6 +169,7 @@ public class MemberController {
         String encryptionPwd = "";
         int result = 0;
         MemberVo member = null;
+        String stance = "";
 
         try {
             memberId = request.getParameter("memberId");
@@ -191,6 +196,15 @@ public class MemberController {
         // TODO: 2021/08/19 Login Session 처리
         HttpSession session = request.getSession();
         session.setAttribute("member", member);
+
+        // 로그인 제차 뿌리기
+        stance = (String) model.getAttribute("stance");
+
+        logger.info("stance :: " + stance);
+
+        if ("product".equals(stance)) {
+            return "/product/productRegister";
+        }
 
         return "redirect:/";
     }
@@ -234,7 +248,7 @@ public class MemberController {
             if ((id == null) || id.equals("")) {
                 model.addAttribute("msg", "fail");
 
-                return "searchIdResultEmail";
+                return "/member/searchIdResultEmail";
             }
 
             title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
@@ -246,12 +260,12 @@ public class MemberController {
             logger.error("error :: " + e);
         }
 
-        return "member/searchIdResultEmail";
+        return "/member/searchIdResultEmail";
     }
 
     @GetMapping(value = "/searchIdResult")
     public String IdResultEmail() {
-        return "searchIdResultEmail";
+        return "/member/searchIdResultEmail";
     }
 
     @PostMapping(value = "/check/phone/sendSms")

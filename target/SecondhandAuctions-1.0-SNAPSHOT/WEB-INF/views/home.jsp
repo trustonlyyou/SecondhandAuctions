@@ -50,7 +50,7 @@
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <c:if test="${sessionScope.member.memberId == null}">
+                        <c:if test="${sessionScope.member == null}">
                             <li class="nav-item">
                                 <a class="nav-link" href="member/login/form">로그인</a>
                             </li>
@@ -61,9 +61,9 @@
                                 <a class="nav-link" href="#">카테고리</a>
                             </li>
                         </c:if>
-                        <c:if test="${sessionScope.member.memberId != null}">
+                        <c:if test="${sessionScope.member != null}">
                             <li class="nav-item">
-                                <a class="nav-link" href="member/login/form">${sessionScope.member.memberId}</a>
+                                <a class="nav-link" href="member/login/form">${sessionScope.member}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/member/logout/action">로그아웃</a>

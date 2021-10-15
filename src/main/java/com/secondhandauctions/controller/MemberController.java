@@ -4,6 +4,7 @@ import com.secondhandauctions.service.EmailService;
 import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.EncryptionSHA256;
+import com.secondhandauctions.utils.InfoFormatter;
 import com.secondhandauctions.vo.MemberVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,9 @@ public class MemberController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private InfoFormatter formatter;
 
     @RequestMapping(method = RequestMethod.GET, value = "/join/form")
     public String joinForm(HttpServletRequest request, HttpServletResponse response) {
@@ -168,7 +172,6 @@ public class MemberController {
         String memberPassword = "";
         String encryptionPwd = "";
         int result = 0;
-        MemberVo member = null;
         String stance = "";
 
         try {
@@ -185,7 +188,13 @@ public class MemberController {
                 return "member/login_fail";
             }
 
-            member = memberService.getMemberInfo(memberId);
+//            member = memberService.getMemberInfo(memberId);
+
+
+            // TODO: 2021/08/19 Login Session 처리
+            HttpSession session = request.getSession();
+            session.setAttribute("member", memberId);
+
 
         } catch (Exception e) {
             logger.error("URL :: " + request.getRequestURL());
@@ -193,18 +202,6 @@ public class MemberController {
         }
 
 
-        // TODO: 2021/08/19 Login Session 처리
-        HttpSession session = request.getSession();
-        session.setAttribute("member", member);
-
-        // 로그인 제차 뿌리기
-        stance = (String) model.getAttribute("stance");
-
-        logger.info("stance :: " + stance);
-
-        if ("product".equals(stance)) {
-            return "/product/productRegister";
-        }
 
         return "redirect:/";
     }
@@ -428,5 +425,48 @@ public class MemberController {
         session.removeAttribute("memberId");
 
         return "member/modifyPasswordResult";
+    }
+
+    @GetMapping(value = "/myPage")
+    public String myPageForm(HttpServletRequest request, Model model) {
+        MemberVo memberVo = new MemberVo();
+        String memberId = "";
+        String memberName = "";
+        String memberPassword = "";
+        String memberEmail = "";
+        String memberPhone = "";
+
+        try {
+            HttpSession session = request.getSession();
+            memberId = (String) session.getAttribute("member");
+
+
+            if (("".equals(memberId) || memberId == null)) {
+                return "redirect:/member/login/form";
+            }
+
+            memberVo = memberService.getMemberInfo(memberId);
+
+            memberPassword = formatter.passwordFormat(memberVo.getMemberPassword());
+            memberName = formatter.nameFormat(memberVo.getMemberName());
+            memberEmail = formatter.emailFormat(memberVo.getMemberEmail());
+            memberPhone = formatter.phoneFormat(memberVo.getMemberPhone());
+
+            memberVo.setMemberPassword(memberPassword);
+            memberVo.setMemberName(memberName);
+            memberVo.setMemberEmail(memberEmail);
+
+            logger.info(memberVo.toString());
+
+            model.addAttribute("memberInfo", memberVo);
+        } catch (Exception e) {
+            logger.error("error :: " + e);
+            e.printStackTrace();
+        }
+
+
+
+
+        return "member/myPage";
     }
 }

@@ -11,6 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-  ${stance}
+<%--    <h3>${categoryName}</h3>--%>
+        <h3>완료</h3>
 </body>
 </html>

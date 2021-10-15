@@ -12,5 +12,9 @@
 </head>
 <body>
   <h1>main jsp</h1>
+    <form action="/test/model" method="post">
+        categoryName :: <input type="text" name="categoryName" id="categoryName">
+        <input type="submit" value="확인">
+    </form>
 </body>
 </html>

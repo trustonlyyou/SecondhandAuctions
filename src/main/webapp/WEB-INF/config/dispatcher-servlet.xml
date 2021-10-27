@@ -33,6 +33,12 @@
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
 
+    <!--  upload path test  -->
+    <bean id="uploadPath" class="java.lang.String">
+        <constructor-arg value="/Users/junghwan/Desktop/testUpload"/>
+    </bean>
+
+
     <!-- Ajax 주석문 허가 -->
     <mvc:annotation-driven/>
     <!-- 스프링에서 처리할 수 없는 요청은 tomcat에 위임 -->

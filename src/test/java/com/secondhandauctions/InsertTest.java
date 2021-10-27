@@ -3,7 +3,6 @@ package com.secondhandauctions;
 import com.secondhandauctions.dao.MemberDao;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.vo.ImageVo;
-import com.secondhandauctions.vo.TestVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,30 +37,17 @@ public class InsertTest {
 //        System.out.println(testVo.getCategoryId());
 //    }
 
-    @Test
-    public void insertListTest() throws Exception {
-        List<TestVo> list = new ArrayList<>();
-
-        list.add(new TestVo("오정환", 27));
-        list.add(new TestVo("쌍퉁바가지", 26));
-
-        System.out.println(list.size());
-
-        productDao.setListTet(list);
-
-    }
-
-    @Test
-    public void insertTest() throws Exception {
-        List<ImageVo> list = new ArrayList<>();
-
-        list.add(new ImageVo(1, "test1", 10));
-        list.add(new ImageVo(1, "test2", 10));
-        list.add(new ImageVo(1, "test3", 10));
-
-        productDao.registerImg(list);
-
-    }
+//    @Test
+//    public void insertTest() throws Exception {
+//        List<ImageVo> list = new ArrayList<>();
+//
+//        list.add(new ImageVo(1, "test1", 10));
+//        list.add(new ImageVo(1, "test2", 10));
+//        list.add(new ImageVo(1, "test3", 10));
+//
+//        productDao.registerImg(list);
+//
+//    }
 
     @Autowired
     private DataSource dataSource;

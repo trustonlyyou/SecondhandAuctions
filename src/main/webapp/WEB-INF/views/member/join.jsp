@@ -22,7 +22,8 @@
         <div class="col-lg-10 col-xl-9 mx-auto">
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-                    <button type="button" class="btn btn-link">이전 페이지</button>
+<%--                    <button type="button" class="btn btn-link">이전 페이지</button>--%>
+                    <a href="/">메인 페이지</a>
                     <h2 class="card-title text-center">회원가입</h2>
 
                     <!-- Form 시작 -->
@@ -215,8 +216,9 @@
                 $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
             },
 
-            error: function (error) {
-                alert(error);
+            error: function (request,status,error) {
+                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
             }
         });
 

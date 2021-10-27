@@ -9,145 +9,103 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 
-  <title>상품 판매 | 중고 경매의 세계</title>
+    <title>상품 판매 | 중고 경매의 세계</title>
+
 </head>
 <body>
-<header>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="/">중고 경매의 세계</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;
-            <button class="btn btn-outline-light" type="submit">검색</button>
-          </form>
-        </div>
-      </nav>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="member/login/form">로그인</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="member/join/form">회원가입</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">카테고리</a>
-          </li>
-          <c:if test="${sessionScope.member.memberId == null}">
-          </c:if>
-          <c:if test="${sessionScope.member.memberId != null}">
-            <li class="nav-item">
-              <a class="nav-link" href="member/login/form">${sessionScope.member.memberId}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/member/logout/action">로그아웃</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">카테고리</a>
-            </li>
-          </c:if>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
 
 <div class="container">
-  <div class="row">
-    <div class="col-lg-10 col-xl-9 mx-auto">
-      <div class="card card-signin flex-row my-5">
-        <div class="card-body">
-          <br>
-          <h2 class="card-title text-center">상품 등록</h2>
+    <div class="row">
+        <div class="col-lg-10 col-xl-9 mx-auto">
+            <div class="card card-signin flex-row my-5">
+                <div class="card-body">
+                    <br>
+                    <h2 class="card-title text-center">상품 등록</h2>
 
-          <!-- Form 시작 -->
-          <form class="form-signin" action="/register/product" method="post" enctype="multipart/form-data">
-            <br>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <label class="input-group-text" for="categoryName">카테고리</label>
-              </div>
-              <select class="custom-select" id="categoryName" name="categoryName" onchange="categoryCheck(this)">
-                <option selected>카테고리 선택</option>
-                <option value="digtal">전자</option>
-                <option value="computer">컴퓨터</option>
-                <option value="cloths">의류</option>
-                <option value="shoes">신발</option>
-                <option value="book">도서</option>
+                    <!-- Form 시작 -->
+                    <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
+                        <br>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="categoryName">카테고리</label>
+                            </div>
+                            <select class="custom-select" id="categoryName" name="categoryName" required>
+                                <option selected>카테고리 선택</option>
+                                <option value="digital">전자</option>
+                                <option value="computer">컴퓨터</option>
+                                <option value="cloths">의류</option>
+                                <option value="shoes">신발</option>
+                                <option value="book">도서</option>
 
-              </select>
+                            </select>
+                        </div>
+                        <div id="category_check" name="category_check" class="check_font"></div>
+                        <br>
+
+                        <div class="form-label-group">
+                            제목 <img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <input type="text" id="productTitle" name="productTitle" class="form-control"
+                                   placeholder="상품의 제목을 입력해주세요." minlength="5" maxlength="20">
+                        </div>
+                        <div name="titleCheckMsg" id="titleCheckMsg"></div>
+                        <br>
+
+                        <div class="form-label-group">
+                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
+
+                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <div name="contentCheckMsg" id="contentCheckMsg"></div>
+                        <br>
+
+                        <div class="form-label-group">
+                            <%--              이미지 첨부 <input type="file" multiple="multiple" id="productImg" name="productImg" class="form-control">--%>
+                            <%--              <div id="preview" class="form-label-group"></div>--%>
+
+                            <%--                            이미지 첨부--%>
+                            <table border="1">
+                                <tr>
+                                    <th align="center" width="900px">첨부파일</th>
+                                </tr>
+                                <tr>
+                                    <td align="center" width="900px" >
+                                        <input type="file" name="uploadFile" id="uploadFile" multiple class="form-control">
+                                        <div id="uploadResult">
+                                            <%--                                            <img alt="view" src="/view?fileName=test.png" width="100" height="100">--%>
+                                            <%--                                            <img alt="display" src="/display?fileName=test.png" width="100" height="100">--%>
+                                        </div>
+                                        <div>
+                                            <input type="hidden" name="fileCount" id="fileCount"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <br>
+
+                        <div class="form-label-group">
+                            경매 시작 가격<img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <input type="text" id="startPrice" name="startPrice" onkeyup="numberWithCommas(this.value)">&nbsp;원
+                        </div>
+                        <div id="priceCheckMsg" name="priceCheckMsg" class="check_font"></div>
+
+                        <br>
+                        <input type="submit" class="btn btn-lg btn-primary btn-block text-uppercase"
+                               value="상품 등록" id="registerSubmit" name="registerSubmit" disabled>
+
+                        <a class="d-block text-center mt-2 small" href="login_form"></a>
+                        <hr class="my-4">
+                    </form>
+                </div>
             </div>
-            <div id="category_check" name="category_check" class="check_font"></div>
-            <br>
-
-            <div class="form-label-group">
-              제목 <img src="/resources/image/check.gif" alt="필수 입력사항">
-              <input type="text" id="productTitle" name="productTitle" class="form-control"
-                     placeholder="상품의 제목을 입력해주세요." minlength="5" maxlength="20">
-            </div>
-            <div name="titleCheckMsg" id="titleCheckMsg"></div>
-            <br>
-
-            <div class="form-label-group">
-              내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
-
-              <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control"></textarea>
-            </div>
-            <div name="contentCheckMsg" id="contentCheckMsg"></div>
-            <br>
-
-            <div class="form-label-group">
-<%--              이미지 첨부 <input type="file" multiple="multiple" id="productImg" name="productImg" class="form-control">--%>
-<%--              <div id="preview" class="form-label-group"></div>--%>
-
-              이미지 첨부
-              <table border="1">
-<%--                <tr>--%>
-<%--                  <th align="center" width="900px">첨부파일</th>--%>
-<%--                </tr>--%>
-                <tr>
-                  <td align="center" width="900px" >
-                    <input type="file" name="multiFiles" id="multiFiles" multiple class="form-control">
-                    <div id="preview"></div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <br>
-
-            <div class="form-label-group">
-              경매 시작 가격<img src="/resources/image/check.gif" alt="필수 입력사항">
-              <input type="text" id="startPrice" name="startPrice" onkeyup="numberWithCommas(this.value)">&nbsp;원
-            </div>
-            <div id="priceCheckMsg" name="priceCheckMsg" class="check_font"></div>
-
-            <br>
-            <input type="submit" class="btn btn-lg btn-primary btn-block text-uppercase"
-                   value="상품 등록" id="registerSubmit" name="registerSubmit" disabled>
-
-            <a class="d-block text-center mt-2 small" href="login_form"></a>
-            <hr class="my-4">
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 
@@ -156,217 +114,402 @@
 
 <script>
 
-  var categoryFlag = false;
-  var productTitleFlag = false;
-  var productContentFlag = false;
-  var startPriceFlag = false;
+    var categoryFlag = false;
+    var productTitleFlag = false;
+    var productContentFlag = false;
+    var startPriceFlag = false;
 
-  function numberWithCommas(startPrice) {
-    startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
-    startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
+    function numberWithCommas(startPrice) {
+        startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
+        startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
 
-    $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
-  }
-
-
-  // id = productImg
-  // 이미지 업로드
-  $(document).ready(function (e) {
-    $("#multiFiles").change(function (e) {
-
-      $("#preview").empty();
-
-      var files = e.target.files;
-      var arr = Array.prototype.slice.call(files);
-
-      for (var i = 0; i < files.length; i++) {
-        if(!checkFile(files[i].name,files[i].size)) {
-          return false;
-        }
-      }
-      preview(arr);
-    });
-
-    function checkFile(fileName, fileSize) {
-      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
-      var maxSize = 20971520;  //20MB
-
-      if(fileSize >= maxSize){
-        alert('파일 사이즈 초과');
-        $("#uploadFile").val("");  //파일 초기화
-        return false;
-      }
-
-      if(regex.test(fileName)){
-        alert('업로드 불가능한 파일이 있습니다.');
-        $("#uploadFile").val("");  //파일 초기화
-        return false;
-      }
-      return true;
+        $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
     }
 
-    function preview(arr){
-      arr.forEach(function(f){
 
-        //파일명이 길면 파일명...으로 처리
-        var fileName = f.name;
-        if(fileName.length > 10){
-          fileName = fileName.substring(0,7)+"...";
+    var uploadFilesArr = [];
+    var tmpArr1 = [];
+    var tmpArr2 = [];
+    var fileCount = 0;
+    var maxFileCount = 5;
+
+    $("input[type='file']").on("change", function (e) {
+        var formData = new FormData();
+        var fileInput = $('input[name="uploadFile"]');
+        var fileList = fileInput[0].files;
+        var fileObj = fileList[0];
+
+
+        for (var i = 0; i < fileList.length; i++) {
+            formData.append("uploadFile", fileList[i]);
         }
 
-        //div에 이미지 추가
-        var str = '<div style="display: inline-flex; padding: 10px;"><li>';
-        str += '<span>'+fileName+'</span><br>';
+        // fileCount = fileCount + fileList.length;
 
-        //이미지 파일 미리보기
-        if(f.type.match('image.*')){
-          var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
-          reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-            //str += '<button type="button" class="delBtn" value="'+f.name+'" style="background: red">x</button><br>';
-            str += '<img src="'+e.target.result+'" title="'+f.name+'" width=100 height=100 />';
-            str += '</li></div>';
-            $(str).appendTo('#preview');
-          }
-          reader.readAsDataURL(f);
-        }else{
-          str += '<img src="/resources/img/fileImg.png" title="'+f.name+'" width=100 height=100 />';
-          $(str).appendTo('#preview');
+        $.ajax({
+            url: '/upload/ajax',
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+
+            success: function (result) {
+                console.log(result);
+
+                // 원본
+                // uploadFilesArr = uploadFilesArr.concat(result);
+                //
+                // showImage(uploadFilesArr);
+                // // 삭제하고 남은 배열데이터를 또 뽑는다.
+
+                // Test
+                // if (tmpArr1.length == 0) {
+                //     uploadFilesArr = uploadFilesArr.concat(result);
+                // }
+                //
+                // if (tmpArr1.length > 0) {
+                //     uploadFilesArr = uploadFilesArr.concat(tmpArr1);
+                //     uploadFilesArr = uploadFilesArr.concat(result);
+                //
+                //     tmpArr1 = [];
+                // }
+
+                // 하나의 배열을 바라보고 하자. Test
+
+                uploadFilesArr = uploadFilesArr.concat(result);
+
+                $("#uploadResult").empty();
+
+                showImage(uploadFilesArr);
+
+                fileCount += result.length;
+
+                $("#fileCount").attr('value', fileCount);
+
+                console.log("UploadFileCount :: " + fileCount)
+
+            },
+            error: function (request,status,error) {
+                alert("fail");
+                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    });
+
+    var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
+    var maxSize = 1048576; //1MB
+
+    function fileCheck(fileName, fileSize){
+
+        if(fileSize >= maxSize){
+            alert("파일 사이즈 초과");
+            return false;
         }
-      });//arr.forEach
+
+        if(!regex.test(fileName)){
+            alert("해당 종류의 파일은 업로드할 수 없습니다.");
+            return false;
+        }
+
+        return true;
     }
 
-    $("#startPrice").on('keyup', function() {
-      var startPrice = $("#startPrice").val();
-      var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
-      var replacePrice = "";
+    var uploadResult = $("#uploadResult");
 
-      // replacePrice = replacePrice.toString.replace(priceReg, ',');
+    function showImage(uploadFiles) {
+        /* 전달받은 데이터 검증 */
+        if(!uploadFiles || uploadFiles.length == 0) {
+            return
+        }
 
-      if (startPrice == "") {
-        $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
-        $("#priceCheckMsg").css('color', 'red');
+        var str = "";
 
-        startPriceFlag = false;
+        $(uploadFiles).each(function (i, obj) {
 
-        return false;
-      }
+            var fullPath = encodeURIComponent(obj.uploadPath + "/" + obj.uploadFileName);
 
-      startPriceFlag = true;
+            // str += "<div id='result'>";
+            str += "<div id=\"index_"+i+"\">"
+            str += "<img src='/view?fileName=" + fullPath + "' width='100px' height='100px' '>";
+            // str += "<div class='imageDeleteBtn' data-file='" + fullPath + "' datatype='image'>X</div>";
+            // str += "<div onclick='deleteImageIndex("+i+")' class='imageDeleteBtn' data-file='" + fullPath + "' datatype='image'>X</div>";
+            str += "<div onclick='deleteImageIndex("+i+")' class=\"imageDeleteBtn_"+i+"\" data-file='" + fullPath + "' datatype='image'>X</div>";
 
-      $("#priceCheckMsg").text('');
+            str += "<input type='hidden' id=\"imageList[" + i + "].uploadPath\" name=\"imageList[" + i + "].uploadPath\" value='"+ obj.uploadPath +"'>";
+            str += "<input type='hidden' id=\"imageList[" + i + "].uploadFileName\" name=\"imageList[" + i + "].uploadFileName\" value='"+ obj.uploadFileName +"'>";
+            str += "<input type='hidden' id=\"imageList[" + i + "].uploadFileName\" name=\"imageList[" + i + "].fileSize\" value='"+ obj.fileSize +"'>";
+            str += "</div>";
 
-      if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#registerSubmit").attr('disabled', false);
-      }
+            // console.log("fullPath :: " + fullPath);
 
-      return true;
+            var getId = "#imageList[" + i + "].uploadFileName";
+            var getIdValue = $(getId).val();
 
-    });
+            console.log("getIdValue :: " + getIdValue);
+        });
 
-    $("#productContent").on('keyup', function () {
-      var productContent = $("#productContent").val();
+        uploadResult.append(str);
 
-      if (productContent == "") {
-        $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
-        $("#contentCheckMsg").css('color', 'red');
+    }
 
-        productContentFlag = false;
+    // $("#uploadResult").on('click', ".imageDeleteBtn", function () {
+    //     alert("DeleteFunction");
+    //     deleteUploadFile();
+    // })
 
-        return false;
-      }
 
-      productContentFlag = true;
+    //====================TEST====================
+    function deleteImageIndex(index) {
+        console.log("Delete Index :: " + index);
 
-      $("#contentCheckMsg").text('');
+        deleteImageAction(index);
+    }
 
-      console.log(productContentFlag);
+    function deleteImageAction(index) {
+        var targetDivId = "#index_" + index;
+        var targetFileClass = ".imageDeleteBtn_" + index
 
-      if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#registerSubmit").attr('disabled', false);
-      }
+        var targetFile = $(targetFileClass).data("file");
+        // var targetFile = $(".imageDeleteBtn").data("file");
 
-      return true;
 
-    });
+        deleteUploadFile(targetFile); // 서버에 등록된 이미지 파일 삭제
 
-    // $("#productTitle").on('keyup', function () {
-    //   var productTitle = $("#productTitle").val();
+
+        // 원본
+        // $(targetDivId).remove();
+        //
+        // uploadFilesArr.splice(index, 1);
+        // fileCount--;
+
+        // Test
+        // uploadFilesArr.splice(index, 1); // 해당 데이터 삭제 했어.
+        // fileCount--;
+        //
+        // tmpArr1 = tmpArr1.concat(uploadFilesArr);// 삭제하고 남은 데이터가 있다.
+        //
+        // uploadFilesArr = [];
+        //
+        // $("#uploadResult").empty();
+        //
+        // showImage(tmpArr1);
+
+
+        // 하나의 배열을 바라보고 하자. Test
+        uploadFilesArr.splice(index, 1);
+
+        $("#uploadResult").empty();
+
+        fileCount--;
+
+        $("#fileCount").attr('value', fileCount);
+
+        console.log("DeleteAction FileCount :: " + fileCount);
+
+        showImage(uploadFilesArr);
+
+        for (var i = 0; i < uploadFilesArr.length; i++) {
+            console.log("TmpArray 요소 :: " + uploadFilesArr[i].uploadFileName);
+        }
+
+        // console.log("fileCount :: " + fileCount);
+    }
+
+    // $("#uploadResult").on('click', ".imageDeleteBtn", function () {
+    //     var targetFile = $(".imageDeleteBtn").data("file"); // 하나만바로보고 있다.
     //
-    //   if (productTitle == "") {
-    //     $("#productTitle_check").text('제목은 필수 입력 사항 입니다.');
-    //     $("#productTitle_check").css('color', 'red');
+    //     console.log("targetFile :: " + targetFile);
     //
-    //     productTitleFlag = false;
-    //   }
+    //     deleteUploadFile(targetFile);
+    // })
+
+    function deleteUploadFile(targetFile) {
+        // var targetFile = $(".imageDeleteBtn").data("file");
+        var targetDiv = $("#result");
+
+        console.log("targetFile :: " + targetFile);
+
+        $.ajax({
+            url: '/delete/image',
+            data: {fileName : targetFile},
+            datType: 'text',
+            type: 'post',
+
+            success: function (result) {
+                console.log(result);
+
+                targetDiv.remove();
+                $("input[type='file']").val("");
+
+
+
+                // $("#uploadResult").empty(); // 비우고
+                // showImage(uploadFilesArr); // 다시 재배열 해야한다.
+            },
+            error: function (result) {
+                alert("파일을 삭제하지 못하였습니다.");
+                console.log(result);
+            }
+        });
+    }
+
+
+    // $("#registerSubmit").submit(function () {
+    //     alert("hello");
+    //     $.ajax({
+    //         url: '/upload/submit',
+    //         type: 'post',
+    //         data: {productVo : $("#registerProduct").serialize(), uploadFilesArr : uploadFilesArr},
     //
-    //   productTitleFlag = true;
-    //
-    //   $("#productTitle_check").text('');
-    //
-    //   if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-    //     $("#registerSubmit").attr('disabled', false);
-    //   }
+    //         success: function (result) {
+    //             alert("success");
+    //         },
+    //         error: function (request,status,error) {
+    //             alert("fail");
+    //             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    //         }
+    //     });
     // });
 
 
-    // var categoryName;
-    // categoryName = $("#categoryName option:selected").val()
+    //====================End TEST====================
+
+
+    // delete file method
+    // function deleteUploadFile() {
+    //     var targetFile = $(".imageDeleteBtn").data("file");
+    //     var targetDiv = $("#result");
     //
-    // if (categoryName == "") {
-    //   $("#category_check").text('카테고리는 필수 입력 사항입니다.');
-    //   $("#category_check").css('color', 'red');
+    //     console.log("targetFile :: " + targetFile);
+    //
+    //     $.ajax({
+    //         url: '/delete/image',
+    //         data: {fileName : targetFile},
+    //         datType: 'text',
+    //         type: 'post',
+    //
+    //         success: function (result) {
+    //             console.log(result);
+    //
+    //             targetDiv.remove();
+    //             $("input[type='file']").val("");
+    //         },
+    //         error: function (result) {
+    //             alert("파일을 삭제하지 못하였습니다.");
+    //             console.log(result);
+    //         }
+    //     });
     // }
 
 
-  });
+    //================================================================================
 
-  $("#productTitle").on('keyup', function () {
-    var productTitle = $("#productTitle").val();
+    // id = productImg
+    // 이미지 업로드
+    $(document).ready(function (e) {
+        $("#startPrice").on('keyup', function() {
+            var startPrice = $("#startPrice").val();
+            var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
+            var replacePrice = "";
 
-    console.log(productTitle);
+            // replacePrice = replacePrice.toString.replace(priceReg, ',');
 
-    if (productTitle == "") {
-      $("#titleCheckMsg").text('제목은 필수 입력 사항 입니다.');
-      $("#titleCheckMsg").css('color', 'red');
+            if (startPrice == "") {
+                $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
+                $("#priceCheckMsg").css('color', 'red');
 
-      productTitleFlag = false;
+                startPriceFlag = false;
 
-      return false;
-    }
+                return false;
+            }
 
-    productTitleFlag = true;
+            startPriceFlag = true;
 
-    $("#titleCheckMsg").text('');
+            $("#priceCheckMsg").text('');
 
-    if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-      $("#registerSubmit").attr('disabled', false);
-    }
+            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+                $("#registerSubmit").attr('disabled', false);
+            }
 
-    return true;
-  });
+            return true;
 
-  function categoryCheck(object) {
-    var inputValue = $(object).val();
+        });
 
-    if (inputValue == "") {
-      $("#category_check").text('카테고리는 필수 입력 사항입니다.');
-      $("#category_check").css('color', 'red');
+        $("#productContent").on('keyup', function () {
+            var productContent = $("#productContent").val();
 
-      categoryFlag = false;
+            if (productContent == "") {
+                $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
+                $("#contentCheckMsg").css('color', 'red');
 
-      return false;
-    }
+                productContentFlag = false;
 
-    categoryFlag = true;
+                return false;
+            }
 
-    $("#category_check").text('');
+            productContentFlag = true;
 
-    if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-      $("#registerSubmit").attr('disabled', false);
-    }
+            $("#contentCheckMsg").text('');
 
-    return true;
-  }
+            console.log(productContentFlag);
+
+            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+                $("#registerSubmit").attr('disabled', false);
+            }
+
+            return true;
+
+        });
+    });
+
+    $("#productTitle").on('keyup', function () {
+        var productTitle = $("#productTitle").val();
+
+        console.log(productTitle);
+
+        if (productTitle == "") {
+            $("#titleCheckMsg").text('제목은 필수 입력 사항 입니다.');
+            $("#titleCheckMsg").css('color', 'red');
+
+            productTitleFlag = false;
+
+            return false;
+        }
+
+        productTitleFlag = true;
+
+        $("#titleCheckMsg").text('');
+
+        if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+            $("#registerSubmit").attr('disabled', false);
+        }
+
+        return true;
+    });
+
+    // function categoryCheck(object) {
+    //     var inputValue = $(object).val();
+    //
+    //     if (inputValue == "") {
+    //         $("#category_check").text('카테고리는 필수 입력 사항입니다.');
+    //         $("#category_check").css('color', 'red');
+    //
+    //         categoryFlag = false;
+    //
+    //         return false;
+    //     }
+    //
+    //     categoryFlag = true;
+    //
+    //     $("#category_check").text('');
+    //
+    //     if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
+    //         $("#registerSubmit").attr('disabled', false);
+    //     }
+    //
+    //     return true;
+    // }
 
 </script>
 </html>

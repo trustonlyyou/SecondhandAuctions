@@ -27,61 +27,62 @@
 </head>
 
 <body>
-    <header>
+    <%@include file="includes/header.jsp"%>
+<%--    <header>--%>
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">중고 경매의 세계</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <nav class="navbar navbar-dark bg-dark">
-                    <div class="container-fluid">
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;
-                            <button class="btn btn-outline-light" type="submit">검색</button>
-                        </form>
-                    </div>
-                </nav>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/">Home
-                                <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <c:if test="${sessionScope.member == null}">
-                            <li class="nav-item">
-                                <a class="nav-link" href="member/login/form">로그인</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="member/join/form">회원가입</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">카테고리</a>
-                            </li>
-                        </c:if>
-                        <c:if test="${sessionScope.member != null}">
-                            <li class="nav-item">
-                                <a class="nav-link" href="member/login/form">${sessionScope.member}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/member/logout/action">로그아웃</a>
-                            </li>
+<%--        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">--%>
+<%--            <div class="container">--%>
+<%--                <a class="navbar-brand" href="/">중고 경매의 세계</a>--%>
+<%--                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">--%>
+<%--                    <span class="navbar-toggler-icon"></span>--%>
+<%--                </button>--%>
+<%--                <nav class="navbar navbar-dark bg-dark">--%>
+<%--                    <div class="container-fluid">--%>
+<%--                        <form class="d-flex">--%>
+<%--                            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;--%>
+<%--                            <button class="btn btn-outline-light" type="submit">검색</button>--%>
+<%--                        </form>--%>
+<%--                    </div>--%>
+<%--                </nav>--%>
+<%--                <div class="collapse navbar-collapse" id="navbarResponsive">--%>
+<%--                    <ul class="navbar-nav ml-auto">--%>
+<%--                        <li class="nav-item active">--%>
+<%--                            <a class="nav-link" href="/">Home--%>
+<%--                                <span class="sr-only">(current)</span>--%>
+<%--                            </a>--%>
+<%--                        </li>--%>
+<%--                        <c:if test="${sessionScope.member == null}">--%>
 <%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="#">카테고리</a>--%>
+<%--                                <a class="nav-link" href="member/login/form">로그인</a>--%>
 <%--                            </li>--%>
-                        </c:if>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+<%--                            <li class="nav-item">--%>
+<%--                                <a class="nav-link" href="member/join/form">회원가입</a>--%>
+<%--                            </li>--%>
+<%--                            <li class="nav-item">--%>
+<%--                                <a class="nav-link" href="/product/register/form">상품 등록</a>--%>
+<%--                            </li>--%>
+<%--                        </c:if>--%>
+<%--                        <c:if test="${sessionScope.member != null}">--%>
+<%--                            <li class="nav-item">--%>
+<%--                                <a class="nav-link" href="member/login/form">${sessionScope.member}</a>--%>
+<%--                            </li>--%>
+<%--                            <li class="nav-item">--%>
+<%--                                <a class="nav-link" href="/member/logout/action">로그아웃</a>--%>
+<%--                            </li>--%>
+<%--&lt;%&ndash;                            <li class="nav-item">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <a class="nav-link" href="#">카테고리</a>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            </li>&ndash;%&gt;--%>
+<%--                        </c:if>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </nav>--%>
+<%--    </header>--%>
 
-    <br>
-    <br>
-    <br>
-    <hr>
+<%--    <br>--%>
+<%--    <br>--%>
+<%--    <br>--%>
+<%--    <hr>--%>
 
 
 

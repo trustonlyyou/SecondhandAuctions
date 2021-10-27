@@ -10,11 +10,11 @@
 
         insert into product
         (
-            memberId, categoryName, productTitle, productContent, startPrice, imagePath
+            memberId, categoryName, productTitle, productContent, startPrice
         )
         values
         (
-            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}, #{imagePath}
+            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}
         )
 
     </insert>
@@ -22,51 +22,29 @@
     <insert id="registerImg" parameterType="java.util.List">
         insert into image
         (
-            fileName, productId, fileSize
+            productId, uploadPath, uploadFileName, fileExtension, fileSize
         )
         values
         <foreach collection="list" item="item" separator=",">
             (
-            #{item.fileName}, #{item.productId}, #{item.fileSize}
+             #{item.productId}, #{item.uploadPath}, #{item.uploadFileName}, #{item.fileExtension}, #{item.fileSize}
             )
         </foreach>
     </insert>
 
-
-    <insert id="setListTet" parameterType="java.util.List">
-        insert into test
-        (
-        name, age
-        )
-        values
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.name}, #{item.age}
-            )
-        </foreach>
-
-    </insert>
-
-    <insert id="registerCategory" parameterType="com.secondhandauctions.vo.TestVo" useGeneratedKeys="true" keyProperty="categoryId">
-        insert into category
-        (
-            categoryName
-        )
-        values
-        (
-            #{categoryName}
-        )
-
-    </insert>
-
-    <select id="getCategory" resultType="String" parameterType="int">
+    <select id="searchImgTest" resultType="com.secondhandauctions.vo.BoardVo">
         select
-            categoryName
+            product.productId, categoryName, productTitle, productContent, startPrice, bidPrice,
+               startTime, expireTime, imagePath, s_FileName, fileExtension
         from
-            category
+             product
+        left join
+             image
+        on
+             product.productId = image.productId
         where
-            categoryName = #{categoryName}
+             isProductCheck = 1
+             and
+             fileExtension is not null
     </select>
-
-
 </mapper>

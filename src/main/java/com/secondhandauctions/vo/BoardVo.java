@@ -4,21 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.xml.ws.BindingType;
 import java.util.Date;
 
-@Setter
 @Getter
+@Setter
 @ToString
-public class ProductVo {
-
+public class BoardVo {
     private int productId;
-    private String memberId;
     private String categoryName;
     private String productTitle;
     private String productContent;
     private String startPrice;
-    private int bidPrice;
+    private String bidPrice;
     private Date startTime;
     private Date expireTime;
+    private String imagePath;
+    private String s_FileName;
+    private String fileExtension;
+
 }

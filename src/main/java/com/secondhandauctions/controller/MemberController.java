@@ -126,7 +126,7 @@ public class MemberController {
     }
 
     @PostMapping(value = "/join/action")
-    public String joinEnd(@ModelAttribute MemberVo memberVo, HttpServletRequest request, HttpServletResponse response) {
+    public String joinEnd(@ModelAttribute MemberVo memberVo, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 
         String encryptionPwd = "";
 
@@ -151,6 +151,8 @@ public class MemberController {
             logger.info("Success join");
             logger.info("New User is {}", memberVo.getMemberId());
 
+            redirectAttributes.addFlashAttribute("memberId", memberVo.getMemberId());
+
             return "redirect:/member/join/result";
         }
     }
@@ -172,7 +174,8 @@ public class MemberController {
         String memberPassword = "";
         String encryptionPwd = "";
         int result = 0;
-        String stance = "";
+        String referer = "";
+
 
         try {
             memberId = request.getParameter("memberId");
@@ -195,25 +198,33 @@ public class MemberController {
             HttpSession session = request.getSession();
             session.setAttribute("member", memberId);
 
-
         } catch (Exception e) {
             logger.error("URL :: " + request.getRequestURL());
             logger.error("Login Error ", e);
         }
 
+        // TODO: 2021/10/27 referer 조건문 걸자. 
+        referer = request.getHeader("referer");
 
+        logger.info("referer :: " + referer);
+
+        if (referer != null) {
+            return "redirect:" + referer;
+        }
 
         return "redirect:/";
     }
 
     @GetMapping(value = "logout/action")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
+        String memberId = "";
         HttpSession session = request.getSession();
 
-        MemberVo memberVo = (MemberVo) session.getAttribute("member");
-        String memberId = memberVo.getMemberId();
+        memberId = (String) session.getAttribute("member");
 
-        session.invalidate();
+        if ((!"".equals(memberId)) && (memberId != null)) {
+            session.invalidate();
+        }
 
         logger.info("'{}' is Logout" , memberId);
 

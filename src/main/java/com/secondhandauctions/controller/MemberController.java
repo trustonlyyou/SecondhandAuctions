@@ -2,6 +2,7 @@ package com.secondhandauctions.controller;
 
 import com.secondhandauctions.service.EmailService;
 import com.secondhandauctions.service.MemberService;
+import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.EncryptionSHA256;
 import com.secondhandauctions.utils.InfoFormatter;
@@ -75,12 +76,34 @@ public class MemberController {
         return isCheck;
     }
 
+    // 이메일 중복 체크
+    @PostMapping(value = "emailCheck", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public int emailCheck(@RequestBody String email) throws Exception {
+        int emailCheck = 0;
+
+        logger.info("email :: " + email);
+
+        try {
+            emailCheck = memberService.isEmail(email);
+
+            logger.info("emailCheck Result :: " + emailCheck);
+
+        } catch (Exception e) {
+            logger.error(RouteService.printStackTrace(e));
+
+        }
+
+        return emailCheck;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/sendEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String emailCheck(@RequestBody String email) throws Exception {
+    public String sendEmail(@RequestBody String email) {
         String toEmail = "";
         String title = "";
         String content = "";
+        String num = "";
 
         // 난수 생성
         Random random = new Random();
@@ -95,9 +118,13 @@ public class MemberController {
                 "인증번호는 " + checkNum + " 입니다. <br>" +
                 "해당 인증번호를 인증번호 확인란에 기입해 주세요.";
 
-        emailService.sendEmail(toEmail, title, content);
+        try {
+            emailService.sendEmail(toEmail, title, content);
 
-        String num = Integer.toString(checkNum);
+            num = Integer.toString(checkNum);
+        } catch (Exception e) {
+            logger.error(RouteService.printStackTrace(e));
+        }
 
         logger.info("인증번호 " + checkNum);
 
@@ -114,7 +141,7 @@ public class MemberController {
         // 난수 생성
         Random random = new Random();
 
-        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111를 사용하였습니다.
+        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111
         int checkNum = random.nextInt(888888) + 11111;
 
         logger.info("인증번호 " + checkNum);
@@ -191,10 +218,6 @@ public class MemberController {
                 return "member/login_fail";
             }
 
-//            member = memberService.getMemberInfo(memberId);
-
-
-            // TODO: 2021/08/19 Login Session 처리
             HttpSession session = request.getSession();
             session.setAttribute("member", memberId);
 
@@ -203,12 +226,11 @@ public class MemberController {
             logger.error("Login Error ", e);
         }
 
-        // TODO: 2021/10/27 referer 조건문 걸자. 
         referer = request.getHeader("referer");
 
         logger.info("referer :: " + referer);
 
-        if (referer != null) {
+        if (!referer.contains("/member/login")) {
             return "redirect:" + referer;
         }
 
@@ -438,6 +460,7 @@ public class MemberController {
         return "member/modifyPasswordResult";
     }
 
+    // TODO: 2021/10/28 MyPage 에다가 게시글 보여주기
     @GetMapping(value = "/myPage")
     public String myPageForm(HttpServletRequest request, Model model) {
         MemberVo memberVo = new MemberVo();

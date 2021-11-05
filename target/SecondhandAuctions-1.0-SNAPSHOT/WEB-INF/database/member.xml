@@ -122,30 +122,6 @@
             isMemberCheck = 1;
     </select>
 
-
-<!--    <select id="getPasswordFromPhone" parameterType="java.util.Map" resultType="String">-->
-<!--        select-->
-<!--            memberPassword-->
-<!--        from-->
-<!--            member-->
-<!--        where-->
-<!--            memberName = #{memberName} and-->
-<!--            memberId = #{memberId} and-->
-<!--            memberPhone = #{memberPhone} and-->
-<!--            isMemberCheck = 1;-->
-<!--    </select>-->
-
-<!--    <select id="getPasswordFromEmail" parameterType="java.util.Map" resultType="String">-->
-<!--        select-->
-<!--            memberPassword-->
-<!--        from-->
-<!--            member-->
-<!--        where-->
-<!--            memberId = #{memberId} and-->
-<!--            memberEmail = #{memberEmail} and-->
-<!--            isMemberCheck = 1;-->
-<!--    </select>-->
-
     <!--  패스워드 수정  -->
     <update id="modifyPassword" parameterType="java.util.Map">
         update

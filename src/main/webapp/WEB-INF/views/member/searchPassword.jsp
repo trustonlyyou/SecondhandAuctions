@@ -155,6 +155,8 @@
 
     var code = ""; // 이메일 코드 저장
 
+
+    // 핸드폰 인증
     $("#checkPhone").click(function () {
 
         $.ajax({

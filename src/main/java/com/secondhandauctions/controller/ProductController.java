@@ -2,6 +2,7 @@ package com.secondhandauctions.controller;
 
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.service.ProductService;
+import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.utils.FileUtils;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
@@ -41,8 +42,8 @@ public class ProductController {
     @GetMapping(value = "/product/register/form")
     public String registerForm(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String memberId = "";
-        HttpSession session = request.getSession();
 
+        HttpSession session = request.getSession();
         memberId = (String) session.getAttribute("member");
 
         if (("".equals(memberId)) || (memberId == null)) {
@@ -58,49 +59,6 @@ public class ProductController {
 
     @PostMapping(value = "/upload/ajax", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ImageVo>> uploadAjax(MultipartFile[] uploadFile) {
-//        List<ImageVo> imageVoList = new ArrayList<>();
-//        String uploadDateDir = FileUtils.getUploadPath();
-//
-//        File uploadPath = new File(ProductDao.UPLOAD_PATH, uploadDateDir);
-//
-//        if (uploadPath.exists() == false) {
-//            uploadPath.mkdirs();
-//        }
-//
-//        for (MultipartFile file : uploadFile) {
-//            ImageVo imageVo = new ImageVo();
-//            String uuidFileName = FileUtils.getUUID();
-//            String uploadFileName = uuidFileName + "_" + file.getOriginalFilename();
-//
-//            logger.info("uploadPath :: " + uploadDateDir); // /Users/junghwan/Desktop/upload/2021/10/20
-//            logger.info("originalFileName :: " + file.getOriginalFilename());
-//            logger.info("uuidFileName :: " + uuidFileName);
-//            logger.info("fileExtension :: " + FilenameUtils.getExtension(file.getOriginalFilename()));
-//            logger.info("uploadFileName :: " + uploadFileName); // b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
-//            logger.info("fileSize :: " + file.getSize());
-//
-//            File target = new File(uploadPath, uploadFileName);
-//
-//            logger.info("saveFilePath :: " + target.getPath());
-//            // /Users/junghwan/Desktop/upload/2021/10/20/b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
-//
-//            try {
-//                file.transferTo(target);
-//            } catch (Exception e) {
-//                logger.error("error :: " + e);
-//            }
-//
-//            imageVo.setUploadPath(uploadDateDir);
-//            imageVo.setOriginalFileName(file.getOriginalFilename());
-//            imageVo.setUuidFileName(uuidFileName);
-//            imageVo.setFileExtension(FilenameUtils.getExtension(file.getOriginalFilename()));
-//            imageVo.setUploadFileName(uploadFileName);
-//            imageVo.setFileSize(file.getSize());
-//
-//            imageVoList.add(imageVo);
-//        }
-//
-//        ResponseEntity<List<ImageVo>> result = new ResponseEntity<>(imageVoList, HttpStatus.OK );
 
         ResponseEntity<List<ImageVo>> result = null;
 
@@ -119,31 +77,6 @@ public class ProductController {
         int status = 0;
 
         logger.info("Input :: " + request.getRequestURI());
-//        logger.info("FileName :: " + fileName);
-//
-////        String uploadFolder = ProductDao.UPLOAD_PATH;
-//        String uploadFolder = Paths.get("/Users", "junghwan", "Desktop", "upload").toString();
-//
-//        File file = new File(uploadFolder, fileName);
-//
-//        logger.info("File :: " + file.getPath());
-//
-//        /*
-//
-//        fileName :: b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
-//         */
-//
-//        ResponseEntity<byte[]> result = null;
-//
-//        try {
-//            HttpHeaders header = new HttpHeaders();
-//            header.add("Content-type", Files.probeContentType(file.toPath()));
-//            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            logger.error("error :: " + e);
-//            e.printStackTrace();
-//        }
 
         result = productService.getImageAjax(fileName);
         status = result.getStatusCodeValue();
@@ -252,61 +185,19 @@ public class ProductController {
 
         } catch (Exception e) {
             logger.error("error :: " + e);
-            e.printStackTrace();
+            logger.error(RouteService.printStackTrace(e));
         }
 
         return "redirect:/product/register/success";
     }
 
-
-    // Test
-//    @PostMapping(value = "/register/product")
-//    public String registerProduct(HttpServletRequest request, ProductVo productVo, @RequestParam("multiFiles") MultipartFile[] files) {
-//        List<ImageVo> imageList = new ArrayList<>();
-//        int productId = 0;
-//        String memberId = "";
-//        MemberVo memberVo = null;
-//
-//        HttpSession session = request.getSession();
-//        memberId = (String) session.getAttribute("member");
-//
-//        logger.info("MemberId :: " + memberId);
-//
-//        if ((!"".equals(memberId)) && (memberId != null)) {
-//            productVo.setMemberId(memberId);
-//        }
-//
-////        productVo.setImagePath(ProductDao.UPLOAD_PATH);
-//
-//        try {
-////            productDao.registerProduct(productVo); // db에 게시물 저장
-//
-//            productService.setProduct(productVo);
-//
-//            productId = productVo.getProductId();
-//
-//            imageList = fileUtils. getFiles(files, productId);
-//
-////            productDao.registerImg(imageList); // db에 이미지 저장
-////
-////            for (ImageVo imageVo : imageList) {
-////                System.out.println(imageVo.getFileName());
-////            }
-//
-//            productService.setImage(imageList);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        logger.info(productVo.toString());
-//
-//        return "redirect:/product/register/success";
-//    }
-
     @GetMapping(value = "/product/register/success")
     public String registerSuccess() {
         return "product/productSuccess";
     }
+
+    // 게시물 수정
+
+    // 게시물 삭제
 
 }

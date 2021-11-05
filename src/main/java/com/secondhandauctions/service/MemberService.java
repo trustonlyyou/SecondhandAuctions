@@ -42,7 +42,22 @@ public class MemberService {
         return memberDao.searchIdEmail(email);
     }
 
-    @Transactional
+    public int isEmail(String memberEmail) throws Exception {
+        int result = 0;
+
+        result = memberDao.isMemberEmail(memberEmail);
+
+        return result;
+    }
+
+    public int isPhone(Map<String, Object> params) throws Exception {
+        int result = 0;
+
+        result = memberDao.isMemberPhone(params);
+
+        return result;
+    }
+
     public String getMemberIdFromEmail(String memberEmail) throws Exception {
         int check = 0;
         String memberId = "";

@@ -74,7 +74,8 @@
                             <input type="email" name="memberEmail" id="memberEmail" class="form-control"
                                    placeholder="email">
                         </div>
-                        <div name="emailCheckMsg" id="emailCheckMsg" class="check_font"></div><br>
+                        <div name="emailCheckMsg" id="emailCheckMsg" class="check_font"></div>
+                        <br>
                         <div>
                             인증번호 입력 <input type="text" id="input_mail" name="input_mail" disabled="disabled">
                             <input type="button" id="mailCheck" name="mailCheck" value="인증번호 전송" disabled><br>
@@ -90,6 +91,12 @@
                         </div>
                         <div name="phoneCheckMsg" id="phoneCheckMsg" class="check_font"></div>
                         <br>
+                        <div id="phoneCheckForm" class="form-label-group">
+                            인증번호 입력 <input type="text" id="phoneInputNum" name="phoneInputNum" disabled="disabled">
+                            <input type="button" id="phoneInputNumCheck" name="phoneInputNumCheck" value="인증번호 전송" disabled><br>
+                        </div>
+                        <div id="phone_check" name="phone_check" class="check_font"></div>
+
 
                         <br>
                         <input type="submit" class="btn btn-lg btn-primary btn-block text-uppercase"
@@ -167,62 +174,160 @@
     // 이메일 체크
     $("#mailCheck").click(function () {
 
-        // function time(){
-        //     myVar = setInterval(alertFunc, 1000);
-        // }
-        // time();
-        //
-        // function alertFunc() {
-        //     var min = num / 60;
-        //     min = Math.floor(min);
-        //
-        //     var sec = num - (60 * min);
-        //
-        //     $("#email_timer").text(min + "분" + sec + "초");
-        //     $("#email_timer").css('color', 'red');
-        //
-        //     check = true;
-        //
-        //     console.log("check :: " + check);
-        //
-        //
-        //     if (num == 0) {
-        //         $("#email_timer").text("입력시간이 만료되었습니다.");
-        //
-        //         clearInterval(myVar) // num 이 0초가 되었을대 clearInterval로 타이머 종료
-        //
-        //         check = false;
-        //
-        //         console.log("check :: " + check);
-        //     }
-        //     num--;
-        // }
-
         var email = $("#memberEmail").val();
 
-
         $.ajax({
-            // url: "/join/emailCheck?email" + email,
-            url: '/member/sendEmail',
-            type: 'POST',
+            url: '/member/emailCheck',
+            type: 'post',
             dataType: 'json',
             contentType: 'application/json; charset=UTF-8',
             data: email,
 
             success: function (data) {
-                $("#input_mail").attr("disabled", false);
-                code = data;
 
-                $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
+                alert("data :: " + data);
+
+                if (data === 0) {
+                    $("#mailCheck").attr("disabled", true);
+                    $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
+
+
+                    $.ajax({
+                        // url: "/join/emailCheck?email" + email,
+                        url: '/member/sendEmail',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=UTF-8',
+                        data: email,
+
+                        success: function (data) {
+                            $("#input_mail").attr("disabled", false);
+                            code = data;
+
+                            $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
+                        },
+
+                        error: function (request,status,error) {
+                            alert("error!!!");
+                            $("#mailCheck").attr("disabled", false);
+                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                        }
+                    });
+                } else {
+                    alert("이미 사용 중인 이메일 입니다.");
+                }
             },
-
             error: function (request,status,error) {
+                alert("ajax error!!!");
+                $("#mailCheck").attr("disabled", false);
                 console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
             }
         });
 
+        // $("#mailCheck").attr("disabled", true);
+        // $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
+        //
+        //
+        // $.ajax({
+        //     // url: "/join/emailCheck?email" + email,
+        //     url: '/member/sendEmail',
+        //     type: 'POST',
+        //     dataType: 'json',
+        //     contentType: 'application/json; charset=UTF-8',
+        //     data: email,
+        //
+        //     success: function (data) {
+        //         $("#input_mail").attr("disabled", false);
+        //         code = data;
+        //
+        //         $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
+        //     },
+        //
+        //     error: function (request,status,error) {
+        //         alert("이메일 인증을 다시 시도해 주세요.");
+        //         $("#mailCheck").attr("disabled", false);
+        //         console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        //
+        //     }
+        // });
+
     });
+
+    var phoneCheckKey;
+
+    // 핸드폰 체크
+    $("#phoneInputNumCheck").click(function () {
+
+        $("#phoneCheckMsg").text("인증번호가 전송 중 입니다. 잠시만 기다려주세요.");
+        $("#phoneInputNumCheck").attr("disabled", true);
+
+       $.ajax({
+           url: '/member/check/phone/sendSms',
+           type: 'POST',
+           data: $("form").serialize(),
+
+           success: function (data) {
+               phoneCheckKey = data.key;
+
+               $("#phoneCheckMsg").text("휴대폰에 인증번호가 전송되었습니다. 인증번호를 입력해주세요.");
+
+               console.log("key :: " + phoneCheckKey);
+
+               $("#phoneInputNum").attr('disabled', false);
+
+
+               // $("#phoneInputNumCheck").click(function () {
+               //     var inputNum = $("#phoneInputNum").val();
+               //
+               //     if (inputNum === checkKey) {
+               //         alert('인증번호가 일치합니다.');
+               //         $("#searchPwdSubmitPhone").attr('disabled', false);
+               //     } else {
+               //         alert('인증번호가 틀립니다.');
+               //         $("#searchPwdSubmitPhone").attr('disabled', true);
+               //     }
+               // });
+           },
+           error: function (request,status,error) {
+               alert("핸드폰 인증을 다시 시도해주세요.");
+               $("#phoneInputNumCheck").attr("disabled", true);
+               console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+           }
+       });
+    });
+
+    $("#phoneInputNum").on('keyup', function () {
+        var inputNum = $("#phoneInputNum").val();
+
+        if (inputNum === phoneCheckKey) {
+            $("#phone_check").text('인증번호가 일치합니다.');
+            $("#phone_check").css('color', 'green');
+
+            phoneFlag = true;
+
+            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                $("#join_submit").attr('disabled', false);
+            }
+
+            return true;
+
+        } else {
+            $("#phone_check").text('인증번호가 틀립니다.');
+            $("#phone_check").css('color', 'red');
+
+            phoneFlag = false;
+
+            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                $("#join_submit").attr('disabled', true);
+            }
+
+            return false;
+
+        }
+    });
+
 
 
 
@@ -405,6 +510,7 @@
         if (email == "") {
             $("#emailCheckMsg").text("이메일은 필수입력 입니다.");
             $("#emailCheckMsg").css('color', 'red');
+            $("#mailCheck").attr('disabled', true);
 
             emailFlag = false;
 
@@ -414,6 +520,7 @@
         if (!isEmail.test(email)) {
             $("#emailCheckMsg").text("옳바르지 않은 이메일 형식 입니다.");
             $("#emailCheckMsg").css('color', 'red');
+            $("#mailCheck").attr('disabled', true);
 
             emailFlag = false;
 
@@ -439,16 +546,18 @@
                 $("#mail_check").text("불일치 합니다.");
                 $("#mail_check").css('color', 'red');
                 $("#emailCheckMsg").text("이메일 인증을 해주세요.");
-                // $("#email_timer").show();
 
                 emailFlag = false;
+
+                if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                    $("#join_submit").attr('disabled', true);
+                }
 
                 return false;
             } else {
                 $("#mail_check").text("일치합니다.");
                 $("#mail_check").css('color', 'green');
                 $("#emailCheckMsg").text("");
-                // $("#email_timer").hide();
 
                 emailFlag = true;
 
@@ -467,6 +576,7 @@
         if (phone == "") {
             $("#phoneCheckMsg").text("핸드폰은 필수 입력입니다.");
             $("#phoneCheckMsg").css('color', 'red');
+            $("#phoneInputNumCheck").attr('disabled', true);
 
             phoneFlag = false;
 
@@ -476,6 +586,7 @@
         if (!isPhone.test(phone)) {
             $("#phoneCheckMsg").text("핸드폰 입력형식이 옳바르지 않습니다.");
             $("#phoneCheckMsg").css('color', 'red');
+            $("#phoneInputNumCheck").attr('disabled', true);
 
             phoneFlag = false;
 
@@ -486,13 +597,15 @@
             // phone = phone.replace(/ /gi, "").replace(/-/gi, "");
             // $("#phone").val(phone);
 
-            $("#phoneCheckMsg").text("");
+            $("#phoneCheckMsg").text("핸드폰 인증을 해주세요.");
+            $("#phoneCheckMsg").css('color', 'red');
+            $("#phoneInputNumCheck").attr('disabled', false);
 
-            phoneFlag = true;
-
-            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                $("#join_submit").attr('disabled', false);
-            }
+            // phoneFlag = true;
+            //
+            // if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+            //     $("#join_submit").attr('disabled', false);
+            // }
 
             return true;
 

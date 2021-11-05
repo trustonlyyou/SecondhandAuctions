@@ -22,4 +22,17 @@ public class ConvertTest {
 
         System.out.println(result);
     }
+
+    @Test
+    public void refererTest() throws Exception {
+        String referer = "http://localhost:8080/member/login/form";
+
+//        String[] strArr = referer.split("/");
+//
+//        for (String str : strArr) {
+//            System.out.println(str);
+//        }
+
+        System.out.println(referer.contains("/member/login"));
+    }
 }

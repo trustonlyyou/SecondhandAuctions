@@ -77,7 +77,7 @@ public class MemberController {
     }
 
     // 이메일 중복 체크
-    @PostMapping(value = "emailCheck", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/emailCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int emailCheck(@RequestBody String email) throws Exception {
         int emailCheck = 0;
@@ -133,9 +133,30 @@ public class MemberController {
         return num;
     }
 
+    @PostMapping("/phoneCheck")
+    @ResponseBody
+    public int isCheckPhone(String memberName, String memberPhone) {
+        Map<String, Object> prams = new HashMap<>();
+        int result = 0;
+
+        logger.info("memberName :: " + memberName);
+        logger.info("memberPhone" + memberPhone);
+
+        prams.put("memberName", memberName);
+        prams.put("memberPhone", memberPhone);
+
+        try {
+            result = memberService.isPhone(prams);
+        } catch (Exception e) {
+            logger.error(RouteService.printStackTrace(e));
+        }
+
+        return result;
+    }
+
     @RequestMapping(value ="/join/sendSms")
     @ResponseBody
-    public String checkPhone(HttpServletRequest request, HttpServletResponse response) {
+    public String sendSms(HttpServletRequest request, HttpServletResponse response) {
         String strNum = "";
 
         // 난수 생성

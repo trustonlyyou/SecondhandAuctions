@@ -61,7 +61,7 @@
                         <br>
 
                         <div class="form-label-group">
-                            이름<img src="/resources/image/heck.gif" alt="필수 입력사항">
+                            이름<img src="/resources/image/check.gif" alt="필수 입력사항">
                             <input type="text" id="memberName" name="memberName" class="form-control"
                                    placeholder="name" required>
                         </div>
@@ -104,6 +104,10 @@
 
                         <a class="d-block text-center mt-2 small" href="login_form"></a>
                         <hr class="my-4">
+
+                        <div>
+                            <input type="button" id="test" name="test" value="test">
+                        </div>
                     </form>
                 </div>
             </div>
@@ -185,8 +189,6 @@
 
             success: function (data) {
 
-                alert("data :: " + data);
-
                 if (data === 0) {
                     $("#mailCheck").attr("disabled", true);
                     $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
@@ -257,45 +259,107 @@
 
     var phoneCheckKey;
 
+    $("#test").click(function () {
+        var memberName = $("#memberName").val();
+        var memberPhone = $("#memberPhone").val();
+
+        var formData = {
+            memberName : memberName,
+            memberPhone : memberPhone
+        }
+
+        $.ajax({
+            url: '/member/phoneCheck',
+            type: 'post',
+            // data: $("form").serialize(),
+            data: formData,
+
+            success: function (data) {
+                alert(data);
+            },
+            error: function (request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+            }
+        });
+    });
+
     // 핸드폰 체크
     $("#phoneInputNumCheck").click(function () {
+        var memberName = $("#memberName").val();
+        var memberPhone = $("#memberPhone").val();
 
-        $("#phoneCheckMsg").text("인증번호가 전송 중 입니다. 잠시만 기다려주세요.");
-        $("#phoneInputNumCheck").attr("disabled", true);
+        var isName = /^[가-힣]+$/;
+        var isPhone = /^((01[1|6|7|8|9])[1-9][0-9]{6,7})$|(010[1-9][0-9]{7})$/;
 
-       $.ajax({
-           url: '/member/check/phone/sendSms',
-           type: 'POST',
-           data: $("form").serialize(),
+        if ((memberName == "") || (memberPhone == "")) {
+            alert("이름과 핸드폰 번호를 입력해주세요.");
 
-           success: function (data) {
-               phoneCheckKey = data.key;
+            return false;
+        }
 
-               $("#phoneCheckMsg").text("휴대폰에 인증번호가 전송되었습니다. 인증번호를 입력해주세요.");
+        if (!isName.test(memberName)) {
 
-               console.log("key :: " + phoneCheckKey);
+            alert("이름의 입력형식이 옳바르지 않습니다.");
+            return false
 
-               $("#phoneInputNum").attr('disabled', false);
+        }
+
+        var formData = {
+            memberName : memberName,
+            memberPhone : memberPhone
+        }
+
+        $.ajax({
+            url: '/member/phoneCheck',
+            type: 'post',
+            data: formData,
+
+            success: function (data) {
+                if (data === 0) {
+                    $("#phoneCheckMsg").text("인증번호가 전송 중 입니다. 잠시만 기다려주세요.");
+                    $("#phoneInputNumCheck").attr("disabled", true);
+
+                    $.ajax({
+                        url: '/member/check/phone/sendSms',
+                        type: 'POST',
+                        data: $("form").serialize(),
+
+                        success: function (data) {
+                            phoneCheckKey = data.key;
+
+                            $("#phoneCheckMsg").text("휴대폰에 인증번호가 전송되었습니다. 인증번호를 입력해주세요.");
+
+                            console.log("key :: " + phoneCheckKey);
+
+                            $("#phoneInputNum").attr('disabled', false);
 
 
-               // $("#phoneInputNumCheck").click(function () {
-               //     var inputNum = $("#phoneInputNum").val();
-               //
-               //     if (inputNum === checkKey) {
-               //         alert('인증번호가 일치합니다.');
-               //         $("#searchPwdSubmitPhone").attr('disabled', false);
-               //     } else {
-               //         alert('인증번호가 틀립니다.');
-               //         $("#searchPwdSubmitPhone").attr('disabled', true);
-               //     }
-               // });
-           },
-           error: function (request,status,error) {
-               alert("핸드폰 인증을 다시 시도해주세요.");
-               $("#phoneInputNumCheck").attr("disabled", true);
-               console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-           }
-       });
+                            // $("#phoneInputNumCheck").click(function () {
+                            //     var inputNum = $("#phoneInputNum").val();
+                            //
+                            //     if (inputNum === checkKey) {
+                            //         alert('인증번호가 일치합니다.');
+                            //         $("#searchPwdSubmitPhone").attr('disabled', false);
+                            //     } else {
+                            //         alert('인증번호가 틀립니다.');
+                            //         $("#searchPwdSubmitPhone").attr('disabled', true);
+                            //     }
+                            // });
+                        },
+                        error: function (request,status,error) {
+                            alert("핸드폰 인증을 다시 시도해주세요.");
+                            $("#phoneInputNumCheck").attr("disabled", true);
+                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                } else {
+                    alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
+                }
+            },
+            error: function (request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+            }
+        });
     });
 
     $("#phoneInputNum").on('keyup', function () {

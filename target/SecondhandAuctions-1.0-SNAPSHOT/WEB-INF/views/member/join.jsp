@@ -289,19 +289,15 @@
         var memberPhone = $("#memberPhone").val();
 
         var isName = /^[가-힣]+$/;
-        var isPhone = /^((01[1|6|7|8|9])[1-9][0-9]{6,7})$|(010[1-9][0-9]{7})$/;
 
         if ((memberName == "") || (memberPhone == "")) {
             alert("이름과 핸드폰 번호를 입력해주세요.");
-
             return false;
         }
 
         if (!isName.test(memberName)) {
-
             alert("이름의 입력형식이 옳바르지 않습니다.");
             return false
-
         }
 
         var formData = {

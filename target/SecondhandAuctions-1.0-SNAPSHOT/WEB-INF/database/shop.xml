@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.ShopDao">
+
+    <select id="getDetail" parameterType="int" resultType="com.secondhandauctions.dao.ShopDao">
+        select
+            categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime, uploadPath, uploadFileName, fileExtension
+        from
+            product
+        left join image
+            on product.productId = image.productId
+        where
+              isProductCheck = 1 and product.productId = #{productId}
+    </select>
+
+    <select id="countProduct">
+        select
+            count(*)
+        from
+            product
+        where
+            isProductCheck = 1
+    </select>
+
+    <select id="getListWithPaging" parameterType="com.secondhandauctions.utils.Criteria" resultType="com.secondhandauctions.vo.ShopVo">
+        <![CDATA[
+        select
+            categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime, uploadPath, uploadFileName, fileExtension
+        from
+             product
+
+        left join image on product.productId = image.productId
+
+        where isProductCheck = 1
+
+        order by startTime desc
+
+        limit #{pageNum}, #{amount}
+        ]]>
+    </select>
+
+
+</mapper>

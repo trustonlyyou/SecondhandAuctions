@@ -63,7 +63,7 @@
                         <div name="contentCheckMsg" id="contentCheckMsg"></div>
                         <br>
 
-                        <div class="form-label-group">
+                        <div class="form-label-group row">
                             <%--              이미지 첨부 <input type="file" multiple="multiple" id="productImg" name="productImg" class="form-control">--%>
                             <%--              <div id="preview" class="form-label-group"></div>--%>
 
@@ -76,8 +76,6 @@
                                     <td align="center" width="900px" >
                                         <input type="file" name="uploadFile" id="uploadFile" multiple class="form-control">
                                         <div id="uploadResult">
-                                            <%--                                            <img alt="view" src="/view?fileName=test.png" width="100" height="100">--%>
-                                            <%--                                            <img alt="display" src="/display?fileName=test.png" width="100" height="100">--%>
                                         </div>
                                         <div>
                                             <input type="hidden" name="fileCount" id="fileCount"/>
@@ -133,6 +131,7 @@
     var fileCount = 0;
     var maxFileCount = 5;
 
+    // upload file
     $("input[type='file']").on("change", function (e) {
         var formData = new FormData();
         var fileInput = $('input[name="uploadFile"]');
@@ -156,26 +155,6 @@
 
             success: function (result) {
                 console.log(result);
-
-                // 원본
-                // uploadFilesArr = uploadFilesArr.concat(result);
-                //
-                // showImage(uploadFilesArr);
-                // // 삭제하고 남은 배열데이터를 또 뽑는다.
-
-                // Test
-                // if (tmpArr1.length == 0) {
-                //     uploadFilesArr = uploadFilesArr.concat(result);
-                // }
-                //
-                // if (tmpArr1.length > 0) {
-                //     uploadFilesArr = uploadFilesArr.concat(tmpArr1);
-                //     uploadFilesArr = uploadFilesArr.concat(result);
-                //
-                //     tmpArr1 = [];
-                // }
-
-                // 하나의 배열을 바라보고 하자. Test
 
                 uploadFilesArr = uploadFilesArr.concat(result);
 
@@ -276,26 +255,6 @@
 
         deleteUploadFile(targetFile); // 서버에 등록된 이미지 파일 삭제
 
-
-        // 원본
-        // $(targetDivId).remove();
-        //
-        // uploadFilesArr.splice(index, 1);
-        // fileCount--;
-
-        // Test
-        // uploadFilesArr.splice(index, 1); // 해당 데이터 삭제 했어.
-        // fileCount--;
-        //
-        // tmpArr1 = tmpArr1.concat(uploadFilesArr);// 삭제하고 남은 데이터가 있다.
-        //
-        // uploadFilesArr = [];
-        //
-        // $("#uploadResult").empty();
-        //
-        // showImage(tmpArr1);
-
-
         // 하나의 배열을 바라보고 하자. Test
         uploadFilesArr.splice(index, 1);
 
@@ -353,57 +312,6 @@
             }
         });
     }
-
-
-    // $("#registerSubmit").submit(function () {
-    //     alert("hello");
-    //     $.ajax({
-    //         url: '/upload/submit',
-    //         type: 'post',
-    //         data: {productVo : $("#registerProduct").serialize(), uploadFilesArr : uploadFilesArr},
-    //
-    //         success: function (result) {
-    //             alert("success");
-    //         },
-    //         error: function (request,status,error) {
-    //             alert("fail");
-    //             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-    //         }
-    //     });
-    // });
-
-
-    //====================End TEST====================
-
-
-    // delete file method
-    // function deleteUploadFile() {
-    //     var targetFile = $(".imageDeleteBtn").data("file");
-    //     var targetDiv = $("#result");
-    //
-    //     console.log("targetFile :: " + targetFile);
-    //
-    //     $.ajax({
-    //         url: '/delete/image',
-    //         data: {fileName : targetFile},
-    //         datType: 'text',
-    //         type: 'post',
-    //
-    //         success: function (result) {
-    //             console.log(result);
-    //
-    //             targetDiv.remove();
-    //             $("input[type='file']").val("");
-    //         },
-    //         error: function (result) {
-    //             alert("파일을 삭제하지 못하였습니다.");
-    //             console.log(result);
-    //         }
-    //     });
-    // }
-
-
-    //================================================================================
 
     // id = productImg
     // 이미지 업로드
@@ -488,28 +396,10 @@
         return true;
     });
 
-    // function categoryCheck(object) {
-    //     var inputValue = $(object).val();
-    //
-    //     if (inputValue == "") {
-    //         $("#category_check").text('카테고리는 필수 입력 사항입니다.');
-    //         $("#category_check").css('color', 'red');
-    //
-    //         categoryFlag = false;
-    //
-    //         return false;
-    //     }
-    //
-    //     categoryFlag = true;
-    //
-    //     $("#category_check").text('');
-    //
-    //     if ((categoryFlag && productTitleFlag && productContentFlag && startPriceFlag) == true) {
-    //         $("#registerSubmit").attr('disabled', false);
-    //     }
-    //
-    //     return true;
-    // }
-
+    // client 뒤로가기시 file 을 비워줘야지, 페이지 리로드 하면서 server 에 이미지가 다시 저장이 안된다.
+    // controller 는 어차피 hidden value 로 값을 받기 때문에 상관 없다.
+    $("#registerSubmit").on('click', function () {
+        $("#uploadFile").val("");
+    });
 </script>
 </html>

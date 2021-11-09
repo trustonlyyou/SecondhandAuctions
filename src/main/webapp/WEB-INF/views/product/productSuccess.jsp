@@ -32,9 +32,8 @@
                     <br>
                     <br>
 
-                    <div>
-                        <button class="btn btn-primary btn-lg" value="로그인">게시물 보기</button>
-                    </div>
+                    <a class="nav-link" href="/shop">게시물 보러가기</a>
+
                     <br>
                     <br>
                     <br>
@@ -51,6 +50,14 @@
 </body>
 <script>
 
+    <%--$.document.ready(function () {--%>
+
+    <%--    $(".btn-primary").on('click', function (e) {--%>
+    <%--        e.preventDefault();--%>
+    <%--        location.replace('${pageContext.request.contextPath}/shop');--%>
+    <%--        &lt;%&ndash;location.href = "${pageContext.request.contextPath}/shop";&ndash;%&gt;--%>
+    <%--    });--%>
+    <%--});--%>
 </script>
 </html>
 

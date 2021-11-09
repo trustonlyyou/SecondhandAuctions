@@ -208,18 +208,26 @@
 <script type="text/javascript">
     // todo :: pagination jquery active, prev, next
 
-    var actionForm = $("#actionForm");
+    $(document).ready(function () {
 
-    $(".page-link").on("click", function (e) {
-        e.preventDefault(); // a 태그의 기본 동작을 막는다. 즉, 기본 동작을 막아준다.
+        history.replaceState({}, null, null); // 히스토리를 지운다.
 
-        var targetPage = $(this).attr("href");
+        var actionForm = $("#actionForm");
 
-        console.log(targetPage);
+        $(".page-link").on("click", function (e) {
+            e.preventDefault(); // a 태그의 기본 동작을 막는다. 즉, 기본 동작을 막아준다.
 
-        actionForm.find("input[name='pageNum']").val(targetPage);
-        actionForm.submit();
+            var targetPage = $(this).attr("href");
+
+            console.log(targetPage);
+
+            actionForm.find("input[name='pageNum']").val(targetPage);
+            actionForm.submit();
+        });
+
     });
+
+
 
 
 </script>

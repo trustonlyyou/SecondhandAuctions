@@ -2,15 +2,21 @@ package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.ShopDao;
 import com.secondhandauctions.utils.Criteria;
+import com.secondhandauctions.vo.ImageVo;
+import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 public class ShopService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShopService.class);
 
     @Autowired
     private ShopDao shopDao;
@@ -21,5 +27,48 @@ public class ShopService {
         list = shopDao.getListWithPaging(criteria);
 
         return list;
+    }
+
+    public Map<String, Object> getReadProduct(int productId) throws Exception {
+        Map<String, Object> info = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+        ProductVo productVo = new ProductVo();
+
+        String fileName = "";
+
+        productVo = shopDao.readProduct(productId);
+
+        if (productVo == null) {
+            info.put("product", null);
+
+            logger.info("productVo is null");
+        }
+
+        info.put("product", productVo);
+
+        imageList = shopDao.readProductImage(productId);
+
+        if (imageList.isEmpty()) {
+            imageList = Collections.emptyList();
+        }
+
+        for (ImageVo imageVo : imageList) {
+            fileName = Paths.get("/" + imageVo.getUploadPath() + "/" + imageVo.getUploadFileName()).toString();
+
+            fileNames.add(fileName);
+        }
+
+        info.put("fileName", fileNames);
+
+        return info;
+    }
+
+    public ShopVo getDetail(int productId) throws Exception {
+        ShopVo shopVo = new ShopVo();
+
+        shopVo = getDetail(productId);
+
+        return shopVo;
     }
 }

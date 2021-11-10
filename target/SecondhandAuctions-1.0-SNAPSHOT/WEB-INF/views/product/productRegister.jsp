@@ -112,6 +112,14 @@
 
 <script>
 
+    // $(document).ready(function () {
+    //     history.replaceState({}, null, null);
+    //
+    //     if (history.state) {
+    //         alert("history!!");
+    //     }
+    // });
+
     var categoryFlag = false;
     var productTitleFlag = false;
     var productContentFlag = false;
@@ -396,6 +404,8 @@
         return true;
     });
 
+    // client 뒤로가기시 file 을 비워줘야지, 페이지 리로드 하면서 server 에 이미지가 다시 저장이 안된다.
+    // controller 는 어차피 hidden value 로 값을 받기 때문에 상관 없다.
     $("#registerSubmit").on('click', function () {
         $("#uploadFile").val("");
     });

@@ -112,6 +112,14 @@
 
 <script>
 
+    // $(document).ready(function () {
+    //     history.replaceState({}, null, null);
+    //
+    //     if (history.state) {
+    //         alert("history!!");
+    //     }
+    // });
+
     var categoryFlag = false;
     var productTitleFlag = false;
     var productContentFlag = false;

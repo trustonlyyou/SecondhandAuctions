@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
@@ -45,18 +46,14 @@
                 <div class="card-body">
                     <div class="carousel slide" data-ride="carousel" id="banner" >
                         <!-- 이미지 부분 -->
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="896FCA67-78F4-40DC-9E1A-48D090D2BDB5.jpeg" alt="beg">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="78639320-0D45-4451-AA41-5B778837D6BA.jpeg" alt="beg" >
-                            </div>
-                            <div class="carousel-item">
-                                <img src="A2605FF7-A557-4247-865D-7CE707B275FD.jpeg" alt="beg" >
-                            </div>
+                        <div class="carousel-inner" id="images">
+                            <c:forEach var="fileName" items="${fileName}" varStatus="stauts">
+                                <%--                             todo :: 여기서부터   --%>
+                                <div class="carousel-item ${stauts.index == 0 ? "active" : ""}">
+                                    <img src="/detail/show?fileName=${fileName}">
+                                </div>
+                            </c:forEach>
                         </div>
-
                         <!-- 인디케이션 부분 -->
                         <ul class="carousel-indicators">
                             <li data-target="#banner" data-slide-to="0" class="active"></li>
@@ -73,11 +70,11 @@
                     </div>
                 </div>
             </div>
+
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
                     <br>
                     <h2 class="card-title text-center">상품 조회</h2>
-
                     <!-- Form 시작 -->
                     <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
@@ -86,14 +83,16 @@
                         <div class="form-label-group">
                             제목<br>
                             <input type="text" id="productTitle" name="productTitle" class="form-control"
-                                   placeholder="상품의 제목을 입력해주세요." minlength="5" maxlength="20">
+                                   readonly value="${product.productTitle}">
                         </div>
                         <br>
 
                         <div class="form-label-group">
                             내용<br>
 
-                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control" readonly>
+                                <c:out value="${product.productContent}"/>
+                            </textarea>
                         </div>
                         <div name="contentCheckMsg" id="contentCheckMsg"></div>
                         <br>
@@ -101,8 +100,8 @@
                         <br>
 
                         <div class="form-label-group">
-                            현재 가격
-                            <input type="text" id="startPrice" name="startPrice" onkeyup="numberWithCommas(this.value)">&nbsp;원
+                            현재 가격 <c:out value="${product.startPrice}"/>
+<%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
                         </div>
 
 
@@ -153,6 +152,16 @@
 <hr>
 </body>
 <script>
+    $(document).ready(function () {
+        var msg = "${msg}";
+
+        if (msg === "productNull") {
+            alert(msg);
+            window.location.replace("/shop");
+        }
+
+    });
+
 
 </script>
 </html>

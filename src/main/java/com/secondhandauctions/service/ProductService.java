@@ -112,6 +112,7 @@ public class ProductService {
         return result;
     }
 
+    // FileService 로 Refactoring 했음
     public ResponseEntity<byte[]> getImageAjax(String fileName) {
         ResponseEntity<byte[]> result = null;
 

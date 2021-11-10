@@ -1,6 +1,7 @@
 package com.secondhandauctions.controller;
 
 import com.secondhandauctions.dao.ProductDao;
+import com.secondhandauctions.service.FileService;
 import com.secondhandauctions.service.ProductService;
 import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.utils.FileUtils;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,10 +36,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private FileUtils fileUtils;
-
-    @Autowired
-    private ProductDao productDao;
+    private FileService fileService;
 
     @GetMapping(value = "/product/register/form")
     public String registerForm(HttpServletRequest request, RedirectAttributes redirectAttributes) {
@@ -78,7 +77,7 @@ public class ProductController {
 
         logger.info("Input :: " + request.getRequestURI());
 
-        result = productService.getImageAjax(fileName);
+        result = fileService.getImageAjax(fileName);
         status = result.getStatusCodeValue();
 
         if (status == 501) {

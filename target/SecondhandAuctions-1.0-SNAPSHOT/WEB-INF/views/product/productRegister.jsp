@@ -166,7 +166,7 @@
 
                 uploadFilesArr = uploadFilesArr.concat(result);
 
-                $("#uploadResult").empty();
+                $("#uploadResult").empty(); // 또 다른 이미지를 업로드할 때 비우고 다시 보여준다.
 
                 showImage(uploadFilesArr);
 

@@ -21,10 +21,16 @@ public class ShopService {
     @Autowired
     private ShopDao shopDao;
 
+    public int getCount() throws Exception {
+        return shopDao.countProduct();
+    }
+
     public List<ShopVo> getList(Criteria criteria) throws Exception {
         List<ShopVo> list = new ArrayList<>();
 
-        list = shopDao.getListWithPaging(criteria);
+//        list = shopDao.getListWithPaging(criteria);
+
+        list = shopDao.getList(criteria);
 
         return list;
     }

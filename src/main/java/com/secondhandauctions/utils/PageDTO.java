@@ -2,34 +2,116 @@ package com.secondhandauctions.utils;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @ToString
 @Getter
 public class PageDTO {
 
-    private int startPage;
-    private int endPage;
-    private boolean prev;
-    private boolean next;
+    private int totalCount; // 전체 게시글의 갯수
+    private int startPage; // 시작 페이지 번호
+    private int endPage; // 끝 페이지 번호
+    private boolean prev; // 이전 링크
+    private boolean next; // 다음 링크
 
-    private int total;
+    private int displayPageNum = 10;
+
     private Criteria criteria;
 
-    public PageDTO(Criteria criteria, int total) {
+    public void setCriteria(Criteria criteria) {
         this.criteria = criteria;
-        this.total = total;
+    }
 
-        this.endPage = (int) Math.ceil(criteria.getPageNum() / 10.0) * 10;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+        calcDate();
+    }
 
-        this.startPage = endPage - 9;
+    private void calcDate() {
+        endPage = (int) (Math.ceil(criteria.getPage() / (double) displayPageNum) * displayPageNum);
 
-        this.prev = this.startPage > 1;
+        startPage = (endPage - displayPageNum) + 1;
 
-        int realEnd = (int)(Math.ceil((total * 1.0) / criteria.getAmount()));
+        int tempEndPage = (int) (Math.ceil(totalCount / (double) criteria.getPerPageNum()));
 
-        this.endPage = realEnd <= endPage ? realEnd : endPage;
+        if(endPage > tempEndPage) {
+            endPage = tempEndPage;
+        }
 
-        this.next = this.endPage < realEnd;
+        prev = startPage == 1 ? false : true;
 
+        next = endPage * criteria.getPerPageNum() >= totalCount ? false : true;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public int getStartPage() {
+        return startPage;
+    }
+
+    public void setStartPage(int startPage) {
+        this.startPage = startPage;
+    }
+
+    public int getEndPage() {
+        return endPage;
+    }
+
+    public void setEndPage(int endPage) {
+        this.endPage = endPage;
+    }
+
+    public boolean isPrev() {
+        return prev;
+    }
+
+    public void setPrev(boolean prev) {
+        this.prev = prev;
+    }
+
+    public boolean isNext() {
+        return next;
+    }
+
+    public void setNext(boolean next) {
+        this.next = next;
+    }
+
+    public int getDisplayPageNum() {
+        return displayPageNum;
+    }
+
+    public void setDisplayPageNum(int displayPageNum) {
+        this.displayPageNum = displayPageNum;
+    }
+
+    public Criteria getCriteria() {
+        return criteria;
+    }
+
+    @Override
+    public String toString() {
+        return "PageMaker{" +
+                "totalCount=" + totalCount +
+                ", startPage=" + startPage +
+                ", endPage=" + endPage +
+                ", prev=" + prev +
+                ", next=" + next +
+                ", displayPageNum=" + displayPageNum +
+                ", criteria=" + criteria +
+                '}';
+    }
+
+    public String makeQuery(int page) {
+        UriComponents uriComponents =
+                UriComponentsBuilder.newInstance()
+                        .queryParam("page", page)
+                        .queryParam("perPageNum", criteria.getPerPageNum())
+                        .build();
+
+        return uriComponents.toString();
     }
 }

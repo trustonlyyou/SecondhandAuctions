@@ -10,11 +10,11 @@
 
         insert into product
         (
-            memberId, categoryName, productTitle, productContent, startPrice
+            memberId, categoryName, productTitle, productContent, startPrice, expireTime
         )
         values
         (
-            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}
+            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}, DATE_ADD(NOW(), interval 7 day)
         )
 
     </insert>

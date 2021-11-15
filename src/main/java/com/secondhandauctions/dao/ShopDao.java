@@ -11,6 +11,8 @@ public interface ShopDao {
 
     public int countProduct() throws Exception;
 
+    public List<ShopVo> getList(Criteria criteria) throws Exception;
+
     public List<ShopVo> getListWithPaging(Criteria criteria) throws Exception;
 
     public ProductVo readProduct(int productId) throws Exception;

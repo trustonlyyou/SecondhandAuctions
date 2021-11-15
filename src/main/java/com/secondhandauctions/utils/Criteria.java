@@ -2,40 +2,49 @@ package com.secondhandauctions.utils;
 
 public class Criteria {
 
-    private int pageNum; // 현재 페이지 번호
-    private int amount; // 페이지당 출력할 게시글 수
+    private int page; // 현재 페이지 번호
+    private int perPageNum; // 페이지당 출력할 게시굴의 갯수
 
     public Criteria() {
-        this(1,10);
+        this.page = 1;
+        this.perPageNum = 10;
     }
 
-    public Criteria(int pageNum, int amount) {
-        super();
-        this.pageNum = pageNum;
-        this.amount = amount;
+    public void setPage(int page) {
+        if(page <= 0) {
+            this.page = 1;
+            return;
+        }
+        this.page = page;
     }
 
-    public int getPageNum() {
-        return pageNum;
+    public void setPerPageNum(int perPageNum) {
+        if(perPageNum <= 0 || perPageNum > 100) {
+            this.perPageNum = 10;
+            return;
+        }
+        this.perPageNum = perPageNum;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public int getPage() {
+        return page;
     }
 
-    public int getAmount() {
-        return amount;
+    // method for MyBatis SQL Mapper -
+    public int getPageStart() {
+        return (this.page - 1) * perPageNum;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    // method for MyBatis SQL Mapper -
+    public int getPerPageNum() {
+        return perPageNum;
     }
 
     @Override
     public String toString() {
         return "Criteria{" +
-                "pageNum=" + pageNum +
-                ", amount=" + amount +
+                "page=" + page +
+                ", perPageNum=" + perPageNum +
                 '}';
     }
 }

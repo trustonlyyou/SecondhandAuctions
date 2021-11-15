@@ -53,96 +53,18 @@
                 <c:forEach items="${list}" var="shopVo">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+                            <img class="card-img-top" src="/file/show?uploadPath=${shopVo.uploadPath}&fileName=${shopVo.uploadFileName}" alt="test" width="700" height="200">
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="#">${shopVo.productTitle}</a>
+                                    <a href="/shop/get?productId=<c:out value="${shopVo.productId}" />">${shopVo.productTitle}</a>
                                 </h4>
                                 <h5>${shopVo.startPrice}&nbsp; <fmt:formatDate pattern="yyyy-MM-dd HH:mm"
                                                                                value="${shopVo.startTime}" /></h5>
-                                <p class="card-text">${shopVo.productContent}</p>
+                                <p class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</p>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item One</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item Two</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item Three</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item Four</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item Five</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="#">Item Six</a>
-                            </h4>
-                            <h5>$24.99</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
             <!-- /.row -->
 
@@ -160,7 +82,8 @@
                 </li>
             </c:if>
             <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
-                <li class="page-item ${pageMaker.criteria.pageNum == num ? "active": ""}"><a class="page-link" href="${num}">${num}</a></li>
+                <li class="page-item ${pageMaker.criteria.page == num ? "active": ""}">
+                    <a class="page-link" href="${num}">${num}</a></li>
             </c:forEach>
             <c:if test="${pageMaker.next}">
                 <li class="page-item">
@@ -172,24 +95,11 @@
 
     <div>
         <form id="actionForm" action="/shop" method="get">
-            <input type="hidden" name="pageNum" id="pageNum" value="${pageMaker.criteria.pageNum}">
-            <input type="hidden" name="amount" id="amount" value="${pageMaker.criteria.amount}">
+            <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
+            <input type="hidden" name="perPageNum" id="amount" value="${pageMaker.criteria.perPageNum}">
         </form>
     </div>
 
-    <%--    <nav>--%>
-    <%--        <ul class="pagination pagination-circle pg-blue justify-content-end">--%>
-    <%--            <li class="prev disabled">--%>
-    <%--                <a class="page-link">이전</a>--%>
-    <%--            </li>--%>
-    <%--            <li class="page-item active"><a class="page-link" href="#">1</a></li>--%>
-    <%--            <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
-    <%--            <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
-    <%--            <li class="next">--%>
-    <%--                <a class="page-link" href="#">다음</a>--%>
-    <%--            </li>--%>
-    <%--        </ul>--%>
-    <%--    </nav>--%>
 </div>
 
 <!-- /.container -->
@@ -221,7 +131,7 @@
 
             console.log(targetPage);
 
-            actionForm.find("input[name='pageNum']").val(targetPage);
+            actionForm.find("[name='page']").val(targetPage);
             actionForm.submit();
         });
 

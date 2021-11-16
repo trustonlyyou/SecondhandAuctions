@@ -31,26 +31,9 @@
         limit #{pageStart}, #{perPageNum}
     </select>
 
-    <select id="getListWithPaging" parameterType="com.secondhandauctions.utils.Criteria" resultType="com.secondhandauctions.vo.ShopVo">
-        select
-            image.productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
-            min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
-        from
-            image
-                left join product on product.productId = image.productId
-
-        where isProductCheck = 1
-
-        group by image.productId
-
-        order by startTime desc
-
-            limit #{pageNum}, #{amount}
-    </select>
-
     <select id="readProduct" parameterType="int" resultType="com.secondhandauctions.vo.ProductVo">
         select
-            categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
+            productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
         from
             product
         where isProductCheck = 1 and product.productId = #{productId};
@@ -61,7 +44,7 @@
             image.productId, uploadPath, uploadFileName, fileExtension
         from
             image
-                left join
+        left join
             product on image.productId = product.productId
         where
             isProductCheck = 1 and product.productId = #{productId};

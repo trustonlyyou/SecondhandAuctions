@@ -80,7 +80,7 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-<%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
+                    <%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
                     <!-- Form 시작 -->
                     <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
@@ -107,7 +107,7 @@
 
                         <div class="form-label-group">
                             현재 가격 <c:out value="${product.startPrice}"/>
-<%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
+                            <%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
                         </div>
                         <br>
                         <div>
@@ -154,9 +154,10 @@
     </div>
 
     <div>
-        <form id="actionForm" action="/shop" method="get">
+        <form id="actionForm" action="/myShop/list" method="get">
             <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
+            <input type="hidden" name="productId" id="productId" value="${product.productId}">
         </form>
     </div>
 </div>

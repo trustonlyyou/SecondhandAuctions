@@ -2,14 +2,13 @@ package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.MyPageDao;
 import com.secondhandauctions.utils.Criteria;
+import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 public class MyPageService {
@@ -41,6 +40,40 @@ public class MyPageService {
         }
 
         result = myPageDao.myShopList(params);
+
+        return result;
+    }
+
+    public Map<String, Object> getMyShopDetail(Map<String, Object> info) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+        ProductVo productVo = new ProductVo();
+
+        String memberId = "";
+        Integer productId = null;
+        String fileName = "";
+
+        memberId = (String) info.get("memberId");
+        productId = (Integer) info.get("productId");
+
+        productVo = myPageDao.myShopDetail(info);
+
+        imageList = myPageDao.myShopDetailImage(info);
+
+        if (imageList.isEmpty()) {
+            imageList = Collections.emptyList();
+        }
+
+        for (ImageVo imageVo : imageList) {
+            fileName = Paths.get("/" + imageVo.getUploadPath() + "/" + imageVo.getUploadFileName()).toString();
+
+            fileNames.add(fileName);
+        }
+
+        result.put("product", productVo);
+        result.put("fileName", fileNames);
+
 
         return result;
     }

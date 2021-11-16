@@ -46,7 +46,7 @@ public class ShopController {
     private FileService fileService;
 
     @GetMapping(value = "/shop")
-    public String shopForm(@ModelAttribute Criteria criteria, Model model) {
+    public String shopList(@ModelAttribute Criteria criteria, Model model) {
         List<ShopVo> list = new ArrayList<>();
         PageDTO pageDTO = new PageDTO();
         String fileName = "";
@@ -112,7 +112,7 @@ public class ShopController {
 
 
     @GetMapping(value = "/shop/get")
-    public String get(@RequestParam int productId, @ModelAttribute("criteria") Criteria criteria, Model model) {
+    public String shopDetail(@RequestParam int productId, @ModelAttribute("criteria") Criteria criteria, Model model) {
         Map<String, Object> info = new HashMap<>();
         List<ImageVo> imageList = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();

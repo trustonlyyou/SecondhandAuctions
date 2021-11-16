@@ -13,8 +13,6 @@ public interface ShopDao {
 
     public List<ShopVo> getList(Criteria criteria) throws Exception;
 
-    public List<ShopVo> getListWithPaging(Criteria criteria) throws Exception;
-
     public ProductVo readProduct(int productId) throws Exception;
 
     public List<ImageVo> readProductImage(int productId) throws Exception;

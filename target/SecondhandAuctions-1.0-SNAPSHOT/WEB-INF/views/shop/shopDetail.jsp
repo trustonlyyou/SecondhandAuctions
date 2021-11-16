@@ -157,6 +157,7 @@
         <form id="actionForm" action="/shop" method="get">
             <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
+            <input type="hidden" name="producdtId" id="productId" value="${product.productId}">
         </form>
     </div>
 </div>
@@ -177,8 +178,11 @@
         }
 
         $(".listBtn").on("click", function (e) {
-            alert("hello");
             e.preventDefault();
+
+            var productId = $("#productId").val()
+            alert(productId);
+
             actionForm.submit();
         });
     });

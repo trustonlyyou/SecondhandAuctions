@@ -5,6 +5,7 @@ import com.secondhandauctions.service.MyPageService;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.utils.InfoFormatter;
 import com.secondhandauctions.utils.PageDTO;
+import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -101,7 +104,6 @@ public class MyPageController {
             logger.error("error :: " + e);
         }
 
-        pageDTO.setDisplayPageNum(7);
         pageDTO.setCriteria(criteria);
         pageDTO.setTotalCount(count);
 
@@ -110,6 +112,54 @@ public class MyPageController {
 
         return "member/myShopList";
 
-        // TODO: 2021/11/15 view 에 뿌리자
     }
+
+    @GetMapping(value = "/myShop/get/{productId}")
+    public String myShopDetail(@PathVariable Integer productId, @ModelAttribute("criteria") Criteria criteria, HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+
+        Map<String, Object> info = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+        Map<String, Object> result = new HashMap<>();
+
+        ProductVo productVo = new ProductVo();
+
+        String memberId = "";
+
+        if (productId != 0) {
+            info.put("productId", productId);
+        }
+
+        memberId = (String) session.getAttribute("member");
+
+        if (("".equals(memberId) || memberId == null)) {
+            return "redirect:/member/login/form";
+        }
+
+        info.put("memberId", memberId);
+
+        try {
+            result = myPageService.getMyShopDetail(info);
+
+            productVo = (ProductVo) result.get("product");
+
+            if (productVo != null) {
+                model.addAttribute("product", productVo);
+            }
+
+            fileNames = (List<String>) result.get("fileName");
+
+            model.addAttribute("fileName", fileNames);
+
+        } catch (Exception e) {
+            logger.error("error :: " + e);
+            e.printStackTrace();
+        }
+
+        return "member/myShopDetail";
+    }
+
+    // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
+
 }

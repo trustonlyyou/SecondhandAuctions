@@ -60,7 +60,7 @@
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <h5>
-                                    제목 : <a href="/shop/get?productId=${productVo.productId}"><c:out value="${productVo.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    제목 : <a href="/myShop/get/${productVo.productId}"><c:out value="${productVo.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     마감일 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${productVo.expireTime}"/>
                                 </h5>
                             </div>

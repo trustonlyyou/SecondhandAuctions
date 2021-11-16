@@ -24,6 +24,34 @@
         order by expireTime desc
         limit
             #{criteria.pageStart}, #{criteria.perPageNum}
+    </select>
+
+    <select id="myShopDetail" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
+        select
+            productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
+        from
+            product
+        where
+              isProductCheck = 1
+            and
+              product.productId = #{productId}
+            and
+              memberId = #{memberId}
+    </select>
+
+    <select id="myShopDetailImage" parameterType="Map" resultType="com.secondhandauctions.vo.ImageVo">
+        select
+            image.productId, uploadPath, uploadFileName, fileExtension
+        from
+            image
+                left join
+            product on image.productId = product.productId
+        where
+            isProductCheck = 1
+        and
+            product.productId = #{productId}
+        and
+            product.memberId = #{memberId}
 
     </select>
 </mapper>

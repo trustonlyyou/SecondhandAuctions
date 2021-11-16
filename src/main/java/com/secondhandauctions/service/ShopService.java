@@ -69,12 +69,4 @@ public class ShopService {
 
         return info;
     }
-
-    public ShopVo getDetail(int productId) throws Exception {
-        ShopVo shopVo = new ShopVo();
-
-        shopVo = getDetail(productId);
-
-        return shopVo;
-    }
 }

@@ -26,56 +26,8 @@
   <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
 <body>
-<header>
+<%@include file="../includes/header.jsp"%>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="/">중고 경매의 세계</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">
-            <button class="btn btn-outline-light" type="submit">검색</button>
-          </form>
-        </div>
-      </nav>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <c:if test="${sessionScope.member == null}">
-            <li class="nav-item">
-              <a class="nav-link" href="member/login/form">로그인</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="member/join/form">회원가입</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">카테고리</a>
-            </li>
-          </c:if>
-          <c:if test="${sessionScope.member != null}">
-            <li class="nav-item">
-              <a class="nav-link" href="member/login/form">${sessionScope.member}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/member/logout/action">로그아웃</a>
-            </li>
-            <%--                            <li class="nav-item">--%>
-            <%--                                <a class="nav-link" href="#">카테고리</a>--%>
-            <%--                            </li>--%>
-          </c:if>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
 <br>
 <br>
 <br>
@@ -86,7 +38,8 @@
 
       <h2 class="my-4">마이 페이지</h2>
       <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item">나의 정보</a>
+        <a href="/myPage" class="list-group-item">나의 정보</a>
+        <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
         <a href="#" class="list-group-item">입찰 물품</a>
         <a href="#" class="list-group-item">배송</a>
       </div>
@@ -107,6 +60,7 @@
           <label for="memberPassword" class="col-sm-2 col-form-label">비밀번호</label>
           <div class="col-sm-10">
             <input type="text" readonly class="form-control-plaintext" id="memberPassword" value="${memberInfo.memberPassword}">
+            <input type="button" id="modifyPwd" class="btn btn-secondary btn-sm float-right" value="비밀번호 변경">
           </div>
         </div>
         <hr>
@@ -140,12 +94,12 @@
 </body>
 
 <script type="text/javascript">
-
-
-
-
-
-
+  $(document).ready(function () {
+    $("#modifyPwd").on('click', function () {
+      alert("hello");
+      window.location.replace("/member/modify/form");
+    });
+  })
 </script>
 
 </html>

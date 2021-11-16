@@ -59,7 +59,6 @@ public class ShopController {
 
             pageDTO.setCriteria(criteria);
             pageDTO.setTotalCount(count);
-
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("error :: " + e);

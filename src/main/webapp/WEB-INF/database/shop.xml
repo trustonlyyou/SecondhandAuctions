@@ -28,7 +28,7 @@
 
         order by startTime desc
 
-            limit #{pageStart}, #{perPageNum}
+        limit #{pageStart}, #{perPageNum}
     </select>
 
     <select id="getListWithPaging" parameterType="com.secondhandauctions.utils.Criteria" resultType="com.secondhandauctions.vo.ShopVo">

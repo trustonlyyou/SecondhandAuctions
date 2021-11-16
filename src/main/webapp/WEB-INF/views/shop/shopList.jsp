@@ -58,8 +58,9 @@
                                 <h4 class="card-title">
                                     <a href="/shop/get?productId=<c:out value="${shopVo.productId}" />">${shopVo.productTitle}</a>
                                 </h4>
-                                <h5>${shopVo.startPrice}&nbsp; <fmt:formatDate pattern="yyyy-MM-dd HH:mm"
-                                                                               value="${shopVo.startTime}" /></h5>
+                                <h5>경매 시작 가격 : ${shopVo.startPrice}</h5>
+                                <h5>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></h5>
+                                <h5>경매 마감 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.expireTime}" /></h5>
                                 <p class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</p>
                             </div>
                         </div>
@@ -136,9 +137,5 @@
         });
 
     });
-
-
-
-
 </script>
 </html>

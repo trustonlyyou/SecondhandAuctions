@@ -1,16 +1,14 @@
-<!-- <%--
+<%--
   Created by IntelliJ IDEA.
-  User: 렁환이
-  Date: 2021-06-07
-  Time: 오후 7:06
+  User: junghwan
+  Date: 2021/10/13
+  Time: 12:53 오후
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
--->
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-    <title>중고 경매의 세계</title>
+    <title>중고 경매의 세계 | 마이페이지</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -27,54 +25,54 @@
     <!-- Custom styles for this template -->
     <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
-
 <body>
 <%@include file="../includes/header.jsp"%>
+<br>
+<br>
+<br>
 
-
-<!-- Page Content -->
 <div class="container">
     <div class="row">
+        <div class="col-lg-3">
 
-        <div class="row">
-            <h3 class="my-4">실시간 상품</h3> &nbsp;&nbsp;
-            <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">신규등록순</button>
-        </span>
-            &nbsp;
-            <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">마감임박순</button>
-        </span>
+            <h2 class="my-4">마이 페이지</h2>
+            <div class="list-group list-group-flush">
+                <a href="/myPage" class="list-group-item">나의 정보</a>
+                <a href="/myPage" class="list-group-item">나의 판매 정보</a>
+                <a href="#" class="list-group-item">입찰 물품</a>
+                <a href="#" class="list-group-item">배송</a>
+            </div>
         </div>
 
-        <div class="col-lg-12">
-
-            <div class="row">
-                <c:forEach items="${list}" var="shopVo">
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <img class="card-img-top" src="/file/show?uploadPath=${shopVo.uploadPath}&fileName=${shopVo.uploadFileName}" alt="test" width="700" height="200">
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="/shop/get?productId=<c:out value="${shopVo.productId}" />">${shopVo.productTitle}</a>
-                                </h4>
-                                <h5>경매 시작 가격 : ${shopVo.startPrice}</h5>
-                                <h5>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></h5>
-                                <h5>경매 마감 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.expireTime}" /></h5>
-                                <p class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</p>
-                            </div>
+        <div class="col-lg-9">
+            <h4 class="my-4">나의 판매 리스트</h4>
+            <hr style="border: solid 1px;">
+            <form>
+                <c:if test="${empty list}">
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <h5>판매 정보가 없습니다.</h5>
                         </div>
                     </div>
-                </c:forEach>
-            </div>
-            <!-- /.row -->
-
+                </c:if>
+                <c:if test="${not empty list}">
+                    <c:forEach items="${list}" var="productVo">
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <h5>
+                                    제목 : <a href="/shop/get?productId=${productVo.productId}"><c:out value="${productVo.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    마감일 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${productVo.expireTime}"/>
+                                </h5>
+                            </div>
+                        </div>
+                        <hr>
+                    </c:forEach>
+                </c:if>
+            </form>
         </div>
-
     </div>
-    <!-- /.row -->
-
-    <h3>${pageMaker}</h3>
+    <!-- .row -->
+    <h4>${pageMaker}</h4>
     <div>
         <ul class="pagination justify-content-end">
             <c:if test="${pageMaker.prev}">
@@ -93,28 +91,13 @@
             </c:if>
         </ul>
     </div>
-
     <div>
-        <form id="actionForm" action="/shop" method="get">
+        <form id="actionForm" action="/myShop/list" method="get">
             <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${pageMaker.criteria.perPageNum}">
         </form>
     </div>
-
 </div>
-
-<!-- /.container -->
-
-<!-- Footer -->
-<footer class="py-5 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p>
-    </div>
-    <!-- /.container -->
-</footer>
-
-
-
 </body>
 <script type="text/javascript">
     // todo :: pagination jquery active, prev, next

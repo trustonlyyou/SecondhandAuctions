@@ -31,30 +31,6 @@ public class ProductService {
     @Autowired
     private FileUtils fileUtil;
 
-//    public void setProduct(ProductVo productVo) throws Exception {
-//        productDao.registerProduct(productVo);
-//    }
-//
-//    public void registerProduct(ProductVo productVo, MultipartFile[] files) throws Exception {
-//        // TODO: 2021/09/30 Util 가져오고, Foreach MyBatis
-//        List<ImageVo> imageList = new ArrayList<>();
-//        int productId = 0;
-//
-//        // 게시물 등록
-//        productDao.registerProduct(productVo);
-//
-//        productId = productVo.getProductId();
-//
-//
-//
-//        // image list save
-////        imageList = fileUtil.uploadFiles(files, productId);
-//
-//        // db register
-//        productDao.registerImg(imageList);
-//
-//    }
-
     public ResponseEntity<List<ImageVo>> uploadAjax(MultipartFile[] uploadFile) {
         List<ImageVo> imageVoList = new ArrayList<>();
         String uploadDir = "";

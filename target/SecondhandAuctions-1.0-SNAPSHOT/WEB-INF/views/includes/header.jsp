@@ -32,10 +32,10 @@
                     </li>
                     <c:if test="${sessionScope.member == null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="member/login/form">로그인</a>
+                            <a class="nav-link" href="/member/login/form">로그인</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="member/join/form">회원가입</a>
+                            <a class="nav-link" href="/member/join/form">회원가입</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/product/register/form">상품 등록</a>
@@ -43,7 +43,7 @@
                     </c:if>
                     <c:if test="${sessionScope.member != null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="member/login/form">${sessionScope.member}</a>
+                            <a class="nav-link" href="/myPage">마이페이지</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/member/logout/action">로그아웃</a>

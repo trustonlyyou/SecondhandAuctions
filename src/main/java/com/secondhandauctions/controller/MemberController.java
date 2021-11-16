@@ -53,6 +53,9 @@ public class MemberController {
         return "member/join"; // join_sample
     }
 
+    // 비동기 통신시 데이터를 본문에 담아서 보낸다.
+    // ResponseBody :: 응답 본문
+    // RequestBody :: 요청 본문
     @PostMapping(value = "/join/idCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int iDCheck(@RequestBody String memberId, HttpServletRequest request) {
@@ -123,7 +126,7 @@ public class MemberController {
 
             num = Integer.toString(checkNum);
         } catch (Exception e) {
-            logger.error(RouteService.printStackTrace(e));
+            logger.error("error :: " + e);
         }
 
         logger.info("인증번호 " + checkNum);
@@ -148,7 +151,7 @@ public class MemberController {
         try {
             result = memberService.isPhone(prams);
         } catch (Exception e) {
-            logger.error(RouteService.printStackTrace(e));
+            logger.error("error :: " + e);
         }
 
         return result;
@@ -428,21 +431,32 @@ public class MemberController {
             return "member/searchPasswordResult";
         }
 
-        redirectAttributes.addFlashAttribute("memberId", memberIdEmail);
+        redirectAttributes.addFlashAttribute("member", memberIdEmail);
 
         logger.info("Member :: " + memberIdEmail);
 
         return "redirect:/member/modify/form";
     }
 
+    // TODO: 2021/11/15 Mypage -> modify Password 에서 memberId 문제
     @GetMapping(value = "/modify/form")
     public String modifyPassword(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
         String memberId = "";
 
-        memberId = (String) model.getAttribute("memberId");
+        logger.info("URL :: " + request.getRequestURI());
 
-        HttpSession session = request.getSession();
-        session.setAttribute("memberId", memberId);
+        memberId = (String) model.getAttribute("member");
+
+        if ((memberId != null) || ("".equals(memberId))) {
+            session.setAttribute("member", memberId);
+        }
+
+        logger.info("Model MemberId :: " + memberId);
+
+        if (("".equals(memberId)) || (memberId == null)) {
+            memberId = (String) session.getAttribute("member");
+        }
 
         logger.info("memberId :: " + memberId);
 
@@ -456,7 +470,7 @@ public class MemberController {
         String encryptionPwd = "";
 
         HttpSession session = request.getSession();
-        memberId = (String) session.getAttribute("memberId");
+        memberId = (String) session.getAttribute("member");
 
         logger.info("memberId :: " + memberId);
 
@@ -476,52 +490,8 @@ public class MemberController {
             logger.error("error :: " + e);
         }
 
-        session.removeAttribute("memberId");
+        session.invalidate();
 
-        return "member/modifyPasswordResult";
-    }
-
-    // TODO: 2021/10/28 MyPage 에다가 게시글 보여주기
-    @GetMapping(value = "/myPage")
-    public String myPageForm(HttpServletRequest request, Model model) {
-        MemberVo memberVo = new MemberVo();
-        String memberId = "";
-        String memberName = "";
-        String memberPassword = "";
-        String memberEmail = "";
-        String memberPhone = "";
-
-        try {
-            HttpSession session = request.getSession();
-            memberId = (String) session.getAttribute("member");
-
-
-            if (("".equals(memberId) || memberId == null)) {
-                return "redirect:/member/login/form";
-            }
-
-            memberVo = memberService.getMemberInfo(memberId);
-
-            memberPassword = formatter.passwordFormat(memberVo.getMemberPassword());
-            memberName = formatter.nameFormat(memberVo.getMemberName());
-            memberEmail = formatter.emailFormat(memberVo.getMemberEmail());
-            memberPhone = formatter.phoneFormat(memberVo.getMemberPhone());
-
-            memberVo.setMemberPassword(memberPassword);
-            memberVo.setMemberName(memberName);
-            memberVo.setMemberEmail(memberEmail);
-
-            logger.info(memberVo.toString());
-
-            model.addAttribute("memberInfo", memberVo);
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-            e.printStackTrace();
-        }
-
-
-
-
-        return "member/myPage";
+        return "redirect:/member/modifyPasswordResult";
     }
 }

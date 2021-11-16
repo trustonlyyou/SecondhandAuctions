@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.MyPageDao">
+
+    <select id="count" parameterType="String" resultType="int">
+        select
+            count(*)
+        from
+            product
+        where
+            memberId = #{memberId} and isProductCheck = 1
+    </select>
+
+    <select id="myShopList" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
+        select
+            productId, memberId, productTitle, startPrice, bidPrice, startTime, expireTime
+        from
+            product
+        where
+            memberId = #{memberId} and isProductCheck = 1
+        order by expireTime desc
+        limit
+            #{criteria.pageStart}, #{criteria.perPageNum}
+
+    </select>
+</mapper>

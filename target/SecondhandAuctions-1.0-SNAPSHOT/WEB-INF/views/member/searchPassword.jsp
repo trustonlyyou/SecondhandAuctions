@@ -185,28 +185,12 @@
     });
 
     $("#checkEmail").click(function () {
-        // $.ajax({
-        //     url: '/member/sendEmail',
-        //     type: 'POST',
-        //     dataType: 'json',
-        //     contentType: 'application/json; charset=UTF-8',
-        //     data: email,
-        //
-        //     success: function (data) {
-        //         var inputNum = $("#phoneInputNum").val();
-        //         code = data;
-        //
-        //         if (inputNum === checkKey) {
-        //             alert('인증번호가 일치합니다.');
-        //             $("#searchPwdSubmitEmail").attr('disabled', false);
-        //         } else {
-        //             alert('인증번호가 틀립니다.');
-        //             $("#searchPwdSubmitEmail").attr('disabled', true);
-        //         }
-        //     }
-        // });
 
         var email = $("#memberEmail").val();
+
+        $("#emailCheckMsg").text("메일로 인증번호 전송 중 입니다. 잠시만 기다려주세요.");
+        $("#checkEmail").attr('disabled', true);
+
 
         $.ajax({
             // url: "/join/emailCheck?email" + email,
@@ -217,7 +201,7 @@
             data: email,
 
             success: function (data) {
-                $("#input_mail").attr("disabled", false);
+                $("#input_mail").attr("disabled", true);
                 code = data;
 
                 $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
@@ -225,7 +209,8 @@
             },
 
             error: function (error) {
-                alert(error);
+                $("#emailCheckMsg").text("다시요청해주세요.");
+                $("#checkEmail").attr('disabled', false);
             }
         });
     });

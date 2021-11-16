@@ -80,8 +80,7 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-                    <br>
-                    <h2 class="card-title text-center">상품 조회</h2>
+<%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
                     <!-- Form 시작 -->
                     <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
@@ -110,10 +109,10 @@
                             현재 가격 <c:out value="${product.startPrice}"/>
 <%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
                         </div>
-
-
-
                         <br>
+                        <div>
+                            <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
+                        </div>
                     </form>
                 </div>
             </div>
@@ -153,7 +152,16 @@
             </div>
         </div>
     </div>
+
+    <div>
+        <form id="actionForm" action="/shop" method="get">
+            <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
+            <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
+        </form>
+    </div>
 </div>
+<%--<./container>--%>
+
 
 
 <hr>
@@ -161,12 +169,18 @@
 <script>
     $(document).ready(function () {
         var msg = "${msg}";
+        var actionForm = $("#actionForm");
 
         if (msg === "productNull") {
             alert(msg);
             window.location.replace("/shop");
         }
 
+        $(".listBtn").on("click", function (e) {
+            alert("hello");
+            e.preventDefault();
+            actionForm.submit();
+        });
     });
 
 

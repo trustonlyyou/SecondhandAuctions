@@ -20,12 +20,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
     <title>중고 경매의 세계</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
 
 <body>
@@ -57,6 +51,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">
                                     <a href="/shop/get?productId=<c:out value="${shopVo.productId}" />">${shopVo.productTitle}</a>
+                                    <a class="move" href="<c:out value="${shopVo.productId}"/>">${shopVo.productTitle}</a>
                                 </h4>
                                 <h5>경매 시작 가격 : ${shopVo.startPrice}</h5>
                                 <h5>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></h5>
@@ -134,6 +129,18 @@
 
             actionForm.find("[name='page']").val(targetPage);
             actionForm.submit();
+        });
+
+        $(".move").on("click", function (e) {
+           e.preventDefault();
+
+           var targetProductId = $(this).attr('href');
+
+           console.log(targetProductId);
+
+           actionForm.append("<input type='hidden' name='productId' value='"+targetProductId+"'>");
+           actionForm.attr("action", "/shop/get").submit();
+           // actionForm.submit();
         });
 
     });

@@ -112,7 +112,7 @@ public class ShopController {
 
 
     @GetMapping(value = "/shop/get")
-    public String get(@RequestParam int productId, Model model) {
+    public String get(@RequestParam int productId, @ModelAttribute("criteria") Criteria criteria, Model model) {
         Map<String, Object> info = new HashMap<>();
         List<ImageVo> imageList = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();

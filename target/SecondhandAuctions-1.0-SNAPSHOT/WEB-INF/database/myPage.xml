@@ -28,7 +28,7 @@
 
     <select id="myShopDetail" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
         select
-            categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
+            productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
         from
             product
         where
@@ -52,6 +52,16 @@
             product.productId = #{productId}
         and
             product.memberId = #{memberId}
-
     </select>
+
+    <update id="deleteProduct" parameterType="Map">
+        update
+            product
+        set
+            isProductCheck = 0
+        where
+            productId = #{productId}
+        and
+            memberId = #{memberId};
+    </update>
 </mapper>

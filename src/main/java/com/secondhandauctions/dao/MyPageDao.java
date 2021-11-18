@@ -16,4 +16,6 @@ public interface MyPageDao {
 
     public List<ImageVo> myShopDetailImage(Map<String, Object> info) throws Exception;
 
+    public int deleteProduct(Map<String, Object> params) throws Exception;
+
 }

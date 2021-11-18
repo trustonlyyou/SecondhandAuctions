@@ -77,4 +77,12 @@ public class MyPageService {
 
         return result;
     }
+
+    public int deleteProduct(Map<String, Object> params) throws Exception {
+        int result = 0;
+
+        result = myPageDao.deleteProduct(params);
+
+        return result;
+    }
 }

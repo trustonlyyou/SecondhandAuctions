@@ -60,8 +60,8 @@
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <h5>
+                                    마감일 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${productVo.expireTime}"/><br>
                                     제목 : <a href="/myShop/get/${productVo.productId}"><c:out value="${productVo.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    마감일 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${productVo.expireTime}"/>
                                 </h5>
                             </div>
                         </div>
@@ -102,6 +102,12 @@
 <script type="text/javascript">
     // todo :: pagination jquery active, prev, next
 
+    var status = "${msg}";
+
+    if (status) {
+        alert(status);
+    }
+
     $(document).ready(function () {
 
         history.replaceState({}, null, null); // 히스토리를 지운다.
@@ -119,6 +125,17 @@
             actionForm.submit();
         });
 
+        // var deleteForm = $("#deleteForm");
+        //
+        // $("#deleteProduct").on("click", function (e) {
+        //     if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") == true) {
+        //         alert("게시물 삭제");
+        //         deleteForm.submit();
+        //     } else {
+        //         alert("게시물 삭제 취소")
+        //     }
+        //     //todo :: form 을 foreach 하면 어떻게 하냐!!! 거기서 부터 다시하자
+        // });
     });
 </script>
 </html>

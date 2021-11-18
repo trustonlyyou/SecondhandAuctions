@@ -16,9 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,5 +163,46 @@ public class MyPageController {
     }
 
     // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
+
+    @GetMapping(value = "/myShop/product/modify")
+    public String myProductModify(HttpServletRequest request, HttpServletResponse response) {
+        return "";
+    }
+
+    // 삭제
+    @PostMapping(value = "/myShop/product/delete")
+    public String myProductDelete(HttpServletRequest request, Model model, RedirectAttributes attributes) {
+        Map<String, Object> params = new HashMap<>();
+
+        String memberId = "";
+        int productId = 0;
+        int result = 0;
+
+        HttpSession session = request.getSession();
+
+        productId = Integer.parseInt(request.getParameter("deleteProductId"));
+        memberId = (String) session.getAttribute("member");
+
+        logger.info("delete productId :: " + productId);
+        logger.info("Member ID :: " + memberId);
+
+        params.put("memberId", memberId);
+        params.put("productId", productId);
+
+        try {
+            result = myPageService.deleteProduct(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("error :: " + e);
+        }
+
+        if (result == 0) {
+            attributes.addFlashAttribute("msg", "삭제 요청이 잘못 되었습니다.");
+        } else if (result == 1) {
+            attributes.addFlashAttribute("msg", "해당 게시물이 삭제 되었습니다.");
+        }
+
+        return "redirect:/myShop/list";
+    }
 
 }

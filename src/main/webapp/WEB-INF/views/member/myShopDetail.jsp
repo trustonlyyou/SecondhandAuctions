@@ -82,7 +82,6 @@
                 <div class="card-body">
                     <%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
                     <!-- Form 시작 -->
-                    <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
 
 
@@ -110,10 +109,21 @@
                             <%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
                         </div>
                         <br>
-                        <div>
-                            <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
+                        <div class="row">
+                            <form id="deleteForm" action="/myShop/product/delete" method="post">
+                                <input class="deleteBtn btn btn-primary btn-sm float-right" type="button" name="deleteProduct" id="deleteProduct" value="게시물 삭제" >
+                                <input type="hidden" name="deleteProductId" id="deleteProductId" value="${product.productId}">
+                            </form>&nbsp;
+                            <form id="modifyForm">
+                                <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="게시물 수정">
+                            </form>&nbsp;
+                            <form id="actionForm" action="/myShop/list" method="get">
+                                <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
+                                <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
+                                <input type="hidden" name="productId" id="productId" value="${product.productId}">
+                                <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
+                            </form>
                         </div>
-                    </form>
                 </div>
             </div>
             <div class="card text-left">
@@ -153,13 +163,13 @@
         </div>
     </div>
 
-    <div>
-        <form id="actionForm" action="/myShop/list" method="get">
-            <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
-            <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
-            <input type="hidden" name="productId" id="productId" value="${product.productId}">
-        </form>
-    </div>
+<%--    <div>--%>
+<%--        <form id="actionForm" action="/myShop/list" method="get">--%>
+<%--            <input type="hidden" name="page" id="pageNum" value="${criteria.page}">--%>
+<%--            <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">--%>
+<%--            <input type="hidden" name="productId" id="productId" value="${product.productId}">--%>
+<%--        </form>--%>
+<%--    </div>--%>
 </div>
 <%--<./container>--%>
 
@@ -181,9 +191,18 @@
             e.preventDefault();
             actionForm.submit();
         });
+
+        var deleteForm = $("#deleteForm");
+
+        $(".deleteBtn").on("click", function (e) {
+            e.preventDefault();
+            if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") === true) {
+                deleteForm.submit();
+            } else {
+                alert("게시물 삭제 취소");
+            }
+        });
     });
-
-
 </script>
 </html>
 

@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 
 <head>
@@ -18,12 +19,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
     <title>중고 경매의 세계</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
 
 <body>
@@ -86,239 +81,196 @@
 
 
 
-    <div class="container">
-        <div class="row">
-            <div class="col-1">
+<%--    <div class="container">--%>
+<%--        <div class="row">--%>
+<%--            <div class="col-1">--%>
 
-            </div>
-            <div class="col-11" >
+<%--            </div>--%>
+<%--            <div class="col-11" >--%>
 
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        패션
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        패션--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
 
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        뷰티&nbsp;
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        뷰티&nbsp;--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
 
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        유아
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        유아--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
 
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        가구
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        가구--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
 
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        컬렉션
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        디지털
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        가전
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        스포츠
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        도서
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <img src="/resources/image/bag.png" width="65" height="50"><br>
-                        기타
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        컬렉션--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        디지털--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        가전--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        스포츠--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        도서--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
+<%--                <div class="btn-group" role="group">--%>
+<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
+<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
+<%--                        기타--%>
+<%--                    </button>--%>
+<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
+<%--                    </ul>--%>
+<%--                </div>--%>
 
-            </div>
-        </div>
-    </div>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
 
     <!-- Page Content -->
     <div class="container">
         <div class="row">
 
-            <div class="row">
-                <h3 class="my-4">실시간 상품</h3> &nbsp;&nbsp;
-                <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">신규등록순</button>
-        </span>
-                &nbsp;
-                <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">마감임박순</button>
-        </span>
+            <div class="col-lg-2">
+                <h5 class="my-4">카테고리</h5>
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item">컴퓨터</a>
+                    <a href="#" class="list-group-item">전자</a>
+                    <a href="#" class="list-group-item">의류</a>
+                    <a href="#" class="list-group-item">신발</a>
+                    <a href="#" class="list-group-item">도서</a>
+                </div>
+
             </div>
+            <!-- /.col-lg-3 -->
 
-            <div class="col-lg-12">
-
+            <div class="col-lg-10">
+                <div>
+                    <span class="my-4">
+                        <a href="/?status=newList" class="btn_newList btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">신규 등록</a>
+                    </span>
+                    &nbsp;
+                    <span class="my-4">
+                        <a href="/?status=expireList" class="btn_expireList btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">마감 임박</a>
+                    </span>
+                </div>
+                <br>
                 <div class="row">
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item One</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item Two</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                    <c:forEach items="${list}" var="shopVo">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <img class="card-img-top" src="/file/show?uploadPath=${shopVo.uploadPath}&fileName=${shopVo.uploadFileName}" alt="test" width="700" height="200">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <a class="move" href="<c:out value="${shopVo.productId}"/>">${shopVo.productTitle}</a>
+                                    </h4>
+                                    <h5>경매 시작 가격 : ${shopVo.startPrice}</h5>
+                                    <h5>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></h5>
+                                    <h5>경매 마감 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.expireTime}" /></h5>
+                                    <p class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item Three</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item Four</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item Five</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                            <div class="card-body">
-                                <h4 class="card-title">
-                                    <a href="#">Item Six</a>
-                                </h4>
-                                <h5>$24.99</h5>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
 
                 </div>
                 <!-- /.row -->
+
+                <div>
+                    <ul class="pagination justify-content-end">
+                        <c:if test="${pageMaker.prev}">
+                            <li class="page-item">
+                                <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">이전</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
+                            <li class="page-item ${pageMaker.criteria.page == num ? "active": ""}">
+                                <a class="page-link" href="${num}">${num}</a></li>
+                        </c:forEach>
+                        <c:if test="${pageMaker.next}">
+                            <li class="page-item">
+                                <a class="page-link" href="${pageMaker.endPage + 1}" tabindex="-1">다음</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </div>
+
+                <div>
+                    <form id="actionForm" action="/shop" method="get">
+                        <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
+                        <input type="hidden" name="perPageNum" id="amount" value="${pageMaker.criteria.perPageNum}">
+                    </form>
+                </div>
 
             </div>
 
@@ -340,6 +292,37 @@
 
 </body>
 <script type="text/javascript">
-    var isPassMemberId
+
+
+    $(document).ready(function () {
+
+        history.replaceState({}, null, null); // 히스토리를 지운다.
+
+        var actionForm = $("#actionForm");
+
+        $(".page-link").on("click", function (e) {
+            e.preventDefault(); // a 태그의 기본 동작을 막는다. 즉, 기본 동작을 막아준다.
+
+            var targetPage = $(this).attr("href");
+
+            console.log(targetPage);
+
+            actionForm.find("[name='page']").val(targetPage);
+            actionForm.submit();
+        });
+
+        $(".move").on("click", function (e) {
+            e.preventDefault();
+
+            var targetProductId = $(this).attr('href');
+
+            console.log(targetProductId);
+
+            actionForm.append("<input type='hidden' name='productId' value='"+targetProductId+"'>");
+            actionForm.attr("action", "/shop/get").submit();
+            // actionForm.submit();
+        });
+    });
 </script>
+
 </html>

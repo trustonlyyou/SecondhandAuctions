@@ -64,51 +64,45 @@ public class ShopController {
             logger.error("error :: " + e);
         }
 
-        for (ShopVo shopVo : list) {
-            logger.info("===========================================");
-            logger.info(shopVo.toString());
-            logger.info("===========================================");
-        }
-
         model.addAttribute("list", list);
         model.addAttribute("pageMaker", pageDTO);
 
         return "shop/shopList";
     }
 
-    @GetMapping(value = "/file/show")
-    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) throws IOException {
-        Resource resource = null;
-        String path = "";
-        String type = "";
-
-        logger.info("uploadPath :: " + uploadPath);
-        logger.info("fileName :: " + fileName);
-
-//        path = ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName;
-        path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
-//        path = Paths.get("/Users/junghwan/Desktop/").toString() + "/" + fileName;
-
-        logger.info("Path :: " + path);
-
-        resource = new FileSystemResource(path);
-
-        if (!resource.exists()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        Path filePath = null;
-
-        try {
-            filePath = Paths.get(path);
-            headers.add("Content-Type", Files.probeContentType(filePath));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-    }
+//    @GetMapping(value = "/file/show")
+//    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) throws IOException {
+//        Resource resource = null;
+//        String path = "";
+//        String type = "";
+//
+//        logger.info("uploadPath :: " + uploadPath);
+//        logger.info("fileName :: " + fileName);
+//
+////        path = ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName;
+//        path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
+////        path = Paths.get("/Users/junghwan/Desktop/").toString() + "/" + fileName;
+//
+//        logger.info("Path :: " + path);
+//
+//        resource = new FileSystemResource(path);
+//
+//        if (!resource.exists()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        Path filePath = null;
+//
+//        try {
+//            filePath = Paths.get(path);
+//            headers.add("Content-Type", Files.probeContentType(filePath));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+//    }
 
 
     @GetMapping(value = "/shop/get")

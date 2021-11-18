@@ -63,9 +63,12 @@
                         </div>
                         <!-- 인디케이션 부분 -->
                         <ul class="carousel-indicators">
-                            <li data-target="#banner" data-slide-to="0" class="active"></li>
-                            <li data-target="#banner" data-slide-to="1"></li>
-                            <li data-target="#banner" data-slide-to="2"></li>
+<%--                            <li data-target="#banner" data-slide-to="0" class="active"></li>--%>
+<%--                            <li data-target="#banner" data-slide-to="1"></li>--%>
+<%--                            <li data-target="#banner" data-slide-to="2"></li>--%>
+                            <c:forEach var="count" items="${fileName}" varStatus="status">
+                                <li data-target="#banner" data-slide-to="${status.index}" class="${status.index == 0 ? "active" : ""}"></li>
+                            </c:forEach>
                         </ul>
                         <!-- 이동 버튼 부분 -->
                         <a class="carousel-control-prev" href="#banner" data-slide="prev">
@@ -87,20 +90,18 @@
 
 
                         <div class="form-label-group">
-                            제목<br>
+                            <label for="productTitle">제목</label>
                             <input type="text" id="productTitle" name="productTitle" class="form-control"
-                                   readonly value="${product.productTitle}">
+                                                                     readonly value="${product.productTitle}">
                         </div>
                         <br>
 
                         <div class="form-label-group">
-                            내용<br>
-
+                            <label for="productContent">내용</label>
                             <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control" readonly>
                                 <c:out value="${product.productContent}"/>
                             </textarea>
                         </div>
-                        <div name="contentCheckMsg" id="contentCheckMsg"></div>
                         <br>
 
                         <br>

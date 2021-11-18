@@ -164,6 +164,8 @@ public class MyPageController {
 
     // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
 
+
+    // 수정
     @GetMapping(value = "/myShop/product/modify")
     public String myProductModify(HttpServletRequest request, HttpServletResponse response) {
         return "";

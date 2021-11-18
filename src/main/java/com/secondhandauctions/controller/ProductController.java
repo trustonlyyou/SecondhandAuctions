@@ -7,6 +7,7 @@ import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.utils.FileUtils;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class ProductController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -183,8 +185,8 @@ public class ProductController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("error :: " + e);
-            logger.error(RouteService.printStackTrace(e));
         }
 
         return "redirect:/product/register/success";

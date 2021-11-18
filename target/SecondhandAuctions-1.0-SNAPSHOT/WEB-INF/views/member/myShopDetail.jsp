@@ -63,9 +63,12 @@
                         </div>
                         <!-- 인디케이션 부분 -->
                         <ul class="carousel-indicators">
-                            <li data-target="#banner" data-slide-to="0" class="active"></li>
-                            <li data-target="#banner" data-slide-to="1"></li>
-                            <li data-target="#banner" data-slide-to="2"></li>
+<%--                            <li data-target="#banner" data-slide-to="0" class="active"></li>--%>
+<%--                            <li data-target="#banner" data-slide-to="1"></li>--%>
+<%--                            <li data-target="#banner" data-slide-to="2"></li>--%>
+                            <c:forEach var="count" items="${fileName}" varStatus="status">
+                                <li data-target="#banner" data-slide-to="${status.index}" class="${status.index == 0 ? "active" : ""}"></li>
+                            </c:forEach>
                         </ul>
                         <!-- 이동 버튼 부분 -->
                         <a class="carousel-control-prev" href="#banner" data-slide="prev">
@@ -86,20 +89,21 @@
 
 
                         <div class="form-label-group">
-                            제목<br>
+<%--                            제목<br>--%>
+                            <label for="productTitle">제목</label>
                             <input type="text" id="productTitle" name="productTitle" class="form-control"
-                                   readonly value="${product.productTitle}">
+                                                                     readonly value="${product.productTitle}">
                         </div>
                         <br>
 
                         <div class="form-label-group">
-                            내용<br>
+<%--                            내용<br>--%>
 
+                            <label for="productContent">내용</label>
                             <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control" readonly>
                                 <c:out value="${product.productContent}"/>
                             </textarea>
                         </div>
-                        <div name="contentCheckMsg" id="contentCheckMsg"></div>
                         <br>
 
                         <br>
@@ -111,11 +115,11 @@
                         <br>
                         <div class="row">
                             <form id="deleteForm" action="/myShop/product/delete" method="post">
-                                <input class="deleteBtn btn btn-primary btn-sm float-right" type="button" name="deleteProduct" id="deleteProduct" value="게시물 삭제" >
+                                <input class="deleteBtn btn btn-danger btn-sm float-right" type="button" name="deleteProduct" id="deleteProduct" value="게시물 삭제" >
                                 <input type="hidden" name="deleteProductId" id="deleteProductId" value="${product.productId}">
                             </form>&nbsp;
                             <form id="modifyForm">
-                                <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="게시물 수정">
+                                <input type="button" class="listBtn btn btn-warning btn-sm float-right" value="게시물 수정">
                             </form>&nbsp;
                             <form id="actionForm" action="/myShop/list" method="get">
                                 <input type="hidden" name="page" id="pageNum" value="${criteria.page}">

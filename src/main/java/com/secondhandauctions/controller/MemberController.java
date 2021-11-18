@@ -93,7 +93,8 @@ public class MemberController {
             logger.info("emailCheck Result :: " + emailCheck);
 
         } catch (Exception e) {
-            logger.error(RouteService.printStackTrace(e));
+            e.printStackTrace();
+            logger.error("error :: " + e);
 
         }
 

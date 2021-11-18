@@ -15,9 +15,9 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <nav class="navbar navbar-dark bg-dark">ㅌ
+            <nav class="navbar navbar-dark bg-dark">
                 <div class="container-fluid">
-                    <form class="d-flex">
+                    <form class="form-inline my-2 my-lg-0">
                         <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;
                         <button class="btn btn-outline-light" type="submit">검색</button>
                     </form>

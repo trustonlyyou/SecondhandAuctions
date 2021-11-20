@@ -21,14 +21,13 @@ public class ShopService {
     @Autowired
     private ShopDao shopDao;
 
-    public int getCount() throws Exception {
+    public int getTotalCount() throws Exception {
         return shopDao.countProduct();
     }
 
     public List<ShopVo> getList(Criteria criteria) throws Exception {
         List<ShopVo> list = new ArrayList<>();
 
-//        list = shopDao.getListWithPaging(criteria);
 
         list = shopDao.getList(criteria);
 
@@ -68,5 +67,29 @@ public class ShopService {
         info.put("fileName", fileNames);
 
         return info;
+    }
+
+    public List<ShopVo> getNewProductList(Criteria criteria) throws Exception {
+        List<ShopVo> itemList = new ArrayList<>();
+
+        itemList = shopDao.newProductList(criteria);
+
+        if (itemList.isEmpty()) {
+            itemList = Collections.emptyList();
+        }
+
+        return itemList;
+    }
+
+    public List<ShopVo> getExpireTimeProductList(Criteria criteria) throws Exception {
+        List<ShopVo> itemList = new ArrayList<>();
+
+        itemList = shopDao.expireTimeProductList(criteria);
+
+        if (itemList.isEmpty()) {
+            itemList = Collections.emptyList();
+        }
+
+        return itemList;
     }
 }

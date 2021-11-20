@@ -20,7 +20,7 @@
             min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
         from
             image
-                left join product on product.productId = image.productId
+        left join product on product.productId = image.productId
 
         where isProductCheck = 1
 
@@ -48,6 +48,42 @@
             product on image.productId = product.productId
         where
             isProductCheck = 1 and product.productId = #{productId};
+    </select>
+
+    <!--  신규 등록 순   -->
+    <select id="newProductList" parameterType="com.secondhandauctions.utils.Criteria" resultType="com.secondhandauctions.vo.ShopVo">
+        select
+            image.productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
+            min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
+        from
+            image
+                left join product on product.productId = image.productId
+
+        where isProductCheck = 1
+
+        group by image.productId
+
+        order by startTime desc
+
+            limit #{pageStart}, #{perPageNum}
+    </select>
+
+    <!--  마강 순  -->
+    <select id="expireTimeProductList" parameterType="com.secondhandauctions.utils.Criteria" resultType="com.secondhandauctions.vo.ShopVo">
+        select
+            image.productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
+            min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
+        from
+            image
+                left join product on product.productId = image.productId
+
+        where isProductCheck = 1
+
+        group by image.productId
+
+        order by expireTime asc
+
+            limit #{pageStart}, #{perPageNum}
     </select>
 
 </mapper>

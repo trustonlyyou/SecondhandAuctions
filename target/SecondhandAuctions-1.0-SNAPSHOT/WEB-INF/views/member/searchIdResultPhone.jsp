@@ -11,8 +11,10 @@
 <head>
   <meta charset="UTF-8">
   <title>아이디 찾기 결과 | 중고 경매의 세계</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -53,13 +55,13 @@
           <br>
 
           <div>
-            <a href="#">비밀번호가 기억나지 않으세요?</a>
+            <a href="/member/modify/form">비밀번호가 기억나지 않으세요?</a>
           </div>
 
           <br>
 
           <div>
-            <button class="btn btn-primary btn-lg" value="로그인">로그인</button>
+            <a href="/member/login/form" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
           </div>
         </div>
       </div>

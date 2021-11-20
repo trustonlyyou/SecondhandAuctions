@@ -23,179 +23,6 @@
 
 <body>
     <%@include file="includes/header.jsp"%>
-<%--    <header>--%>
-
-<%--        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">--%>
-<%--            <div class="container">--%>
-<%--                <a class="navbar-brand" href="/">중고 경매의 세계</a>--%>
-<%--                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">--%>
-<%--                    <span class="navbar-toggler-icon"></span>--%>
-<%--                </button>--%>
-<%--                <nav class="navbar navbar-dark bg-dark">--%>
-<%--                    <div class="container-fluid">--%>
-<%--                        <form class="d-flex">--%>
-<%--                            <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;--%>
-<%--                            <button class="btn btn-outline-light" type="submit">검색</button>--%>
-<%--                        </form>--%>
-<%--                    </div>--%>
-<%--                </nav>--%>
-<%--                <div class="collapse navbar-collapse" id="navbarResponsive">--%>
-<%--                    <ul class="navbar-nav ml-auto">--%>
-<%--                        <li class="nav-item active">--%>
-<%--                            <a class="nav-link" href="/">Home--%>
-<%--                                <span class="sr-only">(current)</span>--%>
-<%--                            </a>--%>
-<%--                        </li>--%>
-<%--                        <c:if test="${sessionScope.member == null}">--%>
-<%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="member/login/form">로그인</a>--%>
-<%--                            </li>--%>
-<%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="member/join/form">회원가입</a>--%>
-<%--                            </li>--%>
-<%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="/product/register/form">상품 등록</a>--%>
-<%--                            </li>--%>
-<%--                        </c:if>--%>
-<%--                        <c:if test="${sessionScope.member != null}">--%>
-<%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="member/login/form">${sessionScope.member}</a>--%>
-<%--                            </li>--%>
-<%--                            <li class="nav-item">--%>
-<%--                                <a class="nav-link" href="/member/logout/action">로그아웃</a>--%>
-<%--                            </li>--%>
-<%--&lt;%&ndash;                            <li class="nav-item">&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                <a class="nav-link" href="#">카테고리</a>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            </li>&ndash;%&gt;--%>
-<%--                        </c:if>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </nav>--%>
-<%--    </header>--%>
-
-<%--    <br>--%>
-<%--    <br>--%>
-<%--    <br>--%>
-<%--    <hr>--%>
-
-
-
-<%--    <div class="container">--%>
-<%--        <div class="row">--%>
-<%--            <div class="col-1">--%>
-
-<%--            </div>--%>
-<%--            <div class="col-11" >--%>
-
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        패션--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        뷰티&nbsp;--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        유아--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        가구--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        컬렉션--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        디지털--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        가전--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        스포츠--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        도서--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-<%--                <div class="btn-group" role="group">--%>
-<%--                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--%>
-<%--                        <img src="/resources/image/bag.png" width="65" height="50"><br>--%>
-<%--                        기타--%>
-<%--                    </button>--%>
-<%--                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>--%>
-<%--                    </ul>--%>
-<%--                </div>--%>
-
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
 
     <!-- Page Content -->
     <div class="container">
@@ -280,15 +107,7 @@
     </div>
     <!-- /.container -->
 
-    <!-- Footer -->
-    <footer class="py-5 bg-dark">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p>
-        </div>
-        <!-- /.container -->
-    </footer>
-
-
+    <%@include file="includes/footer.jsp"%>
 
 </body>
 <script type="text/javascript">
@@ -322,6 +141,22 @@
             actionForm.attr("action", "/shop/get").submit();
             // actionForm.submit();
         });
+
+        // $(".btn_newList").on("click", function (e) {
+        //     $(".btn_newList").addClass("active");
+        //
+        //     if ($(".btn_expireList").hasClass("active")) {
+        //         $(".btn_expireList").removeClass("active");
+        //     }
+        // });
+        //
+        // $(".btn_expireList").on("click", function (e) {
+        //     $(".btn_expireList").addClass("active");
+        //
+        //     if ($(".btn_newList").hasClass("active")) {
+        //         $(".btn_newList").removeClass("active");
+        //     }
+        // });
     });
 </script>
 

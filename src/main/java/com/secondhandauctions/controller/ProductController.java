@@ -3,7 +3,6 @@ package com.secondhandauctions.controller;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.service.FileService;
 import com.secondhandauctions.service.ProductService;
-import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.utils.FileUtils;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
@@ -58,6 +57,7 @@ public class ProductController {
         return "product/productRegister";
     }
 
+    // client 가 이미지 등록시 로컬서버에 우선 저장
     @PostMapping(value = "/upload/ajax", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ImageVo>> uploadAjax(MultipartFile[] uploadFile) {
 
@@ -72,6 +72,7 @@ public class ProductController {
         return result;
     }
 
+    // 미리보기
     @GetMapping("/view")
     public ResponseEntity<byte[]> loadImage(String fileName, HttpServletRequest request) {
         ResponseEntity<byte[]> result = null;
@@ -89,6 +90,7 @@ public class ProductController {
         return result;
     }
 
+    // 업로드 했던 이미자가 마음에 안들경우 삭제(로컬 서버에서)한다
     @PostMapping("/delete/image")
     public ResponseEntity<String> deleteFile(String fileName, HttpServletRequest request) {
         ResponseEntity<String> result = null;
@@ -196,9 +198,5 @@ public class ProductController {
     public String registerSuccess() {
         return "product/productSuccess";
     }
-
-    // 게시물 수정
-
-    // 게시물 삭제
 
 }

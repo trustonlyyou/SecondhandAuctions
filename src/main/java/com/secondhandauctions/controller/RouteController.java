@@ -1,13 +1,12 @@
 package com.secondhandauctions.controller;
 
-import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.service.ShopService;
+import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.utils.PageDTO;
 import com.secondhandauctions.vo.ShopVo;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +23,7 @@ import java.util.List;
 public class RouteController {
 
     @Autowired
-    private RouteService routeService;
+    private ShopService shopService;
 
     @RequestMapping(value = "/")
     public String home(HttpServletRequest request, @ModelAttribute Criteria criteria,
@@ -37,7 +36,7 @@ public class RouteController {
         int count = 0;
         String ip = "";
 
-        ip = routeService.getClientIp(request);
+        ip = Commons.getClientIp(request);
 
         log.info("client ip :: {}", ip);
         log.info("status :: {}", status);
@@ -46,19 +45,18 @@ public class RouteController {
             switch (status) {
                 case "" :
                 case "newList" :
-                    count = routeService.getTotalCount();
-                    items = routeService.getNewProductList(criteria);
+                    count = shopService.getTotalCount();
+                    items = shopService.getNewProductList(criteria);
 
                     break;
 
                 case "expireList" :
-                    count = routeService.getTotalCount();
-                    items = routeService.getExpireTimeProductList(criteria);
+                    count = shopService.getTotalCount();
+                    items = shopService.getExpireTimeProductList(criteria);
 
                     break;
                 }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("error :: " + e);
         }
 
@@ -68,21 +66,21 @@ public class RouteController {
         model.addAttribute("list", items);
         model.addAttribute("pageMaker", pageDTO);
 
-//        if ("".equals(status)) {
-//            try {
-//                count = routeService.getTotalCount();
-//                items = routeService.getNewProductList(criteria);
-//
-//                pageDTO.setCriteria(criteria);
-//                pageDTO.setTotalCount(count);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                log.error("error :: " + e);
-//            }
-//
-//            model.addAttribute("list", items);
-//            model.addAttribute("pageMaker", pageDTO);
-//        }
+        if ("".equals(status)) {
+            try {
+                count = shopService.getTotalCount();
+                items = shopService.getNewProductList(criteria);
+
+                pageDTO.setCriteria(criteria);
+                pageDTO.setTotalCount(count);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("error :: " + e);
+            }
+
+            model.addAttribute("list", items);
+            model.addAttribute("pageMaker", pageDTO);
+        }
 
 
         return "home";

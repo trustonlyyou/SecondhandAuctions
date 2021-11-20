@@ -2,7 +2,6 @@ package com.secondhandauctions.controller;
 
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.service.FileService;
-import com.secondhandauctions.service.RouteService;
 import com.secondhandauctions.service.ShopService;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.utils.PageDTO;
@@ -21,11 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,8 +50,7 @@ public class ShopController {
         int count = 0;
 
         try {
-            count = shopService.getCount();
-//            count = 250;
+            count = shopService.getTotalCount();
             list = shopService.getList(criteria);
 
             pageDTO.setCriteria(criteria);
@@ -70,41 +66,47 @@ public class ShopController {
         return "shop/shopList";
     }
 
-//    @GetMapping(value = "/file/show")
-//    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) throws IOException {
-//        Resource resource = null;
-//        String path = "";
-//        String type = "";
-//
-//        logger.info("uploadPath :: " + uploadPath);
-//        logger.info("fileName :: " + fileName);
-//
-////        path = ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName;
-//        path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
-////        path = Paths.get("/Users/junghwan/Desktop/").toString() + "/" + fileName;
-//
-//        logger.info("Path :: " + path);
-//
-//        resource = new FileSystemResource(path);
-//
-//        if (!resource.exists()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        Path filePath = null;
-//
-//        try {
-//            filePath = Paths.get(path);
-//            headers.add("Content-Type", Files.probeContentType(filePath));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-//    }
+    /**
+     *
+     * @param uploadPath : 파일 경로
+     * @param fileName 파일 이름
+     * @return : 응답 본문
+     *
+     * shopList.jsp
+     */
+    @GetMapping(value = "/file/show")
+    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) {
+        Resource resource = null;
+        String path = "";
+        String type = "";
 
+        logger.info("uploadPath :: " + uploadPath);
+        logger.info("fileName :: " + fileName);
 
+        path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
+
+        logger.info("Path :: " + path);
+
+        resource = new FileSystemResource(path);
+
+        if (!resource.exists()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        Path filePath = null;
+
+        try {
+            filePath = Paths.get(path);
+            headers.add("Content-Type", Files.probeContentType(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
+
+    // 디테일 페이지
     @GetMapping(value = "/shop/get")
     public String shopDetail(@RequestParam int productId, @ModelAttribute("criteria") Criteria criteria, Model model) {
         Map<String, Object> info = new HashMap<>();
@@ -128,11 +130,6 @@ public class ShopController {
 
             fileNames = (List<String>) info.get("fileName");
 
-//            이미지 없을 때는 대체 이미지 구해서 집어 넣자.
-//            if (fileNames.isEmpty()) {
-//                model.addAttribute("fileName", "fileNameNull");
-//            }
-
             model.addAttribute("fileName", fileNames);
 
         } catch (Exception e) {
@@ -143,6 +140,7 @@ public class ShopController {
         return "shop/shopDetail";
     }
 
+    // 상세 페이지에 이미지를 보여준다. myDetail.jsp, myShopDetail.jsp
     @GetMapping("/detail/show")
     public ResponseEntity<byte[]> loadImages(@RequestParam String fileName, HttpServletRequest request) {
         ResponseEntity<byte[]> result = null;
@@ -152,7 +150,6 @@ public class ShopController {
 
         if (result.getStatusCodeValue() == 404) {
             return null;
-            // TODO: 2021/11/10 Show no Image
         }
 
         return result;

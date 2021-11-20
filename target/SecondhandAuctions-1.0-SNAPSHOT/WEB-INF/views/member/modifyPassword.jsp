@@ -11,8 +11,10 @@
 <head>
   <meta charset="UTF-8">
   <title>비밀번호 변경 | 중고 경매의 세계</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -32,14 +34,6 @@
           <br>
 
           <form class="form-signin" id="phoneForm" action="/member/modify/password" method="post">
-            <div class="input-group input-group-lg">
-<%--              <input type="text" id="memberId" name="memberId" class="form-control"--%>
-<%--                     placeholder="아아디 입력해주세요." aria-label="Large" aria-describedby="inputGroup-sizing-sm"--%>
-<%--                     maxlength="20">--%>
-            </div>
-            <div id="IdCheckMsg" name="IdCheckMsg" class="check_font"></div>
-
-            <br>
 
             <div class="input-group input-group-lg">
               <input type="password" id="memberPassword" name="memberPassword" class="form-control"
@@ -74,8 +68,8 @@
           <br>
 
           <span>
-                            <a href="/member/login/form">로그인</a>&nbsp;
-                        </span>
+              <a href="/member/login/form">로그인</a>&nbsp;
+          </span>
 
           <hr>
 

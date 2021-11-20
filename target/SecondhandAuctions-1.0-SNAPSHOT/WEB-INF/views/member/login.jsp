@@ -19,46 +19,7 @@
 
 </head>
 <body>
-<header>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">Hello Auctions</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <nav class="navbar navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> &nbsp;
-                        <button class="btn btn-outline-light" type="submit">상품을 검색해 보세요.</button>
-                    </form>
-                </div>
-            </nav>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/login/form">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/member/join/form">회원가입</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<br>
-<br>
-<br>
-<br>
+<%@include file="../includes/header.jsp"%>
 
 
 <div class="container">

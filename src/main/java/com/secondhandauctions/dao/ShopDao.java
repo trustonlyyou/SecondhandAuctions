@@ -16,4 +16,8 @@ public interface ShopDao {
     public ProductVo readProduct(int productId) throws Exception;
 
     public List<ImageVo> readProductImage(int productId) throws Exception;
+
+    public List<ShopVo> newProductList(Criteria criteria) throws Exception;
+
+    public List<ShopVo> expireTimeProductList(Criteria criteria) throws Exception;
 }

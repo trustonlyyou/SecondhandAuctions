@@ -51,7 +51,7 @@
                     <br>
 
                     <div>
-                        <button class="btn btn-primary btn-lg" value="로그인">로그인</button>
+                        <a href="/member/login/form" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
                     </div>
                 </div>
             </div>

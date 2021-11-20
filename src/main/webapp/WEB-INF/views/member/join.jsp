@@ -11,8 +11,10 @@
 <head>
     <title>회원가입 | 중고 경매의 세계</title>
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -104,10 +106,6 @@
 
                         <a class="d-block text-center mt-2 small" href="login_form"></a>
                         <hr class="my-4">
-
-                        <div>
-                            <input type="button" id="test" name="test" value="test">
-                        </div>
                     </form>
                 </div>
             </div>
@@ -170,7 +168,7 @@
 
              error: function (error) {
                  console.log("error :: " + error);
-                 alert(error);
+                 window.alert(error);
              }
          });
      });
@@ -210,50 +208,23 @@
                         },
 
                         error: function (request,status,error) {
-                            alert("error!!!");
+                            window.alert("error!!!");
                             $("#mailCheck").attr("disabled", false);
                             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
                         }
                     });
                 } else {
-                    alert("이미 사용 중인 이메일 입니다.");
+                    window.alert("이미 사용 중인 이메일 입니다.");
                 }
             },
             error: function (request,status,error) {
-                alert("ajax error!!!");
+                window.alert("ajax error!!!");
                 $("#mailCheck").attr("disabled", false);
                 console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
             }
         });
-
-        // $("#mailCheck").attr("disabled", true);
-        // $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
-        //
-        //
-        // $.ajax({
-        //     // url: "/join/emailCheck?email" + email,
-        //     url: '/member/sendEmail',
-        //     type: 'POST',
-        //     dataType: 'json',
-        //     contentType: 'application/json; charset=UTF-8',
-        //     data: email,
-        //
-        //     success: function (data) {
-        //         $("#input_mail").attr("disabled", false);
-        //         code = data;
-        //
-        //         $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
-        //     },
-        //
-        //     error: function (request,status,error) {
-        //         alert("이메일 인증을 다시 시도해 주세요.");
-        //         $("#mailCheck").attr("disabled", false);
-        //         console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        //
-        //     }
-        // });
 
     });
 
@@ -275,10 +246,10 @@
             data: formData,
 
             success: function (data) {
-                alert(data);
+                window.alert(data);
             },
             error: function (request,status,error) {
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+                window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
             }
         });
     });
@@ -291,12 +262,12 @@
         var isName = /^[가-힣]+$/;
 
         if ((memberName == "") || (memberPhone == "")) {
-            alert("이름과 핸드폰 번호를 입력해주세요.");
+            window.alert("이름과 핸드폰 번호를 입력해주세요.");
             return false;
         }
 
         if (!isName.test(memberName)) {
-            alert("이름의 입력형식이 옳바르지 않습니다.");
+            window.alert("이름의 입력형식이 옳바르지 않습니다.");
             return false
         }
 
@@ -328,32 +299,19 @@
                             console.log("key :: " + phoneCheckKey);
 
                             $("#phoneInputNum").attr('disabled', false);
-
-
-                            // $("#phoneInputNumCheck").click(function () {
-                            //     var inputNum = $("#phoneInputNum").val();
-                            //
-                            //     if (inputNum === checkKey) {
-                            //         alert('인증번호가 일치합니다.');
-                            //         $("#searchPwdSubmitPhone").attr('disabled', false);
-                            //     } else {
-                            //         alert('인증번호가 틀립니다.');
-                            //         $("#searchPwdSubmitPhone").attr('disabled', true);
-                            //     }
-                            // });
                         },
                         error: function (request,status,error) {
-                            alert("핸드폰 인증을 다시 시도해주세요.");
+                            window.alert("핸드폰 인증을 다시 시도해주세요.");
                             $("#phoneInputNumCheck").attr("disabled", true);
                             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
                 } else {
-                    alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
+                    window.alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
                 }
             },
             error: function (request,status,error) {
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+                window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
             }
         });
     });

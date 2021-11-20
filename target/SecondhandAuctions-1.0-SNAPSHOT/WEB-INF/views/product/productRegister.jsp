@@ -135,6 +135,23 @@
     }
 
 
+    var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
+    var maxSize = 1048576; //1MB
+
+    function fileCheck(fileName, fileSize){
+
+        if(fileSize >= maxSize){
+            window.alert("파일 사이즈 초과");
+            return false;
+        }
+
+        if(!regex.test(fileName)){
+            window.alert("해당 종류의 파일은 업로드할 수 없습니다.");
+            return false;
+        }
+        return true;
+    }
+
     var uploadFilesArr = [];
     var tmpArr1 = [];
     var tmpArr2 = [];
@@ -148,12 +165,23 @@
         var fileList = fileInput[0].files;
         var fileObj = fileList[0];
 
+        console.log("fileName : " + fileObj.name);
+        console.log("fileSize : " + fileObj.size);
+        console.log("fileType(MimeType) : " + fileObj.type);
+
+        if (fileCount === maxFileCount) {
+            $("input[type='file']").val("");
+            window.alert("파일 개수는 5개 까지만 가능합니다.");
+            return false;
+        }
+
+        if (!fileCheck(fileObj.name, fileObj.size)) {
+            return false;
+        }
 
         for (var i = 0; i < fileList.length; i++) {
             formData.append("uploadFile", fileList[i]);
         }
-
-        // fileCount = fileCount + fileList.length;
 
         $.ajax({
             url: '/upload/ajax',
@@ -180,29 +208,11 @@
 
             },
             error: function (request,status,error) {
-                alert("fail");
+                window.alert("fail");
                 console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     });
-
-    var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
-    var maxSize = 1048576; //1MB
-
-    function fileCheck(fileName, fileSize){
-
-        if(fileSize >= maxSize){
-            alert("파일 사이즈 초과");
-            return false;
-        }
-
-        if(!regex.test(fileName)){
-            alert("해당 종류의 파일은 업로드할 수 없습니다.");
-            return false;
-        }
-
-        return true;
-    }
 
     var uploadResult = $("#uploadResult");
 
@@ -227,7 +237,6 @@
             str += "<input type='hidden' id=\"imageList[" + i + "].uploadFileName\" name=\"imageList[" + i + "].fileSize\" value='"+ obj.fileSize +"'>";
             str += "</div>";
 
-            // console.log("fullPath :: " + fullPath);
 
             var getId = "#imageList[" + i + "].uploadFileName";
             var getIdValue = $(getId).val();
@@ -236,14 +245,7 @@
         });
 
         uploadResult.append(str);
-
     }
-
-    // $("#uploadResult").on('click', ".imageDeleteBtn", function () {
-    //     alert("DeleteFunction");
-    //     deleteUploadFile();
-    // })
-
 
     //====================TEST====================
     function deleteImageIndex(index) {
@@ -278,20 +280,10 @@
         for (var i = 0; i < uploadFilesArr.length; i++) {
             console.log("TmpArray 요소 :: " + uploadFilesArr[i].uploadFileName);
         }
-
-        // console.log("fileCount :: " + fileCount);
     }
 
-    // $("#uploadResult").on('click', ".imageDeleteBtn", function () {
-    //     var targetFile = $(".imageDeleteBtn").data("file"); // 하나만바로보고 있다.
-    //
-    //     console.log("targetFile :: " + targetFile);
-    //
-    //     deleteUploadFile(targetFile);
-    // })
 
     function deleteUploadFile(targetFile) {
-        // var targetFile = $(".imageDeleteBtn").data("file");
         var targetDiv = $("#result");
 
         console.log("targetFile :: " + targetFile);
@@ -308,13 +300,9 @@
                 targetDiv.remove();
                 $("input[type='file']").val("");
 
-
-
-                // $("#uploadResult").empty(); // 비우고
-                // showImage(uploadFilesArr); // 다시 재배열 해야한다.
             },
             error: function (result) {
-                alert("파일을 삭제하지 못하였습니다.");
+                window.alert("파일을 삭제하지 못하였습니다.");
                 console.log(result);
             }
         });
@@ -327,8 +315,6 @@
             var startPrice = $("#startPrice").val();
             var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
             var replacePrice = "";
-
-            // replacePrice = replacePrice.toString.replace(priceReg, ',');
 
             if (startPrice == "") {
                 $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
@@ -403,8 +389,6 @@
         return true;
     });
 
-    // client 뒤로가기시 file 을 비워줘야지, 페이지 리로드 하면서 server 에 이미지가 다시 저장이 안된다.
-    // controller 는 어차피 hidden value 로 값을 받기 때문에 상관 없다.
     $("#registerSubmit").on('click', function () {
         $("#uploadFile").val("");
     });

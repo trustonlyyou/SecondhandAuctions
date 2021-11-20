@@ -41,7 +41,6 @@ public class MyPageController {
     @Autowired
     private InfoFormatter formatter;
 
-    // TODO: 2021/10/28 MyPage 에다가 게시글 보여주기
     @GetMapping(value = "/myPage")
     public String myPageForm(HttpServletRequest request, Model model) {
         MemberVo memberVo = new MemberVo();

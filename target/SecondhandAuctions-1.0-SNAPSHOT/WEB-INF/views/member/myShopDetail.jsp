@@ -55,7 +55,6 @@
                         <!-- 이미지 부분 -->
                         <div class="carousel-inner" id="images">
                             <c:forEach var="fileName" items="${fileName}" varStatus="stauts">
-                                <%--                             todo :: 여기서부터   --%>
                                 <div class="carousel-item ${stauts.index == 0 ? "active" : ""}">
                                     <img src="/detail/show?fileName=${fileName}">
                                 </div>

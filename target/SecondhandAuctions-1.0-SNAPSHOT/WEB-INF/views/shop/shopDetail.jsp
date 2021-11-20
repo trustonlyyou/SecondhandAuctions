@@ -55,7 +55,6 @@
                         <!-- 이미지 부분 -->
                         <div class="carousel-inner" id="images">
                             <c:forEach var="fileName" items="${fileName}" varStatus="stauts">
-                                <%--                             todo :: 여기서부터   --%>
                                 <div class="carousel-item ${stauts.index == 0 ? "active" : ""}">
                                     <img src="/detail/show?fileName=${fileName}">
                                 </div>
@@ -83,8 +82,6 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-<%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
-                    <!-- Form 시작 -->
                     <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
 

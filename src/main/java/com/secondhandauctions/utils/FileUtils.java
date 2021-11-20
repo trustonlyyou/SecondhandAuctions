@@ -22,17 +22,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Component
 public class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static String getUploadPath() {
         String uploadPath = "";
+        String convert = "";
 
-        String date = ProductDao.UPLOAD_DAY.replace("-", File.separator);
+        convert = ProductDao.UPLOAD_DAY.replace("-", File.separator);
 
-        File file = new File(date);
+        File file = new File(convert);
 
         uploadPath = file.getPath();
 
@@ -45,72 +45,5 @@ public class FileUtils {
         uploadFileName = UUID.randomUUID().toString();
 
         return uploadFileName;
-    }
-
-    public static String getFileNameToServer() {
-        String convertFileName = "";
-
-        convertFileName = UUID.randomUUID().toString().replaceAll("-", "");
-
-        return convertFileName;
-    }
-
-    // Test
-    public List<ImageVo> getFiles(MultipartFile[] files, int productId) throws Exception {
-        List<ImageVo> list = new ArrayList<>();
-
-        String originalFileName = "";
-        String originalFileExtension = "";
-        String convertFileName = "";
-        String saveFileName = "";
-
-        File dir = new File(ProductDao.UPLOAD_PATH);
-
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        if (files[0].getSize() < 1) {
-            return Collections.emptyList();
-        }
-
-        for (MultipartFile multipartFile : files) {
-            if (!multipartFile.isEmpty()) {
-                originalFileName = multipartFile.getOriginalFilename();
-                originalFileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
-                convertFileName = getFileNameToServer();
-
-//                saveFileName = convertFileName + "." + originalFileExtension;
-                saveFileName = convertFileName;
-
-                logger.info("originalFileName :: " + originalFileName);
-                logger.info("originalFileExtension :: " + originalFileExtension);
-                logger.info("saveFileName :: " + saveFileName);
-
-                // save to Server
-                File target = new File(ProductDao.UPLOAD_PATH, saveFileName);
-
-                multipartFile.transferTo(target);
-
-                // save Thumbnails to Server
-                File thumbnailFile = new File(ProductDao.UPLOAD_PATH, "s_" + saveFileName);
-
-                Thumbnails.of(target).size(160,160).toFile(thumbnailFile);
-
-                ImageVo imageVo = new ImageVo();
-
-                imageVo.setProductId(productId);
-//                imageVo.setOriginalFileName(multipartFile.getOriginalFilename());
-//                imageVo.setFileName(saveFileName);
-//                imageVo.setS_FileName("s_" + saveFileName);
-                imageVo.setFileExtension(originalFileExtension);
-                imageVo.setFileSize(multipartFile.getSize());
-
-                list.add(imageVo);
-
-            }
-        }
-
-        return list;
     }
 }

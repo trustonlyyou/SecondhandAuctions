@@ -28,9 +28,6 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
 
-    @Autowired
-    private FileUtils fileUtil;
-
     public ResponseEntity<List<ImageVo>> uploadAjax(MultipartFile[] uploadFile) {
         List<ImageVo> imageVoList = new ArrayList<>();
         String uploadDir = "";

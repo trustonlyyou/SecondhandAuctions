@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class ProductController {
 
         if (("".equals(memberId)) || (memberId == null)) {
             logger.error("Member is null ");
-
+//            HttpServletRequestWrapper
             return "member/login";
         }
 

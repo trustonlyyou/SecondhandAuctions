@@ -27,8 +27,8 @@
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
                     <br>
+                    <a href="/">메인 페이지</a>
                     <h2 class="card-title text-center">상품 등록</h2>
-
                     <!-- Form 시작 -->
                     <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>

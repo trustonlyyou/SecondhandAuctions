@@ -30,6 +30,7 @@
 
         limit #{pageStart}, #{perPageNum}
     </select>
+<!--  이미지 그룹바이하고 join  -->
 
     <select id="readProduct" parameterType="int" resultType="com.secondhandauctions.vo.ProductVo">
         select

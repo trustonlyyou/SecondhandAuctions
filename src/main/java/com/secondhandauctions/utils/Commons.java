@@ -22,6 +22,7 @@ public class Commons {
             if (ip == null) {
                 ip = request.getRemoteAddr();
             }
+            // 라인 낭비 try - catch
 
         } catch (Exception e) {
             log.error("error :: " + e);

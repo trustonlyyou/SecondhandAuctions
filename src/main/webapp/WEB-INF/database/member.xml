@@ -12,9 +12,7 @@
         from
             member
         where
-            memberId = #{memberId}
-            and isMemberCheck = 1
-
+            memberId = #{memberId} and isMemberCheck = 1
     </select>
 
     <!--  회원가입  -->

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +60,11 @@ public class RouteController {
                 }
         } catch (Exception e) {
             log.error("error :: " + e);
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+
+            log.error(stringWriter.toString());
+
         }
 
         pageDTO.setCriteria(criteria);

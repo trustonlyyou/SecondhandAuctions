@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SecondhandAuctions" target="8" />
+      <module name="SecondhandAuctions" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

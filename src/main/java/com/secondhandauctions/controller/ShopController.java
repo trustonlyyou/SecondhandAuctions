@@ -87,6 +87,8 @@ public class ShopController {
 
         logger.info("Path :: " + path);
 
+        // 이건 안쓰고
+        // apache ftpservice 사용한다.
         resource = new FileSystemResource(path);
 
         if (!resource.exists()) {

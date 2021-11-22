@@ -7,6 +7,7 @@ import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.EncryptionSHA256;
 import com.secondhandauctions.utils.InfoFormatter;
 import com.secondhandauctions.vo.MemberVo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ import java.util.Map;
 import java.util.Random;
 
 @Controller
-@RequestMapping("member")
+@RequestMapping("/member")
+@Slf4j
 public class MemberController {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -43,9 +45,12 @@ public class MemberController {
     private EmailService emailService;
 
     @Autowired
+    private EncryptionSHA256 encryption;
+
+    @Autowired
     private InfoFormatter formatter;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/join/form")
+    @GetMapping(value = "/join/form")
     public String joinForm(HttpServletRequest request, HttpServletResponse response) {
 
         logger.info(Commons.getClientIp(request));
@@ -58,150 +63,104 @@ public class MemberController {
     // RequestBody :: 요청 본문
     @PostMapping(value = "/join/idCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public int iDCheck(@RequestBody String memberId, HttpServletRequest request) {
-        int isCheck = 0;
+    public Map<String, Integer> iDCheck(@RequestBody String memberId, HttpServletRequest request) throws Exception {
+        Map<String, Integer> result = new HashMap<>();
+        int isIdCheck = 0;
 
-        if (memberId == null) {
-            logger.info("input ID is null");
-        } else {
-            logger.info("아이디 중복 데이터 확인");
-            logger.info("ID :: " + memberId);
+        isIdCheck = memberService.idCheck(memberId);
 
-            try {
-                isCheck = memberService.idCheck(memberId);
-            } catch (Exception e) {
-                logger.info("idCheck Error :: ", e);
-            }
-        }
+        log.info("IdCheck :: {}", isIdCheck);
 
-        return isCheck;
+        result.put("result", isIdCheck);
+
+        return result;
     }
 
     // 이메일 중복 체크
     @PostMapping(value = "/emailCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public int emailCheck(@RequestBody String email) throws Exception {
-        int emailCheck = 0;
+    public Map<String, Integer> emailCheck(@RequestBody String email) throws Exception {
+        Map<String, Integer> result = new HashMap<>();
+        int isEmailCheck = 0;
 
-        logger.info("email :: " + email);
+        isEmailCheck = memberService.isEmail(email);
 
-        try {
-            emailCheck = memberService.isEmail(email);
+        log.info("emailCheck Result :: " + isEmailCheck);
 
-            logger.info("emailCheck Result :: " + emailCheck);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("error :: " + e);
-
-        }
-
-        return emailCheck;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/sendEmail", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String sendEmail(@RequestBody String email) {
-        String toEmail = "";
-        String title = "";
-        String content = "";
-        String num = "";
-
-        // 난수 생성
-        Random random = new Random();
-
-        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111를 사용하였습니다.
-        int checkNum = random.nextInt(888888) + 11111;
-
-        toEmail = email;
-        title = "중고 경매의 세계 인증 이메일 입니다.";
-        content = "중고 경매의 세계를 이용해 주셔서 감사합니다." +
-                "<br><br>" +
-                "인증번호는 " + checkNum + " 입니다. <br>" +
-                "해당 인증번호를 인증번호 확인란에 기입해 주세요.";
-
-        try {
-            emailService.sendEmail(toEmail, title, content);
-
-            num = Integer.toString(checkNum);
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-        }
-
-        logger.info("인증번호 " + checkNum);
-
-        return num;
-    }
-
-    @PostMapping("/phoneCheck")
-    @ResponseBody
-    public int isCheckPhone(String memberName, String memberPhone) {
-        Map<String, Object> prams = new HashMap<>();
-        int result = 0;
-
-        logger.info("memberName :: " + memberName);
-        logger.info("memberPhone" + memberPhone);
-
-        prams.put("memberName", memberName);
-        prams.put("memberPhone", memberPhone);
-
-        try {
-            result = memberService.isPhone(prams);
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-        }
+        result.put("result", isEmailCheck);
 
         return result;
     }
 
-    @RequestMapping(value ="/join/sendSms")
+    @PostMapping(value = "/sendEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String sendSms(HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> sendEmail(@RequestBody String email) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        String num = "";
+        int checkNum = 0;
+
+        checkNum = emailService.joinCheckSendEmail(email);
+
+        if (checkNum != 0) {
+            num = Integer.toString(checkNum);
+        } else {
+            log.error("emailService joinCheckSendEmail return is 0");
+        }
+
+        result.put("num", num);
+
+        return result;
+    }
+
+    // 사용자 핸드폰 check
+    @PostMapping("/phoneCheck")
+    @ResponseBody
+    public int isCheckPhone(String memberName, String memberPhone) throws Exception {
+        Map<String, Object> prams = new HashMap<>();
+        int result = 0;
+
+        prams.put("memberName", memberName);
+        prams.put("memberPhone", memberPhone);
+
+        result = memberService.isPhone(prams);
+
+        return result;
+    }
+
+    // 핸드폰 인정번호 전송
+    @PostMapping(value = "/check/phone/sendSms")
+    @ResponseBody
+    public Map<String, Object> searchIdFromPhone(String memberPhone) throws Exception {
+        Map<String, Object> map = new HashMap<>();
         String strNum = "";
 
-        Random random = new Random();
+        strNum = smsService.sendSms(memberPhone);
 
-        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111
-        int checkNum = random.nextInt(888888) + 11111;
+        if (("".equals(strNum)) || (strNum == null)) {
+            log.info("smsService sendSms return is null");
+        }
 
-        logger.info("인증번호 " + checkNum);
+        map.put("key", strNum);
 
-        strNum = Integer.toString(checkNum);
-
-
-        return strNum;
+        return map;
     }
 
     @PostMapping(value = "/join/action")
-    public String joinEnd(@ModelAttribute MemberVo memberVo, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
-
+    public String joinAction(MemberVo memberVo, HttpServletRequest request,
+                             HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
         String encryptionPwd = "";
+        String inputPassword = "";
 
-        if (memberVo == null) {
-            logger.error("URL :: " + request.getRequestURL());
-            logger.error("MemberVo is null");
+        inputPassword = memberVo.getMemberPassword();
+        encryption.memberSetEncryptionPassword(inputPassword, memberVo);
 
-            request.setAttribute("msg", "0");
+        memberService.setMember(memberVo);
 
-            return "member/join";
-        } else {
-            String inputPassword = memberVo.getMemberPassword();
-            encryptionPwd = EncryptionSHA256.encrypt(inputPassword);
-            memberVo.setMemberPassword(encryptionPwd);
+        redirectAttributes.addFlashAttribute("memberId", memberVo.getMemberId());
 
-            try {
-                memberService.setMember(memberVo);
-            } catch (Exception e) {
-                logger.error("error :: " + e);
-            }
+        log.info("join success");
 
-            logger.info("Success join");
-            logger.info("New User is {}", memberVo.getMemberId());
-
-            redirectAttributes.addFlashAttribute("memberId", memberVo.getMemberId());
-
-            return "redirect:/member/join/result";
-        }
+        return "redirect:/member/join/result";
     }
 
     @GetMapping(value = "join/result")
@@ -209,6 +168,11 @@ public class MemberController {
         return "member/join_result";
     }
 
+    // ======================== 회원 가입 끝 ==============================
+
+
+
+    // ======================== 로그인 ============================
     @GetMapping(value = "/login/form")
     public String loginForm() {
         return "member/login";
@@ -227,7 +191,7 @@ public class MemberController {
         try {
             memberId = request.getParameter("memberId");
             memberPassword = request.getParameter("memberPassword");
-            encryptionPwd = EncryptionSHA256.encrypt(memberPassword);
+            encryptionPwd = encryption.encrypt(memberPassword);
 
             memberInfo.put("memberId", memberId);
             memberInfo.put("memberPassword", encryptionPwd);
@@ -318,22 +282,6 @@ public class MemberController {
         return "/member/searchIdResultEmail";
     }
 
-    @PostMapping(value = "/check/phone/sendSms")
-    @ResponseBody
-    public Map<String, Object> searchIdFromPhone(String memberPhone) {
-        Map<String, Object> map = new HashMap<>();
-        String strNum = "";
-
-        try {
-            strNum = smsService.sendSms(memberPhone);
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-        }
-
-        map.put("key", strNum);
-
-        return map;
-    }
 
     @PostMapping(value = "/search/id/phone/action")
     public String searchIdFromPhone(HttpServletRequest request, String memberName, String memberPhone, RedirectAttributes redirectAttributes) {
@@ -475,7 +423,7 @@ public class MemberController {
     }
 
     @PostMapping(value = "/modify/password")
-    public String modifyPassword(HttpServletRequest request, String memberPassword, Model model) {
+    public String modifyPassword(HttpServletRequest request, String memberPassword, Model model) throws Exception {
         Map<String, Object> memberInfo = new HashMap<>();
         String memberId = "";
         String encryptionPwd = "";
@@ -489,8 +437,11 @@ public class MemberController {
             return "redirect:/";
         }
 
-        encryptionPwd = EncryptionSHA256.encrypt(memberPassword);
+        // 암호화 하는 것
+//        encryptionPwd = EncryptionSHA256.encrypt(memberPassword);
+        encryptionPwd = encryption.getEncryption(memberPassword);
 
+        // 값을 넣는 것을 따로 구현
         memberInfo.put("memberId", memberId);
         memberInfo.put("memberPassword", encryptionPwd);
 

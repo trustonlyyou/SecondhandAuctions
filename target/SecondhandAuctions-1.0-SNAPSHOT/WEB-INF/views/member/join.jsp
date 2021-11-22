@@ -147,7 +147,9 @@
              data: id,
 
              success: function (data) {
-                 if (data == 0) {
+                 console.log("data :: " + data.result);
+
+                 if (data.result == 0) {
                      $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
                      $("#IdCheckMsg").css('color', 'green');
 
@@ -187,7 +189,9 @@
 
             success: function (data) {
 
-                if (data === 0) {
+                console.log("EmailCheck :: " + data.result)
+
+                if (data.result === 0) {
                     $("#mailCheck").attr("disabled", true);
                     $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
 
@@ -202,7 +206,7 @@
 
                         success: function (data) {
                             $("#input_mail").attr("disabled", false);
-                            code = data;
+                            code = data.num;
 
                             $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
                         },
@@ -242,7 +246,6 @@
         $.ajax({
             url: '/member/phoneCheck',
             type: 'post',
-            // data: $("form").serialize(),
             data: formData,
 
             success: function (data) {
@@ -289,7 +292,7 @@
                     $.ajax({
                         url: '/member/check/phone/sendSms',
                         type: 'POST',
-                        data: $("form").serialize(),
+                        data: memberPhone,
 
                         success: function (data) {
                             phoneCheckKey = data.key;

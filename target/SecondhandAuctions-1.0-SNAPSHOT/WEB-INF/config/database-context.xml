@@ -7,15 +7,37 @@
 						   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 						   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+	<!-- jasypt -->
+<!--	<bean id="environmentStringPBEConfig" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">-->
+<!--		<property name="algorithm" value="PBEWithHmacSHA256AndAES_256"/>-->
+<!--		&lt;!&ndash;	암호화화 할때 쓰는 알고리즘	&ndash;&gt;-->
+<!--		<property name="passwordEnvName" value="KRE_ENC_KEY"/>-->
+<!--		&lt;!&ndash;	환경변수로 지정한 키 값이다. ENCRYPTION_KYE	&ndash;&gt;-->
+<!--	</bean>-->
+
+<!--	<bean id="encryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">-->
+<!--		<property name="config" ref="environmentStringPBEConfig"/>-->
+<!--	</bean>-->
+
+<!--	<bean id="propertyConfigurer" class="org.jasypt.spring31.properties.EncryptablePreferencesPlaceholderConfigurer">-->
+<!--		<constructor-arg ref="encryptor"/>-->
+<!--		<property name="location" value="classpath:mysqlDatabase.properties"/>-->
+<!--	</bean>-->
+
+	<context:property-placeholder location="WEB-INF/properties/mysqlDatabase.properties" />
+
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/auction?serverTimezone=UTC"/>
-		<property name="username" value="root"/>
-		<property name="password" value="jung344524"/>
-		<property name="minimumIdle" value="50"/>
-		<property name="maximumPoolSize" value="50"/>
-		<property name="maxLifetime" value="3600000"/>
-		<property name="connectionTimeout" value="60000"/>
+<!--		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/auction?serverTimezone=UTC"/>-->
+		<property name="driverClassName" value="${database.classname}"/>
+		<property name="jdbcUrl" value="${database.url}"/>
+		<property name="username" value="${database.username}"/>
+		<property name="password" value="${database.password}"/>
+		<property name="minimumIdle" value="${database.minimumIdle}"/>
+		<property name="maximumPoolSize" value="${database.maximumPoolSize}"/>
+		<property name="maxLifetime" value="${database.maxLifetime}"/>
+		<property name="connectionTimeout" value="${database.connectionTimeout}"/>
+
 	</bean>
 
 	<!--  @Transaction활성화	-->

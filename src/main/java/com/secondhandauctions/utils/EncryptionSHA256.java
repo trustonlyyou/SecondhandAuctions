@@ -1,15 +1,16 @@
 package com.secondhandauctions.utils;
 
+import com.secondhandauctions.vo.MemberVo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
-
+@Component
+@Slf4j
 public class EncryptionSHA256 {
-
-    private static final Logger logger = LoggerFactory.getLogger(EncryptionSHA256.class);
-
-    public static String encrypt(String planText) {
+    public String encrypt(String planText) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(planText.getBytes());
@@ -31,8 +32,16 @@ public class EncryptionSHA256 {
             }
             return hexString.toString();
         } catch (Exception e) {
-            logger.error("sha256 error", e);
+            log.error("sha256 error", e);
             throw new RuntimeException();
         }
+    }
+
+    public void memberSetEncryptionPassword(String target, MemberVo memberVo) throws Exception {
+        String encryptionStr = "";
+
+        encryptionStr = encrypt(target);
+
+        memberVo.setMemberPassword(encryptionStr);
     }
 }

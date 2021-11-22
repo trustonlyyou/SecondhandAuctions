@@ -129,13 +129,7 @@
     var phoneFlag = false;
 
 
-    // 카운트 다운
-    var num = 60 * 3; // 몇분을 설정할지의 대한 변수 선언
-    var myVar;
-    var check = false;
-
-
-     // 아이디 중복 확인
+     // ========================= 아이디 중복 확인 =========================
      $("#idCheck").click(function () {
          var id = $("#memberId").val();
 
@@ -147,7 +141,9 @@
              data: id,
 
              success: function (data) {
-                 if (data == 0) {
+                 console.log("data :: " + data.result);
+
+                 if (data.result == 0) {
                      $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
                      $("#IdCheckMsg").css('color', 'green');
 
@@ -173,7 +169,7 @@
          });
      });
 
-    // 이메일 체크
+    // ======================== 이메일 인증 =========================
     $("#mailCheck").click(function () {
 
         var email = $("#memberEmail").val();
@@ -187,7 +183,9 @@
 
             success: function (data) {
 
-                if (data === 0) {
+                console.log("EmailCheck :: " + data.result)
+
+                if (data.result === 0) {
                     $("#mailCheck").attr("disabled", true);
                     $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
 
@@ -202,7 +200,7 @@
 
                         success: function (data) {
                             $("#input_mail").attr("disabled", false);
-                            code = data;
+                            code = data.num;
 
                             $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
                         },
@@ -228,6 +226,8 @@
 
     });
 
+
+    // // ========================= 핸드폰 인증 =========================
     var phoneCheckKey;
 
     $("#test").click(function () {
@@ -242,7 +242,6 @@
         $.ajax({
             url: '/member/phoneCheck',
             type: 'post',
-            // data: $("form").serialize(),
             data: formData,
 
             success: function (data) {
@@ -254,7 +253,6 @@
         });
     });
 
-    // 핸드폰 체크
     $("#phoneInputNumCheck").click(function () {
         var memberName = $("#memberName").val();
         var memberPhone = $("#memberPhone").val();
@@ -289,7 +287,7 @@
                     $.ajax({
                         url: '/member/check/phone/sendSms',
                         type: 'POST',
-                        data: $("form").serialize(),
+                        data: memberPhone,
 
                         success: function (data) {
                             phoneCheckKey = data.key;
@@ -316,40 +314,8 @@
         });
     });
 
-    $("#phoneInputNum").on('keyup', function () {
-        var inputNum = $("#phoneInputNum").val();
 
-        if (inputNum === phoneCheckKey) {
-            $("#phone_check").text('인증번호가 일치합니다.');
-            $("#phone_check").css('color', 'green');
-
-            phoneFlag = true;
-
-            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                $("#join_submit").attr('disabled', false);
-            }
-
-            return true;
-
-        } else {
-            $("#phone_check").text('인증번호가 틀립니다.');
-            $("#phone_check").css('color', 'red');
-
-            phoneFlag = false;
-
-            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                $("#join_submit").attr('disabled', true);
-            }
-
-            return false;
-
-        }
-    });
-
-
-
-
-
+    // id
     $("#memberId").on('keyup', function () {
         var id = $("#memberId").val();
         var isID = /^[a-z0-9]{4,19}$/;
@@ -422,6 +388,7 @@
         return true;
     }
 
+    // pwd1
     $("#memberPassword").on('keyup', function () {
         var pwd1 = $("#memberPassword").val();
 
@@ -450,7 +417,7 @@
         }
     });
 
-    // pwd2CheckMsg
+    // pwd2
     $("#memberPasswordCheck").on('keyup', function () {
         var pwd1 = $("#memberPassword").val();
         var pwd2 = $("#memberPasswordCheck").val();
@@ -485,7 +452,7 @@
         }
     });
 
-    // name!!
+    // name
     $("#memberName").on('keyup', function () {
         var memberName = $("#memberName").val();
         var isName = /^[가-힣]+$/;
@@ -521,6 +488,7 @@
 
     });
 
+    // email
     $("#memberEmail").on('keyup', function () {
         var email = $("#memberEmail").val();
         var isEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -554,7 +522,7 @@
 
     });
 
-
+    // email check code
     $("#input_mail").on('keyup', function () {
         var inputCode = $("#input_mail").val();
 
@@ -587,6 +555,7 @@
             }
     });
 
+    // phone
     $("#memberPhone").on('keyup', function () {
         var phone = $("#memberPhone").val();
         var isPhone = /^((01[1|6|7|8|9])[1-9][0-9]{6,7})$|(010[1-9][0-9]{7})$/;
@@ -610,36 +579,44 @@
 
             return false;
 
-        } else { // Ajax Phone Check (중복확인)
-
-            // phone = phone.replace(/ /gi, "").replace(/-/gi, "");
-            // $("#phone").val(phone);
-
+        } else {
             $("#phoneCheckMsg").text("핸드폰 인증을 해주세요.");
             $("#phoneCheckMsg").css('color', 'red');
             $("#phoneInputNumCheck").attr('disabled', false);
-
-            // phoneFlag = true;
-            //
-            // if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-            //     $("#join_submit").attr('disabled', false);
-            // }
 
             return true;
 
         }
     });
 
-    // $.fn.flagCheck = function () {
-    //     if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-    //         $("#join_submit").attr('disabled', false);
-    //     }
-    // };
-    //
-    // $(document).ready(function () {
-    //    $.fn.flagCheck();
-    // });
+    // phone check
+    $("#phoneInputNum").on('keyup', function () {
+        var inputNum = $("#phoneInputNum").val();
 
+        if (inputNum === phoneCheckKey) {
+            $("#phone_check").text('인증번호가 일치합니다.');
+            $("#phone_check").css('color', 'green');
+
+            phoneFlag = true;
+
+            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                $("#join_submit").attr('disabled', false);
+            }
+
+            return true;
+
+        } else {
+            $("#phone_check").text('인증번호가 틀립니다.');
+            $("#phone_check").css('color', 'red');
+
+            phoneFlag = false;
+
+            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                $("#join_submit").attr('disabled', true);
+            }
+            return false;
+        }
+    });
 </script>
 
 </html>

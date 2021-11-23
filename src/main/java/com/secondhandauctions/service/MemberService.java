@@ -20,7 +20,11 @@ public class MemberService {
     private MemberDao memberDao;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private SmsService smsService;
+
 
     public int idCheck(String memberId) throws Exception {
         return memberDao.idCheck(memberId);
@@ -36,10 +40,6 @@ public class MemberService {
 
     public MemberVo getMemberInfo(String memberId) throws Exception {
         return memberDao.memberInfo(memberId);
-    }
-
-    public String getMemberId(String email) throws Exception {
-        return memberDao.searchIdEmail(email);
     }
 
     public int isEmail(String memberEmail) throws Exception {
@@ -58,25 +58,31 @@ public class MemberService {
         return result;
     }
 
-    public String getMemberIdFromEmail(String memberEmail) throws Exception {
-        int check = 0;
+    // 이메일로 아이디 찾기
+    public Map<String, Object> getMemberIdFromEmail(Map<String, Object> info) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
         String memberId = "";
 
-        check = memberDao.isMemberEmail(memberEmail);
+        int check = 0;
 
-        logger.info("check :: " + check);
+        memberId = memberDao.searchIdEmail(info);
 
-        if (check == 0) {
-            return memberId;
+        if (("".equals(memberId)) || (memberId == null)) {
+            result.put("check", check);
+
+            return result;
         }
 
-        memberId = memberDao.searchIdEmail(memberEmail);
+        check = 1;
 
-        logger.info("memberId :: " + memberId);
+        result.put("check", check);
+        result.put("memberId", memberId);
 
-        return memberId;
+        return result;
     }
 
+    // 핸드폰으로 아이디 찾기
     public String getMemberIdFromPhone(Map<String, Object> memberInfo) throws Exception {
         int check = 0;
         String memberId = "";
@@ -90,26 +96,23 @@ public class MemberService {
         memberId = memberDao.searchIdPhone(memberInfo);
 
         return memberId;
+
     }
 
-    public int isMemberPasswordPhone(Map<String, Object> memberInfo) throws Exception {
+    // 핸드폰으로 비밀번호 찾기
+    public int isSearchPwdFromPhone(Map<String, Object> memberInfo) throws Exception {
         int check = 0;
-        String memberPassword = "";
 
         check = memberDao.checkSearchPwdPhone(memberInfo);
 
         return check;
     }
 
-    public int isMemberPasswordEmail(Map<String, Object> memberInfo) throws Exception {
+    // 이메일로 비밀번호 찾기
+    public int isSearchPwdFromEmail(Map<String, Object> memberInfo) throws Exception {
         int check = 0;
 
         check = memberDao.checkSearchPwdEmail(memberInfo);
-
-        if (check == 0) {
-            logger.info("Member ID :: " + memberInfo.get("memberId"));
-            logger.info("Don't register Data");
-        }
 
         return check;
     }

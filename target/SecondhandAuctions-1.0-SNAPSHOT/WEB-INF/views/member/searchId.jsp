@@ -11,10 +11,21 @@
 <head>
     <meta charset="UTF-8">
     <title>아이디 찾기 | 중고 경매의 세계</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <style>
+        .spinner-border {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 1;
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -70,14 +81,21 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="searchIdSubmitPhone" name="searchIdSubmitPhone"
+                            <input type="button" id="searchIdSubmitPhone" name="searchIdSubmitPhone"
                                    class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
                         </div>
                     </form>
 
-
                     <!-- 이메일 인증  -->
-                    <form action="/member/search/id/email/action" method="post" id="emailForm">
+                    <form id="emailForm">
+                        <div class="input-group input-group-lg">
+                            <input type="text" id="memberNameToEmail" name="memberNameToEmail" class="form-control"
+                                    placeholder="이름을 입력해주세요." aria-label="Large"
+                                   aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <div id="memberNameToEmailCheckMsg" name="memberNameToEmailCheckMsg" class="check_font"></div>
+                        <br>
+
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberEmail" name="memberEmail" class="form-control"
                                    placeholder="이메일 번호를 입력해주세요." aria-label="Large"
@@ -91,8 +109,12 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="searchIdSubmitEmail" name="searchIdSubmitEmail"
+                            <input type="button" id="searchIdSubmitEmail" name="searchIdSubmitEmail"
                                    class="btn btn-dark btn-lg btn-block" value="아이디 찾기" disabled>
+                        </div>
+
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
                         </div>
 
                     </form>
@@ -113,7 +135,6 @@
 
 
                     회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/form">회원가입</a>
-
                 </div>
             </div>
         </div>
@@ -122,9 +143,16 @@
 </body>
 
 <script>
+
+    var nameFlag = false;
+    var nameEmailFlag = false;
+    var emailFlag = false;
+    var phoneFlag = false;
+
     $(document).ready(function () {
         $("#emailForm").hide();
         $("#phoneCheckForm").hide();
+        $(".spinner-border").hide();
 
         $("#phoneCheck").click(function () {
             $("#emailForm").hide();
@@ -140,9 +168,7 @@
 
 
 
-        var nameFlag = false;
-        var emailFlag = false;
-        var phoneFlag = false;
+        // =================== 핸드폰으로 아이디 찾기 ===================
 
         $("#memberName").on('keyup', function () {
             var memberName = $("#memberName").val();
@@ -217,6 +243,43 @@
             }
         });
 
+        // ===================== 이메일로 아이디 찾기 =======================
+
+        $("#memberNameToEmail").on('keyup', function () {
+            var memberName = $("#memberNameToEmail").val();
+            var isName = /^[가-힣]+$/;
+
+            if (memberName == "") {
+                $("#memberNameToEmailCheckMsg").text("이름은 필수 입력 입니다.");
+                $("#memberNameToEmailCheckMsg").css('color', 'red');
+
+                nameEmailFlag = false;
+
+                return false;
+            }
+
+            if (!isName.test(memberName)) {
+                $("#memberNameToEmailCheckMsg").text("한글만 입력 가능합니다.");
+                $("#memberNameToEmailCheckMsg").css('color', 'red');
+
+                nameEmailFlag = false;
+
+                return false
+
+            } else {
+                $("#memberNameToEmailCheckMsg").text("");
+
+                nameEmailFlag = true;
+
+                if ((nameEmailFlag && emailFlag) == true) {
+                    $("#searchIdSubmitEmail").attr('disabled', false);
+                }
+
+                return true;
+            }
+
+        });
+
         $("#memberEmail").on('keyup', function () {
             var email = $("#memberEmail").val();
             var isEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -243,7 +306,7 @@
 
                 emailFlag = true;
 
-                if (emailFlag == true) {
+                if ((nameEmailFlag && emailFlag) === true) {
                     $("#searchIdSubmitEmail").attr('disabled', false);
                 }
 
@@ -254,21 +317,17 @@
         });
 
 
-
         $("#checkPhone").click(function () {
             $("#phoneCheckForm").show();
         });
 
         $("#inputNum").on('keyup', function() {
-
             $("#checkResult").attr('disabled', false);
-
         });
 
-    })
+    });
 
-    $("#checkPhone").click(function () {
-
+    $("#checkPhone").on("click", function () {
         $.ajax({
             url: '/member/check/phone/sendSms',
             type: 'POST',
@@ -281,10 +340,10 @@
                     var inputNum = $("#inputNum").val();
 
                     if (inputNum === checkKey) {
-                        alert('인증번호가 일치합니다.');
+                        window.alert('인증번호가 일치합니다.');
                         $("#searchIdSubmitPhone").attr('disabled', false);
                     } else {
-                        alert('인증번호가 틀립니다.');
+                        window.alert('인증번호가 틀립니다.');
                         $("#searchIdSubmitPhone").attr('disabled', true);
                     }
                 });
@@ -292,36 +351,91 @@
         });
     });
 
+    $("#searchIdSubmitPhone").on("click", function (e) {
+        var memberName = $("#memberName").val();
+        var memberPhone = $("#memberPhone").val();
 
-    <%--$("#checkPhone").click(function () {--%>
+        var formData = {
+            memberName : memberName,
+            memberPhone : memberPhone,
+        }
 
-    <%--    var inputNum = $("#inputNum").val();--%>
+        $.ajax({
+            url: '/member/search/id/phone',
+            type: 'post',
+            data: formData,
 
-    <%--    $.ajax({--%>
-    <%--        url: '/member/search/id/phone/sendSms',--%>
-    <%--        type: 'POST',--%>
-    <%--        dataType: 'json',--%>
-    <%--        contentType: 'application/json; charset=UTF-8',--%>
-    <%--        data: {key : ${key}},--%>
+            success: function (data) {
+                if (data.check === 1) {
+                    window.location.replace("/member/searchIdResultPhone?memberId=" + data.memberId);
+                } else {
+                    window.location.replace("/member/searchIdResultPhone")
+                }
+            },
 
-    <%--        success: function (data) {--%>
-    <%--            var strNum = data;--%>
+            error: function (request,status,error) {
 
-    <%--            if (inputNum == strNum) {--%>
-    <%--                window.alert('인증번호가 일치합니다.');--%>
-    <%--                $("#searchIdSubmit").attr('disabled', false);--%>
-    <%--            } else {--%>
-    <%--                window.alert('인증번호가 일치하지 않습니다. 인증번호를 확인해주세요.');--%>
-    <%--                $("#searchIdSubmit").attr('disabled', true);--%>
-    <%--            }--%>
-    <%--        },--%>
+            }
+        });
+    });
 
-    <%--        error: function (error) {--%>
-    <%--            console.log("error :: " + error);--%>
-    <%--            alert(error);--%>
-    <%--        }--%>
-    <%--    });--%>
-    <%--});--%>
+
+    // 이메일로 아이디 찾기 submit
+    $("#searchIdSubmitEmail").on("click", function (e) {
+
+        $(".spinner-border").show();
+        $(".container").css({
+            'pointer-events': 'none',
+            'opacity': '0.5'
+        });
+
+        var memberName = $("#memberNameToEmail").val();
+        var memberEmail = $("#memberEmail").val();
+
+        var formData = {
+            memberName : memberName,
+            memberEmail : memberEmail
+        }
+
+        $.ajax({
+            url: '/member/search/id/email',
+            type: 'post',
+            data: formData,
+
+            success: function (data) {
+
+                console.log(data.check);
+
+                if (data.check === 0) {
+                    window.alert("존재하지 않는 회원 입니다.");
+                    $("#memberNameToEmail").val("");
+                    $("#memberEmail").val("");
+                    $("#memberNameToEmail").focus();
+                    $("#searchIdSubmitEmail").attr('disabled', true);
+                    emailFlag = false;
+                    nameEmailFlag = false;
+                }
+
+                if (data.check === 1) {
+                    window.location.replace("/member/searchIdResult")
+                }
+            }
+        });
+
+    });
+
+    var actionPhoneForm = $("#phoneForm");
+
+    // $("#searchIdSubmitPhone").on("click", function (e) {
+    //    e.preventDefault();
+    //    actionPhoneForm.submit();
+    //
+    //    $("#memberName").val("");
+    //    $("#memberPhone").val("");
+    //    $("#inputNum").val("");
+    // });
+
+
 
 
 </script>

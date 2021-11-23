@@ -230,28 +230,28 @@
     // // ========================= 핸드폰 인증 =========================
     var phoneCheckKey;
 
-    $("#test").click(function () {
-        var memberName = $("#memberName").val();
-        var memberPhone = $("#memberPhone").val();
-
-        var formData = {
-            memberName : memberName,
-            memberPhone : memberPhone
-        }
-
-        $.ajax({
-            url: '/member/phoneCheck',
-            type: 'post',
-            data: formData,
-
-            success: function (data) {
-                window.alert(data);
-            },
-            error: function (request,status,error) {
-                window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
-            }
-        });
-    });
+    // $("#test").click(function () {
+    //     var memberName = $("#memberName").val();
+    //     var memberPhone = $("#memberPhone").val();
+    //
+    //     var formData = {
+    //         memberName : memberName,
+    //         memberPhone : memberPhone
+    //     }
+    //
+    //     $.ajax({
+    //         url: '/member/phoneCheck',
+    //         type: 'post',
+    //         data: formData,
+    //
+    //         success: function (data) {
+    //             window.alert(data);
+    //         },
+    //         error: function (request,status,error) {
+    //             window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+    //         }
+    //     });
+    // });
 
     $("#phoneInputNumCheck").click(function () {
         var memberName = $("#memberName").val();

@@ -55,7 +55,7 @@
           <br>
 
           <div>
-            <a href="/member/modify/form">비밀번호가 기억나지 않으세요?</a>
+            <a href="/member/search/password">비밀번호가 기억나지 않으세요?</a>
           </div>
 
           <br>

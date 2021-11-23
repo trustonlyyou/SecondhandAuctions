@@ -10,10 +10,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
 
     <title>로그인 | 중고 경매의 세계</title>
 
@@ -31,7 +32,7 @@
                     <hr>
                     <br>
 
-                    <form class="form-signin" action="/member/login/action" method="post">
+                    <form class="form-signin">
                         <div class="input-group input-group-lg">
                             <input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디를 입력해주세요." aria-label="Large"
                                    aria-describedby="inputGroup-sizing-sm">
@@ -48,7 +49,7 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="login" class="btn btn-dark btn-lg btn-block" value="로그인" disabled>
+                            <input type="button" id="loginAjax" class="btn btn-dark btn-lg btn-block" value="로그인" disabled>
 
                         </div>
 
@@ -73,7 +74,6 @@
 
                         <div>
                             <input type="submit" id="appleLogin" class="btn btn-outline-dark btn-lg btn-block" value="애플 로그인" disabled>
-
                         </div>
 
                         <br>
@@ -123,8 +123,38 @@
 
     $.fn.flagCheck = function () {
         if ((idFlag && passwordFlag) == true) {
-            $("#login").attr('disabled', false);
+            $("#loginAjax").attr('disabled', false);
         }
     }
+
+    $("#loginAjax").on("click", function (e) {
+
+        var memberId = $("#memberId").val();
+        var memberPassword = $("#memberPassword").val();
+
+        var formData = {
+            memberId : memberId,
+            memberPassword : memberPassword
+        }
+
+       $.ajax({
+           url: '/member/login/submit',
+           type: 'post',
+           data: formData,
+
+           success: function (data) {
+               if (data.result === 1) {
+                   window.location.replace("/"); // replace 로 처리하면 뒤로가기가 막힌다.
+               } else {
+                   window.alert("아이디 또는 비밀번호가 틀립니다.")
+                   $("#memberPassword").val("");
+                   $("#loginAjax").attr('disabled', true);
+               }
+           },
+           error: function (request,status,error) {
+               console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+           }
+       });
+    });
 </script>
 </html>

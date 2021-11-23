@@ -16,7 +16,8 @@ public class MemberInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
 
         if (session.getAttribute("member") != null) {
-            session.removeAttribute("member");
+//            session.removeAttribute("member");
+            session.invalidate();
         }
 
         return true;

@@ -12,9 +12,11 @@ public interface MemberDao {
 
     public int login(Map<String, Object> memberInfo) throws Exception;
 
+    // todo ::  비밀번호도 체크해야지
     public MemberVo memberInfo(String memberId) throws Exception;
 
-    public String searchIdEmail(String memberEmail) throws Exception;
+    // 아이디 찾기
+    public String searchIdEmail(Map<String, Object> info) throws Exception;
 
     public String searchIdPhone(Map<String, Object> params) throws Exception;
 
@@ -22,6 +24,7 @@ public interface MemberDao {
 
     public int isMemberPhone(Map<String, Object> params) throws Exception;
 
+    // 비밀번호 찾기
     public int checkSearchPwdPhone(Map<String, Object> params) throws Exception;
 
     public int checkSearchPwdEmail(Map<String, Object> params) throws Exception;

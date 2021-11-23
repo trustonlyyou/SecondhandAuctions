@@ -75,12 +75,13 @@
 
 
     <!--  아이디 찾기  -->
-    <select id="searchIdEmail" parameterType="String" resultType="String">
+    <select id="searchIdEmail" parameterType="Map" resultType="String">
         select
             memberId
         from
             member
         where
+            memberName = #{memberName} and
             memberEmail = #{memberEmail} and
             isMemberCheck = 1;
     </select>
@@ -117,6 +118,7 @@
         where
             memberId = #{memberId} and
             memberEmail = #{memberEmail} and
+
             isMemberCheck = 1;
     </select>
 

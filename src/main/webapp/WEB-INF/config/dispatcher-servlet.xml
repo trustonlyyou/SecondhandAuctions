@@ -23,6 +23,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/member/login/action"/>
+            <mvc:mapping path="/member/logout/action"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

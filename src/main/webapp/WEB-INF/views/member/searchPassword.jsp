@@ -1,6 +1,6 @@
 <%--
   Created by IntelliJ IDEA.
-  User: junghwan
+  User: junghwan화
   Date: 2021/08/31
   Time: 1:41 오후
   To change this template use File | Settings | File Templates.
@@ -44,8 +44,8 @@
                     <br>
                     <br>
 
-                    <!-- 핸드폰 인증 -->
-                    <form class="form-signin" id="phoneForm" action="/member/search/password/phone/action" method="post">
+                    <!-- ================== 핸드폰 인증 ================== -->
+                    <form class="form-signin" id="phoneForm">
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberId" name="memberId" class="form-control"
                                    placeholder="아이디를 입력해주세요." aria-label="Large"
@@ -84,14 +84,14 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="searchPwdSubmitPhone" name="searchPwdSubmitPhone"
+                            <input type="button" id="searchPwdSubmitPhone" name="searchPwdSubmitPhone"
                                    class="btn btn-dark btn-lg btn-block" value="비밀번호 찾기" disabled>
                         </div>
                     </form>
 
 
                     <!-- ====================이메일 인증==================  -->
-                    <form action="/member/search/password/email/action" method="post" id="emailForm">
+                    <form id="emailForm">
                         <div class="input-group input-group-lg">
                             <input type="text" id="memberIdEmail" name="memberIdEmail" class="form-control"
                                    placeholder="아이디를 입력해주세요." aria-label="Large"
@@ -122,7 +122,7 @@
                         <br>
 
                         <div>
-                            <input type="submit" id="searchPwdSubmitEmail" name="searchPwdSubmitEmail"
+                            <input type="button" id="searchPwdSubmitEmail" name="searchPwdSubmitEmail"
                                    class="btn btn-dark btn-lg btn-block" value="비밀번호 찾기" disabled>
                         </div>
 
@@ -139,7 +139,7 @@
                             <a href="/member/search/id">비밀번호 찾기</a>
                         </span>
 
-                    <hr>e
+                    <hr>
 
                     <br>
 
@@ -175,16 +175,51 @@
                     var inputNum = $("#phoneInputNum").val();
 
                     if (inputNum === checkKey) {
-                        alert('인증번호가 일치합니다.');
+                        window.alert('인증번호가 일치합니다.');
                         $("#searchPwdSubmitPhone").attr('disabled', false);
                     } else {
-                        alert('인증번호가 틀립니다.');
+                        window.alert('인증번호가 틀립니다.');
                         $("#searchPwdSubmitPhone").attr('disabled', true);
                     }
                 });
             }
         });
     });
+
+    // 핸드폰으로 패스워드 찾기
+    $("#searchPwdSubmitPhone").on("click", function () {
+        var memberId = $("#memberId").val();
+        var memberName = $("#memberName").val();
+        var memberPhone = $("#memberPhone").val();
+
+        var formData = {
+            memberId : memberId,
+            memberName : memberName,
+            memberPhone : memberPhone
+        }
+
+        $.ajax({
+            url: '/member/search/password/phone',
+            type: 'post',
+            data: formData,
+
+            success: function (data) {
+
+                switch (data.check) {
+                    case 0 :
+                        window.alert("입력하신 정보의 회원이 없습니다.");
+                        window.location.replace("/member/search/password");
+                        break;
+                    case 1 :
+                        window.location.replace("/member/modify/form")
+                        break;
+                }
+            }
+        });
+
+    });
+
+    //========================= 이메일로 패드워드 찾기 =========================
 
     $("#checkEmail").click(function () {
 
@@ -204,7 +239,9 @@
 
             success: function (data) {
                 $("#input_mail").attr("disabled", true);
-                code = data;
+                code = data.num;
+
+                console.log(data.num);
 
                 $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
                 $("#emailCheckMsg").css('color','green');
@@ -217,6 +254,30 @@
         });
     });
 
+    $("#searchPwdSubmitEmail").on("click", function () {
+        $.ajax({
+            url: '/member/search/password/email',
+            type: 'post',
+            data: $("form").serialize(),
+
+            success: function (data) {
+                window.alert("check :: " + data.check);
+
+                switch (data.check) {
+                    case 0 :
+                        window.alert("입력하신 정보의 회원이 없습니다.");
+                        window.location.replace("/member/search/password");
+                        break;
+                    case 1 :
+                        window.location.replace("/member/modify/form")
+                        break;
+                }
+            },
+            error: function (request,status,error) {
+                window.alert("error");
+            }
+        });
+    });
 
     $(document).ready(function () {
         $("#emailForm").hide();
@@ -425,16 +486,14 @@
         $("#emailInputNumCheck").click(function () {
             var inputCode = $("#emailInputNum").val();
 
-            console.log("input_mailCheck :: " + code);
-
             if (inputCode != code) {
-                alert("인증번호가 일치하지 않습니다.");
+                window.alert("인증번호가 일치하지 않습니다.");
 
                 emailFlag = false;
 
                 return false;
             } else {
-                alert("인증번호가 일치합니다.");
+                window.alert("인증번호가 일치합니다.");
 
                 emailFlag = true;
 

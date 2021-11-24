@@ -29,6 +29,6 @@ public interface MemberDao {
 
     public int checkSearchPwdEmail(Map<String, Object> params) throws Exception;
 
-    public void modifyPassword(Map<String, Object> params) throws Exception;
+    public int modifyPassword(Map<String, Object> params) throws Exception;
 }
 

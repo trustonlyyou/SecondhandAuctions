@@ -186,7 +186,7 @@
         });
     });
 
-    // 이메일로 아이디 찾기
+    // 핸드폰으로 패스워드 찾기
     $("#searchPwdSubmitPhone").on("click", function () {
         var memberId = $("#memberId").val();
         var memberName = $("#memberName").val();
@@ -211,7 +211,7 @@
                         window.location.replace("/member/search/password");
                         break;
                     case 1 :
-                        window.location.replace("/member/modify/form")
+                        window.location.replace("/member/password/modify/form")
                         break;
                 }
             }
@@ -219,7 +219,7 @@
 
     });
 
-
+    //========================= 이메일로 패드워드 찾기 =========================
 
     $("#checkEmail").click(function () {
 
@@ -254,7 +254,6 @@
         });
     });
 
-    // 이메일로 아이디 찾기
     $("#searchPwdSubmitEmail").on("click", function () {
         $.ajax({
             url: '/member/search/password/email',
@@ -270,7 +269,7 @@
                         window.location.replace("/member/search/password");
                         break;
                     case 1 :
-                        window.location.replace("/member/modify/form")
+                        window.location.replace("/member/password/modify/form")
                         break;
                 }
             },

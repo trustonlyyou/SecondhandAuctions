@@ -211,7 +211,7 @@
                         window.location.replace("/member/search/password");
                         break;
                     case 1 :
-                        window.location.replace("/member/modify/form")
+                        window.location.replace("/member/password/modify/form")
                         break;
                 }
             }
@@ -269,7 +269,7 @@
                         window.location.replace("/member/search/password");
                         break;
                     case 1 :
-                        window.location.replace("/member/modify/form")
+                        window.location.replace("/member/password/modify/form")
                         break;
                 }
             },

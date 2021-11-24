@@ -8,6 +8,7 @@ import com.secondhandauctions.utils.EncryptionSHA256;
 import com.secondhandauctions.utils.InfoFormatter;
 import com.secondhandauctions.vo.MemberVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,7 +155,7 @@ public class MemberController {
         String inputPassword = "";
 
         inputPassword = memberVo.getMemberPassword();
-        encryption.setMemberEncryptionPassword(inputPassword, memberVo);
+        encryption.setMemberVoEncryptionPassword(inputPassword, memberVo);
 
         memberService.setMember(memberVo);
 
@@ -212,6 +213,12 @@ public class MemberController {
 
     @GetMapping(value = "/logout/action")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Object object = commons.getMemberSession(request);
+
+        if (object != null) {
+            request.getSession().invalidate();
+        }
+
         return "redirect:/";
     }
 
@@ -257,56 +264,11 @@ public class MemberController {
         return map;
     }
 
-//    @PostMapping(value = "/search/id/email/action")
-//    public String searchIdFromEmail(HttpServletRequest request, Model model) throws Exception {
-//        String id = "";
-//        String toEmail = "";
-//        String title = "";
-//        String content = "";
-//
-//        toEmail = request.getParameter("memberEmail");
-//
-//        id = memberService.getMemberIdFromEmail(toEmail);
-//
-//        logger.info("memberId :: " + id);
-//
-//        if ((id == null) || id.equals("")) {
-//            model.addAttribute("msg", "fail");
-//
-//            return "/member/searchIdResultEmail";
-//        }
-//
-//        title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
-//        content = "아이디 찾기 서비스를 이용해 해주셔서 감사합니다." +
-//                "아이디는 " + id + " 입니다.";
-//
-//        emailService.sendEmail(toEmail, title, content);
-//
-//        return "/member/searchIdResultEmail";
-//    }
-
     @GetMapping(value = "/searchIdResult")
     public String IdResultEmail() {
         return "/member/searchIdResultEmail";
     }
 
-    // 핸드폰으로 아이디 찾기
-    // 뒤로가기 어떻게 할래? 1. 그냥 한다. 2. 핸드폰 번호로 아이디를 보낸다.
-//    @PostMapping(value = "/search/id/phone/action")
-//    public String searchIdFromPhone(String memberName, String memberPhone,
-//                                    RedirectAttributes redirectAttributes) throws Exception{
-//        Map<String, Object> memberInfo = new HashMap<>();
-//        String memberId = "";
-//
-//        memberInfo.put("memberName", memberName);
-//        memberInfo.put("memberPhone", memberPhone);
-//
-//        memberId = memberService.getMemberIdFromPhone(memberInfo);
-//
-//        redirectAttributes.addFlashAttribute("memberId", memberId);
-//
-//        return "redirect:/member/searchIdResultPhone";
-//    }
 
     @PostMapping(value = "/search/id/phone")
     @ResponseBody
@@ -335,14 +297,6 @@ public class MemberController {
 
     @GetMapping(value = "/searchIdResultPhone")
     public String IdResultPhone(@RequestParam String memberId, Model model) {
-//        String memberId = "";
-//
-//        memberId = (String) model.getAttribute("memberId");
-//
-//        logger.info("memberId :: " + memberId);
-//
-//        model.addAttribute("memberId", memberId);
-
         // TODO: 2021/11/23 AES256 복호화해서 넘기기
         model.addAttribute("memberId", memberId);
 
@@ -355,7 +309,6 @@ public class MemberController {
         return "member/searchPassword";
     }
 
-    // ajax from phone get password
     @PostMapping(value = "/search/password/phone")
     @ResponseBody
     public Map<String, Integer> searchPasswordFromPhone(HttpServletRequest request, String memberId,
@@ -382,41 +335,6 @@ public class MemberController {
         return result;
     }
 
-    // 핸드폰으로 패스워드 찾기
-//    @PostMapping(value = "/search/password/phone/action")
-//    public String searchPasswordPhone(String memberId, String memberName, String memberPhone, HttpServletRequest request) {
-//        Map<String, Object> memberInfo = new HashMap<>();
-//        HttpSession session = request.getSession();
-//
-//        int check = 0;
-//
-//        logger.info("Request URL :: {}", request.getRequestURI());
-//
-//        logger.info("memberId :: {}", memberId);
-//        logger.info("memberName :: {}", memberName);
-//        logger.info("memberPhone :: {} ", memberPhone);
-//
-//        try {
-//            memberInfo.put("memberId", memberId);
-//            memberInfo.put("memberName", memberName);
-//            memberInfo.put("memberPhone", memberPhone);
-//
-//            check = memberService.isMemberPasswordPhone(memberInfo);
-//
-//        } catch (Exception e) {
-//            logger.info("error :: " + e);
-//        }
-//
-//        if (check == 0) {
-//            return "member/searchPasswordResult";
-//        }
-//
-//        session.setAttribute("member", memberId);
-//
-//        return "redirect:/member/modify/form";
-//    }
-
-    // ajax from email get password
     @PostMapping(value = "/search/password/email")
     @ResponseBody
     public Map<String, Object> searchPasswordEmail(HttpServletRequest request, String memberIdEmail, String memberEmail) throws Exception {
@@ -444,103 +362,47 @@ public class MemberController {
         return result;
     }
 
-
-    // 이메일로 패스워드 찾기
-//    @PostMapping(value = "/search/password/email/action")
-//    public String searchPasswordEmail(HttpServletRequest request, String memberIdEmail, String memberEmail) {
-//        Map<String, Object> memberInfo = new HashMap<>();
-//        HttpSession session = request.getSession();
-//
-//        int check = 0;
-//
-//        logger.info("Request URL :: {}", request.getRequestURI());
-//
-//        logger.info("memberId :: {}", memberIdEmail);
-//        logger.info("memberEmail :: {}", memberEmail);
-//
-//        try {
-//            memberInfo.put("memberId", memberIdEmail);
-//            memberInfo.put("memberEmail", memberEmail);
-//
-//            check = memberService.isMemberPasswordEmail(memberInfo);
-//
-//            logger.info("check :: " + check);
-//
-//        } catch (Exception e) {
-//            logger.error("error :: " + e);
-//        }
-//
-//        if (check == 0) {
-//            return "member/searchPasswordResult";
-//        }
-//
-//        session.setAttribute("member", memberIdEmail);
-//
-//        logger.info("memberId :: " + memberIdEmail);
-//
-//        return "redirect:/member/modify/form";
-//    }
-
-    @GetMapping(value = "/modify/form")
-    public String modifyPassword(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        String memberId = "";
-
-        logger.info("URL :: " + request.getRequestURI());
-
-//        memberId = (String) model.getAttribute("member");
-        memberId = (String) session.getAttribute("member");
-
-        logger.info("memberId :: " + memberId);
-
-//        if ((memberId != null) || ("".equals(memberId))) {
-//            session.setAttribute("member", memberId);
-//        }
-//
-//        logger.info("Model MemberId :: " + memberId);
-//
-//        if (("".equals(memberId)) || (memberId == null)) {
-//            memberId = (String) session.getAttribute("member");
-//        }
+    @GetMapping(value = "/password/modify/form")
+    public String modifyPassword(HttpServletRequest request) {
 
         return "member/modifyPassword";
     }
 
     @PostMapping(value = "/modify/password")
-    public String modifyPassword(HttpServletRequest request, String memberPassword, Model model) throws Exception {
-        Map<String, Object> memberInfo = new HashMap<>();
+    @ResponseBody
+    public Map<String, Integer> modifyPassword(HttpServletRequest request, String memberPassword) throws Exception {
+        Map<String, Object> info = new HashMap<>();
+        Map<String, Integer> result = new HashMap<>();
+
+
         String memberId = "";
-        String encryptionPwd = "";
+        String encryptionPassword = "";
+        int check = 0;
 
-        HttpSession session = request.getSession();
-        memberId = (String) session.getAttribute("member");
+        if (!(StringUtils.isEmpty(memberId) || StringUtils.isEmpty(memberPassword))) {
+            log.info("memberId || memberPassword isEmpty");
+            result.put("check", 0);
 
-        logger.info("memberId :: " + memberId);
-
-        if ((memberId == null || "".equals(memberId))) {
-            return "redirect:/";
+            return result;
         }
 
-        // 암호화 하는 것
-//        encryptionPwd = EncryptionSHA256.encrypt(memberPassword);
+        memberId = commons.getMemberSession(request);
+        encryptionPassword = encryption.encrypt(memberPassword);
 
-        // 수정하자
-//        encryptionPwd = encryption.getEncryption(memberPassword);
+        info.put("memberId", memberId);
+        info.put("memberPassword", encryptionPassword);
 
-        // 값을 넣는 것을 따로 구현
-        memberInfo.put("memberId", memberId);
-        memberInfo.put("memberPassword", encryptionPwd);
+        check = memberService.setPassword(info);
 
-        try {
-            memberService.setPassword(memberInfo);
+        log.info("modify password result {}" , check);
 
-        } catch (Exception e) {
-            logger.error("error :: " + e);
+        if (check == 1) {
+            request.getSession().invalidate();
         }
 
-        session.invalidate();
+        result.put("check", check);
 
-        return "redirect:/member/modify/password/result";
+        return result;
     }
 
     @GetMapping(value = "/modify/password/result")

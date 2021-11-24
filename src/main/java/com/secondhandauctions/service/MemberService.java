@@ -117,8 +117,13 @@ public class MemberService {
         return check;
     }
 
-    public void setPassword(Map<String, Object> memberInfo) throws Exception {
-        memberDao.modifyPassword(memberInfo);
+    // 비밀 번호 수정
+    public int setPassword(Map<String, Object> memberInfo) throws Exception {
+        int check = 0;
+
+        check = memberDao.modifyPassword(memberInfo);
+
+        return check;
     }
 
 }

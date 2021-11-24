@@ -7,7 +7,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-
 <head>
   <meta charset="UTF-8">
   <title>비밀번호 변경 | 중고 경매의 세계</title>
@@ -33,7 +32,7 @@
           <br>
           <br>
 
-          <form class="form-signin" id="phoneForm" action="/member/modify/password" method="post">
+          <form class="form-signin" id="phoneForm">
 
             <div class="input-group input-group-lg">
               <input type="password" id="memberPassword" name="memberPassword" class="form-control"
@@ -58,7 +57,7 @@
             <br>
 
             <div>
-              <input type="submit" id="modifyPassword" name="modifyPassword"
+              <input type="button" id="modifyPassword" name="modifyPassword"
                      class="btn btn-dark btn-lg btn-block" value="비밀번호 변경" disabled>
             </div>
           </form>
@@ -87,46 +86,7 @@
 
 <script>
   $(document).ready(function () {
-
-    // todo :: false 로 수정, input 주석 해제.
-    var idFlag = true;
     var passwordFlag = false;
-
-
-    $("#memberId").on('keyup', function () {
-      var id = $("#memberId").val();
-      var isID = /^[a-z0-9]{4,19}$/;
-
-
-      if (id == "") {
-        $("#IdCheckMsg").text('아이디는 필수 입력입니다.');
-        $("#IdCheckMsg").css('color', 'red');
-
-        idFlag = false;
-
-        return false;
-      }
-
-      if (!isID.test(id)) {
-        $("#IdCheckMsg").text('5~20자의 영문 소문자, 숫자만 사용 가능합니다.');
-        $("#IdCheckMsg").css('color', 'red');
-
-        idFlag = false;
-
-        return false;
-
-      } else {
-        $("#IdCheckMsg").text("");
-
-        idFlag = true;
-
-        if ((idFlag && passwordFlag) == true) {
-          $("#modifyPassword").attr('disabled', false);
-        }
-
-        return true;
-      }
-    });
 
     function checkSpace(str) {
       if (str.search(/\s/) != -1) {
@@ -225,14 +185,37 @@
 
         passwordFlag = true;
 
-        if ((idFlag && passwordFlag) == true) {
+        if (passwordFlag === true) {
           $("#modifyPassword").attr('disabled', false);
         }
 
         return true;
       }
     });
+  });
 
+  $("#modifyPassword").on("click", function () {
+    $("#modifyPassword").attr('disabled', false);
+
+    $.ajax({
+      url: '/member/modify/password',
+      type: 'post',
+      data: $("form").serialize(),
+
+      success: function (data) {
+        var check = data.check;
+
+        switch (check) {
+          case 0 :
+            window.alert("다시 시도해 주세요.");
+            window.location.replace("/member/search/password");
+            break;
+          case 1 :
+            window.location.replace("/member/modify/password/result");
+            break;
+        }
+      }
+    });
   });
 
 </script>

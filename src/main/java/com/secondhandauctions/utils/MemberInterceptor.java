@@ -13,14 +13,21 @@ public class MemberInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+//        HttpSession session = request.getSession();
+//
+//        if (session.getAttribute("member") != null) {
+//            session.invalidate();
+//        }
+
         HttpSession session = request.getSession();
 
         if (session.getAttribute("member") != null) {
-//            session.removeAttribute("member");
-            session.invalidate();
+            return true;
         }
 
-        return true;
+        response.sendRedirect(request.getContextPath() + "/member/login/form");
+
+        return false;
     }
 
     // after controller

@@ -29,4 +29,13 @@ public class Commons {
         HttpSession session = request.getSession();
         session.setAttribute("member", memberId);
     }
+
+    public String getMemberSession(HttpServletRequest request) {
+        String memberId = "";
+
+        HttpSession session = request.getSession();
+        memberId = (String) session.getAttribute("member");
+
+        return memberId;
+    }
 }

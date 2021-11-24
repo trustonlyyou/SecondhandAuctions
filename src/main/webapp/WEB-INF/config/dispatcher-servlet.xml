@@ -22,8 +22,8 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/member/login/action"/>
-            <mvc:mapping path="/member/logout/action"/>
+            <mvc:mapping path="/product/register/form"/>
+            <mvc:mapping path="/member/modify/form"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

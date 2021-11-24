@@ -37,7 +37,7 @@ public class EncryptionSHA256 {
         }
     }
 
-    public void setMemberEncryptionPassword(String target, MemberVo memberVo) throws Exception {
+    public void setMemberVoEncryptionPassword(String target, MemberVo memberVo) throws Exception {
         String encryptionStr = "";
 
         encryptionStr = encrypt(target);

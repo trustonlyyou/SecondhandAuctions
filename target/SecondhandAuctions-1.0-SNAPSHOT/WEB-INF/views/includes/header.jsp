@@ -37,9 +37,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/member/join/form">회원가입</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/product/register/form">상품 등록</a>
-                        </li>
                     </c:if>
                     <c:if test="${sessionScope.member != null}">
                         <li class="nav-item">

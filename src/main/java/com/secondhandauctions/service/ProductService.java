@@ -28,6 +28,72 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
 
+    public int uploadImage(List<MultipartFile> uploadFiles, int productId) throws Exception {
+        List<ImageVo> imageVoList = new ArrayList<>();
+
+        String uploadDir = "";
+        File uploadPath = null;
+
+        int check = 0;
+
+        uploadDir = FileUtils.getUploadPath();
+        uploadPath = new File(ProductDao.UPLOAD_PATH, uploadDir);
+
+        if (uploadFiles.isEmpty()) {
+            return check;
+        }
+        if (!uploadPath.exists()) {
+            uploadPath.mkdirs();
+        }
+
+        for (MultipartFile file : uploadFiles) {
+            ImageVo imageVo = new ImageVo();
+            String uuidFileName = FileUtils.getUUID();
+            String uploadFileName = uuidFileName + "_" + file.getOriginalFilename();
+
+            logger.info("uploadPath :: " + uploadDir); // /Users/junghwan/Desktop/upload/2021/10/20
+            logger.info("originalFileName :: " + file.getOriginalFilename());
+            logger.info("fileExtension :: " + FilenameUtils.getExtension(file.getOriginalFilename()));
+            logger.info("uploadFileName :: " + uploadFileName); // b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
+            logger.info("fileSize :: " + file.getSize());
+
+            File target = new File(uploadPath, uploadFileName);
+
+            file.transferTo(target);
+
+            imageVo.setUploadPath(uploadDir);
+            imageVo.setFileExtension(FilenameUtils.getExtension(file.getOriginalFilename()));
+            imageVo.setUploadFileName(uploadFileName);
+            imageVo.setFileSize(file.getSize());
+
+            imageVoList.add(imageVo);
+        }
+
+        check  = registerImage(productId, imageVoList);
+
+        return check;
+    }
+
+    public int registerImage(int productId, List<ImageVo> images) throws Exception {
+        int result = 0;
+
+        if (images.isEmpty()) {
+            return result;
+        }
+
+        for (ImageVo imageVo : images) {
+            imageVo.setProductId(productId);
+        }
+
+        productDao.registerImg(images);
+
+        result = 1;
+
+        return result;
+    }
+
+    //====================================================================================
+
     public ResponseEntity<List<ImageVo>> uploadAjax(MultipartFile[] uploadFile) {
         List<ImageVo> imageVoList = new ArrayList<>();
         String uploadDir = "";
@@ -163,7 +229,9 @@ public class ProductService {
                 || ("".equals(productTitle)) || productTitle == null || ("".equals(productContent) || productContent == null)
                 || ("".equals(startPrice) || startPrice == null)) {
 
-            result.put("result", 0);
+            result.put("check", 0);
+
+            return result;
         }
 
         // 게시물 등록
@@ -171,6 +239,7 @@ public class ProductService {
 
         productId = productVo.getProductId();
 
+        result.put("check", 1);
         result.put("productId", productId);
 
         return result;

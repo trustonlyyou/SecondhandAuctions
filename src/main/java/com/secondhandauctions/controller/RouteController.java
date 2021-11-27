@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class RouteController {
 
     @RequestMapping(value = "/")
     public String home(HttpServletRequest request, @ModelAttribute Criteria criteria,
-                       @RequestParam(required = false, defaultValue = "") String status, Model model) {
+                       @RequestParam(required = false, defaultValue = "") String status, Model model) throws Exception {
                                         // 해당 파라미터가 필수 인지
         List<ShopVo> items = new ArrayList<>();
         PageDTO pageDTO = new PageDTO();
@@ -43,28 +42,19 @@ public class RouteController {
         log.info("client ip :: {}", ip);
         log.info("status :: {}", status);
 
-        try {
-            switch (status) {
-                case "" :
-                case "newList" :
-                    count = shopService.getTotalCount();
-                    items = shopService.getNewProductList(criteria);
+        switch (status) {
+            case "" :
+            case "newList" :
+                count = shopService.getTotalCount();
+                items = shopService.getNewProductList(criteria);
 
-                    break;
+                break;
 
-                case "expireList" :
-                    count = shopService.getTotalCount();
-                    items = shopService.getExpireTimeProductList(criteria);
+            case "expireList" :
+                count = shopService.getTotalCount();
+                items = shopService.getExpireTimeProductList(criteria);
 
-                    break;
-                }
-        } catch (Exception e) {
-            log.error("error :: " + e);
-            StringWriter stringWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stringWriter));
-
-            log.error(stringWriter.toString());
-
+                break;
         }
 
         pageDTO.setCriteria(criteria);

@@ -2,6 +2,7 @@ package com.secondhandauctions.controller;
 
 import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.MyPageService;
+import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.utils.InfoFormatter;
 import com.secondhandauctions.utils.PageDTO;
@@ -41,8 +42,11 @@ public class MyPageController {
     @Autowired
     private InfoFormatter formatter;
 
+    @Autowired
+    private Commons commons;
+
     @GetMapping(value = "/myPage")
-    public String myPageForm(HttpServletRequest request, Model model) {
+    public String myPageForm(HttpServletRequest request, Model model) throws Exception {
         MemberVo memberVo = new MemberVo();
         String memberId = "";
         String memberName = "";
@@ -50,34 +54,27 @@ public class MyPageController {
         String memberEmail = "";
         String memberPhone = "";
 
-        try {
-            HttpSession session = request.getSession();
-            memberId = (String) session.getAttribute("member");
+        memberId = commons.getMemberSession(request);
 
-
-            if (("".equals(memberId) || memberId == null)) {
-                return "redirect:/member/login/form";
-            }
-
-            memberVo = memberService.getMemberInfo(memberId);
-
-            memberPassword = formatter.passwordFormat(memberVo.getMemberPassword());
-            memberName = formatter.nameFormat(memberVo.getMemberName());
-            memberEmail = formatter.emailFormat(memberVo.getMemberEmail());
-            memberPhone = formatter.phoneFormat(memberVo.getMemberPhone());
-
-            memberVo.setMemberPassword(memberPassword);
-            memberVo.setMemberName(memberName);
-            memberVo.setMemberEmail(memberEmail);
-            memberVo.setMemberPhone(memberPhone);
-
-            logger.info(memberVo.toString());
-
-            model.addAttribute("memberInfo", memberVo);
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-            e.printStackTrace();
+        if (("".equals(memberId) || memberId == null)) {
+            return "redirect:/member/login/form";
         }
+
+        memberVo = memberService.getMemberInfo(memberId);
+
+        memberPassword = formatter.passwordFormat(memberVo.getMemberPassword());
+        memberName = formatter.nameFormat(memberVo.getMemberName());
+        memberEmail = formatter.emailFormat(memberVo.getMemberEmail());
+        memberPhone = formatter.phoneFormat(memberVo.getMemberPhone());
+
+        memberVo.setMemberPassword(memberPassword);
+        memberVo.setMemberName(memberName);
+        memberVo.setMemberEmail(memberEmail);
+        memberVo.setMemberPhone(memberPhone);
+
+        logger.info(memberVo.toString());
+
+        model.addAttribute("memberInfo", memberVo);
 
         return "member/myPage";
     }

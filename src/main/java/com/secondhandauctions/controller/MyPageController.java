@@ -2,22 +2,18 @@ package com.secondhandauctions.controller;
 
 import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.MyPageService;
-import com.secondhandauctions.utils.Commons;
-import com.secondhandauctions.utils.Criteria;
-import com.secondhandauctions.utils.InfoFormatter;
-import com.secondhandauctions.utils.PageDTO;
+import com.secondhandauctions.utils.*;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class MyPageController {
 
     private static final Logger logger = LoggerFactory.getLogger(MyPageController.class);
@@ -40,12 +37,47 @@ public class MyPageController {
     private MyPageService myPageService;
 
     @Autowired
+    private EncryptionSHA256 encryptionSHA256;
+
+    @Autowired
     private InfoFormatter formatter;
 
     @Autowired
     private Commons commons;
 
-    @GetMapping(value = "/myPage")
+    @GetMapping(value = "/myPage/check/form")
+    public String checkForm() {
+        return "myPage/myInfo";
+    }
+
+
+    @PostMapping(value = "/myPage/check")
+    public String myPageCheck(HttpServletRequest request,
+            @ModelAttribute("checkPassword") String memberPassword, Model model, RedirectAttributes attributes) throws Exception {
+        Map<String, String> info = new HashMap<>();
+        int check = 0;
+
+        String memberId = "";
+        memberId = commons.getMemberSession(request);
+
+        if (!StringUtils.isEmpty(memberPassword)) {
+            info.put("memberId", memberId);
+            info.put("memberPassword", encryptionSHA256.encrypt(memberPassword));
+
+            check = myPageService.checkPassword(info);
+        }
+
+        log.info("check result :: {}", check);
+
+        if (check == 1) {
+            attributes.addFlashAttribute("check", 1);
+            return "redirect:/myPage/form";
+        }
+
+        return "redirect:/myPage/check/form";
+    }
+
+    @GetMapping(value = "/myPage/form")
     public String myPageForm(HttpServletRequest request, Model model) throws Exception {
         MemberVo memberVo = new MemberVo();
         String memberId = "";
@@ -55,10 +87,6 @@ public class MyPageController {
         String memberPhone = "";
 
         memberId = commons.getMemberSession(request);
-
-        if (("".equals(memberId) || memberId == null)) {
-            return "redirect:/member/login/form";
-        }
 
         memberVo = memberService.getMemberInfo(memberId);
 
@@ -76,7 +104,7 @@ public class MyPageController {
 
         model.addAttribute("memberInfo", memberVo);
 
-        return "member/myPage";
+        return "myPage/myInfo";
     }
 
     @GetMapping(value = "/myShop/list")
@@ -108,7 +136,7 @@ public class MyPageController {
         model.addAttribute("list", result);
         model.addAttribute("pageMaker", pageDTO);
 
-        return "member/myShopList";
+        return "myPage/myShopList";
 
     }
 
@@ -155,7 +183,7 @@ public class MyPageController {
             e.printStackTrace();
         }
 
-        return "member/myShopDetail";
+        return "myPage/myShopDetail";
     }
 
     // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지

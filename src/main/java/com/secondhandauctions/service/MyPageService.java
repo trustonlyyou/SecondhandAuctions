@@ -16,6 +16,23 @@ public class MyPageService {
     @Autowired
     private MyPageDao myPageDao;
 
+    public int checkPassword(Map<String, String> info) throws Exception {
+        int check = 0;
+
+        if (info.isEmpty()) {
+            return check;
+        }
+
+        check = myPageDao.checkPassword(info);
+
+        if (check > 1 ) {
+            check = 0;
+            return check;
+        }
+
+        return check;
+    }
+
     public int getMyShopListCount(String memberId) throws Exception {
         int count = 0;
 

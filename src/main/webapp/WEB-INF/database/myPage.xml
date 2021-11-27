@@ -5,6 +5,17 @@
 
 <mapper namespace="com.secondhandauctions.dao.MyPageDao">
 
+    <select id="checkPassword" parameterType="Map" resultType="int">
+        select
+            count(*)
+        from
+            member
+        where
+            memberId = #{memberId} and
+            memberPassword = #{memberPassword} and
+            isMemberCheck = 1
+    </select>
+
     <select id="count" parameterType="String" resultType="int">
         select
             count(*)

@@ -22,10 +22,9 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <!--      이제 이거 지우자      -->
-            <mvc:mapping path="/product/register/form"/>
             <mvc:mapping path="/member/modify/form"/>
             <mvc:mapping path="/register/product/form"/>
+            <mvc:mapping path="/myPage/**/*"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface MyPageDao {
 
+    public int checkPassword(Map<String, String> params) throws Exception;
+
     public int count(String memberId) throws Exception;
 
     public List<ProductVo> myShopList(Map<String, Object> params) throws Exception;

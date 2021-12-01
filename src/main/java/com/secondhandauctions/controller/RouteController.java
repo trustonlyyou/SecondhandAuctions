@@ -3,7 +3,7 @@ package com.secondhandauctions.controller;
 import com.secondhandauctions.service.ShopService;
 import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
-import com.secondhandauctions.utils.PageDTO;
+import com.secondhandauctions.utils.PagingUtil;
 import com.secondhandauctions.vo.ShopVo;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +31,7 @@ public class RouteController {
                        @RequestParam(required = false, defaultValue = "") String status, Model model) throws Exception {
                                         // 해당 파라미터가 필수 인지
         List<ShopVo> items = new ArrayList<>();
-        PageDTO pageDTO = new PageDTO();
+        PagingUtil pagingUtil = new PagingUtil();
 
         String fileName = "";
         int count = 0;
@@ -57,26 +57,26 @@ public class RouteController {
                 break;
         }
 
-        pageDTO.setCriteria(criteria);
-        pageDTO.setTotalCount(count);
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(count);
 
         model.addAttribute("list", items);
-        model.addAttribute("pageMaker", pageDTO);
+        model.addAttribute("pageMaker", pagingUtil);
 
         if ("".equals(status)) {
             try {
                 count = shopService.getTotalCount();
                 items = shopService.getNewProductList(criteria);
 
-                pageDTO.setCriteria(criteria);
-                pageDTO.setTotalCount(count);
+                pagingUtil.setCriteria(criteria);
+                pagingUtil.setTotalCount(count);
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("error :: " + e);
             }
 
             model.addAttribute("list", items);
-            model.addAttribute("pageMaker", pageDTO);
+            model.addAttribute("pageMaker", pagingUtil);
         }
 
 

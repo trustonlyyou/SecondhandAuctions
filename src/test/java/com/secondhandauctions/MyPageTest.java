@@ -1,11 +1,8 @@
 package com.secondhandauctions;
 
 import com.secondhandauctions.dao.MyPageDao;
-import com.secondhandauctions.dao.ShopDao;
 import com.secondhandauctions.utils.Criteria;
-import com.secondhandauctions.utils.PageDTO;
 import com.secondhandauctions.vo.ProductVo;
-import com.secondhandauctions.vo.ShopVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

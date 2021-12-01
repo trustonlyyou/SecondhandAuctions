@@ -98,6 +98,10 @@ public class MyPageService {
     public int deleteProduct(Map<String, Object> params) throws Exception {
         int result = 0;
 
+        if (params.isEmpty()) {
+            return result;
+        }
+
         result = myPageDao.deleteProduct(params);
 
         return result;

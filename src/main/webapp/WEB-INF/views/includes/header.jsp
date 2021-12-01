@@ -40,7 +40,7 @@
                     </c:if>
                     <c:if test="${sessionScope.member != null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="/myPage/check/form">마이페이지</a>
+                            <a class="nav-link" href="/myPage/form">마이페이지</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/member/logout/action">로그아웃</a>

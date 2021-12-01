@@ -120,7 +120,7 @@
                             <form id="modifyForm">
                                 <input type="button" class="listBtn btn btn-warning btn-sm float-right" value="게시물 수정">
                             </form>&nbsp;
-                            <form id="actionForm" action="/myShop/list" method="get">
+                            <form id="actionForm">
                                 <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
                                 <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
                                 <input type="hidden" name="productId" id="productId" value="${product.productId}">
@@ -199,11 +199,45 @@
 
         $(".deleteBtn").on("click", function (e) {
             e.preventDefault();
-            if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") === true) {
-                deleteForm.submit();
-            } else {
-                alert("게시물 삭제 취소");
+
+            // if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") === true) {
+            //     deleteForm.submit();
+            // } else {
+            //     alert("게시물 삭제 취소");
+            // }
+
+
+            var productId = $("#productId").val();
+
+            var formData = {
+                productId : productId
             }
+
+            $.ajax({
+                url: '/myPage/myShop/product/delete',
+                type: 'post',
+                data: formData,
+
+                success: function (result) {
+                    var check = result.check;
+
+                    switch (check) {
+                        case 0 :
+                            window.alert("삭제할 수 있는 권한이 없습니다. 다시 시도해 주세요.");
+                            break;
+
+                        case 1 :
+                            window.alert("게시물 삭제가 완료 되었습니다.");
+                            window.location.replace("/myShop/list")
+
+                            break;
+                    }
+                },
+
+                error: function (request,status,error) {
+
+                }
+            });
         });
     });
 </script>

@@ -50,6 +50,10 @@
       color : #999;
       font-size:.9em;
     }
+
+    .product_textarea {
+      resize: none;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +98,7 @@
             <div class="form-label-group">
               내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
 
-              <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control"></textarea>
+              <textarea name="productContent" id="productContent" cols="30" rows="10" class="product_textarea form-control"></textarea>
             </div>
             <div name="contentCheckMsg" id="contentCheckMsg"></div>
             <br>

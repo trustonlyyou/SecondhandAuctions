@@ -1,5 +1,7 @@
 package com.secondhandauctions.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -9,12 +11,18 @@ import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public int joinCheckSendEmail(String toEmail) throws Exception {
+    public int certificationSendEmail(String toEmail) throws Exception {
+
+        if (StringUtils.isEmpty(toEmail)) {
+            return 0;
+        }
+
         // 난수 생성
         Random random = new Random();
 
@@ -37,6 +45,8 @@ public class EmailService {
         helper.setText(content);
 
         javaMailSender.send(message);
+
+        log.info("인증번호 :: {}", checkNum);
 
         return checkNum;
     }

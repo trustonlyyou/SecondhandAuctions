@@ -1,7 +1,9 @@
 package com.secondhandauctions.controller;
 
+import com.secondhandauctions.service.EmailService;
 import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.MyPageService;
+import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.*;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
@@ -11,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,45 +40,17 @@ public class MyPageController {
     private MyPageService myPageService;
 
     @Autowired
-    private EncryptionSHA256 encryptionSHA256;
-
-    @Autowired
     private InfoFormatter formatter;
 
     @Autowired
     private Commons commons;
 
-    @GetMapping(value = "/myPage/check/form")
-    public String checkForm() {
-        return "myPage/myInfo";
-    }
+    @Autowired
+    private SmsService smsService;
 
+    @Autowired
+    private EmailService emailService;
 
-    @PostMapping(value = "/myPage/check")
-    public String myPageCheck(HttpServletRequest request,
-            @ModelAttribute("checkPassword") String memberPassword, Model model, RedirectAttributes attributes) throws Exception {
-        Map<String, String> info = new HashMap<>();
-        int check = 0;
-
-        String memberId = "";
-        memberId = commons.getMemberSession(request);
-
-        if (!StringUtils.isEmpty(memberPassword)) {
-            info.put("memberId", memberId);
-            info.put("memberPassword", encryptionSHA256.encrypt(memberPassword));
-
-            check = myPageService.checkPassword(info);
-        }
-
-        log.info("check result :: {}", check);
-
-        if (check == 1) {
-            attributes.addFlashAttribute("check", 1);
-            return "redirect:/myPage/form";
-        }
-
-        return "redirect:/myPage/check/form";
-    }
 
     @GetMapping(value = "/myPage/form")
     public String myPageForm(HttpServletRequest request, Model model) throws Exception {
@@ -107,11 +82,64 @@ public class MyPageController {
         return "myPage/myInfo";
     }
 
+    // 비밀번호 수정 자기 인증
+    @GetMapping(value = "/myPage/certification/password")
+    public String userCheck() {
+        return "myPage/myCertification";
+    }
+
+    @PostMapping(value = "/certification/phone", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> checkPhone(@RequestBody String memberPhone) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        String strNum = "";
+
+        strNum = smsService.sendSms(memberPhone);
+
+        if (StringUtils.isEmpty(strNum)) {
+            log.info("smsService sendSms return is null");
+        }
+
+        log.info("인증번호 :: {}", strNum);
+
+        map.put("key", strNum);
+
+        return map;
+    }
+
+    @PostMapping(value = "/certification/email", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> checkEmail(@RequestBody String memberEmail) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        String num = "";
+        int checkNum = 0;
+        String title = "";
+        String content = "";
+
+        log.info(memberEmail);
+
+        checkNum = emailService.certificationSendEmail(memberEmail);
+
+        if (checkNum != 0) {
+            num = Integer.toString(checkNum);
+        } else {
+            result.put("num", 0);
+            log.error("emailService certification return is 0");
+
+            return result;
+        }
+
+        result.put("num", num);
+
+        return result;
+    }
+
     @GetMapping(value = "/myShop/list")
     public String myShopList(@ModelAttribute Criteria criteria, HttpServletRequest request, Model model) {
         List<ProductVo> result = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        PageDTO pageDTO = new PageDTO();
+        PagingUtil pagingUtil = new PagingUtil();
         String memberId = "";
         int count = 0;
 
@@ -130,11 +158,11 @@ public class MyPageController {
             logger.error("error :: " + e);
         }
 
-        pageDTO.setCriteria(criteria);
-        pageDTO.setTotalCount(count);
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(count);
 
         model.addAttribute("list", result);
-        model.addAttribute("pageMaker", pageDTO);
+        model.addAttribute("pageMaker", pagingUtil);
 
         return "myPage/myShopList";
 
@@ -187,48 +215,77 @@ public class MyPageController {
     }
 
     // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
-
-
     // 수정
-    @GetMapping(value = "/myShop/product/modify")
+    @GetMapping(value = "/myPage/myShop/product/modify")
     public String myProductModify(HttpServletRequest request, HttpServletResponse response) {
         return "";
     }
 
-    // 삭제
-    @PostMapping(value = "/myShop/product/delete")
-    public String myProductDelete(HttpServletRequest request, Model model, RedirectAttributes attributes) {
+
+    @PostMapping(value = "/myPage/myShop/product/delete")
+    @ResponseBody
+    public Map<String, Object> deleteMyProduct(HttpServletRequest request, int productId) throws Exception {
         Map<String, Object> params = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         String memberId = "";
-        int productId = 0;
-        int result = 0;
+        int check = 0;
 
-        HttpSession session = request.getSession();
+        memberId = commons.getMemberSession(request);
 
-        productId = Integer.parseInt(request.getParameter("deleteProductId"));
-        memberId = (String) session.getAttribute("member");
+        if (StringUtils.isEmpty(memberId)) {
+            result.put("check", 0);
+            log.error("Member Session is null");
+        }
 
-        logger.info("delete productId :: " + productId);
-        logger.info("Member ID :: " + memberId);
+        if (productId == 0) {
+            result.put("check", 0);
+            log.error("productId is 0");
+        }
+
+        log.info("delete productId :: '{}'", productId);
 
         params.put("memberId", memberId);
         params.put("productId", productId);
 
-        try {
-            result = myPageService.deleteProduct(params);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("error :: " + e);
-        }
+        check = myPageService.deleteProduct(params);
 
-        if (result == 0) {
-            attributes.addFlashAttribute("msg", "삭제 요청이 잘못 되었습니다.");
-        } else if (result == 1) {
-            attributes.addFlashAttribute("msg", "해당 게시물이 삭제 되었습니다.");
-        }
+        log.info("Delete product result :: {}", check);
 
-        return "redirect:/myShop/list";
+        result.put("check", check);
+
+        return result;
     }
+
+    // 삭제 ajax로 수정
+//    @PostMapping(value = "/myPage/myShop/product/delete")
+//    public String myProductDelete(HttpServletRequest request,
+//                                  Model model, RedirectAttributes attributes) throws Exception {
+//        Map<String, Object> params = new HashMap<>();
+//
+//        String memberId = "";
+//        int productId = 0;
+//        int result = 0;
+//
+//        memberId = commons.getMemberSession(request);
+//        productId = Integer.parseInt(request.getParameter("deleteProductId"));
+//
+//        logger.info("delete productId :: " + productId);
+//        logger.info("Member ID :: " + memberId);
+//
+//        params.put("memberId", memberId);
+//        params.put("productId", productId);
+//
+//        result = myPageService.deleteProduct(params);
+//
+//
+//        if (result == 0) {
+//            attributes.addFlashAttribute("msg", "삭제 요청이 잘못 되었습니다.");
+//        } else if (result == 1) {
+//            attributes.addFlashAttribute("msg", "해당 게시물이 삭제 되었습니다.");
+//        }
+//
+//        return "redirect:/myPage/myShop/list";
+//    }
 
 }

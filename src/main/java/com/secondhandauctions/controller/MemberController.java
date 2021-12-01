@@ -102,7 +102,7 @@ public class MemberController {
         String num = "";
         int checkNum = 0;
 
-        checkNum = emailService.joinCheckSendEmail(email);
+        checkNum = emailService.certificationSendEmail(email);
 
         if (checkNum != 0) {
             num = Integer.toString(checkNum);
@@ -213,11 +213,14 @@ public class MemberController {
 
     @GetMapping(value = "/logout/action")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Object object = commons.getMemberSession(request);
+//        Object object = commons.getMemberSession(request);
+//
+//        if (object != null) {
+//            request.getSession().invalidate();
+//        }
+        HttpSession session = request.getSession();
 
-        if (object != null) {
-            request.getSession().invalidate();
-        }
+        session.invalidate();
 
         return "redirect:/";
     }
@@ -373,7 +376,6 @@ public class MemberController {
     public Map<String, Integer> modifyPassword(HttpServletRequest request, String memberPassword) throws Exception {
         Map<String, Object> info = new HashMap<>();
         Map<String, Integer> result = new HashMap<>();
-
 
         String memberId = "";
         String encryptionPassword = "";

@@ -38,6 +38,10 @@
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-color: rgba(0, 0, 0, 1);
     }
+
+    .productText {
+        resize: none;
+    }
     /* .card {
       position: absolute;
     } */
@@ -95,7 +99,7 @@
 
                         <div class="form-label-group">
                             <label for="productContent">내용</label>
-                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control" readonly>
+                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="productText form-control" readonly>
                                 <c:out value="${product.productContent}"/>
                             </textarea>
                         </div>
@@ -117,10 +121,15 @@
             <div class="card text-left">
                 <div class="card-body">
                     <h4>Q&A</h4><br>
+                    <div>
+                        <input type="button" id="questionBtn" class="btn btn-primary btn-sm float-right" value="문의사항 등록">
+                    </div>
+                    <br>
+                    <br>
+                    <br>
                     <table class="table">
                         <thead class="table-light">
                         <tr>
-                            <th scope="col">번호</th>
                             <th scope="col">아이디</th>
                             <th scope="col">제목</th>
                             <th scope="col">날짜</th>
@@ -128,19 +137,16 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <th scope="row">1</th>
                             <td>Mark</td>
                             <td>Otto</td>
                             <td>@mdo</td>
                         </tr>
                         <tr>
-                            <th scope="row">2</th>
                             <td>Jacob</td>
                             <td>Thornton</td>
                             <td>@fat</td>
                         </tr>
                         <tr>
-                            <th scope="row">3</th>
                             <td>Larry the Bird</td>
                             <td>@twitter</td>
                         </tr>
@@ -155,6 +161,7 @@
         <form id="actionForm" action="/shop" method="get">
             <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
+            <input type="hidden" name="categoryName" id="categoryName" value="${product.categoryName}">
         </form>
     </div>
 </div>
@@ -178,6 +185,29 @@
             e.preventDefault();
             actionForm.submit();
         });
+
+
+        // 문의 사항
+        $("#questionBtn").on("click", function (e) {
+           e.preventDefault();
+
+           $.ajax({
+               url: '/shop/question',
+               type: 'get',
+
+               success: function (result) {
+                   var sessionCheck = result.sessionCheck;
+
+                   if (sessionCheck === 0) {
+                       window.alert("로그인 후 이용가능한 서비스 입니다.");
+                   }
+               },
+               error: function (request,status,error) {
+
+               }
+           });
+        });
+
     });
 
 

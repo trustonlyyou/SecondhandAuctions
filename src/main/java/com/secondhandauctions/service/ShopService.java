@@ -16,8 +16,6 @@ import java.util.*;
 @Service
 public class ShopService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShopService.class);
-
     @Autowired
     private ShopDao shopDao;
 
@@ -25,16 +23,21 @@ public class ShopService {
         return shopDao.countProduct();
     }
 
-    public List<ShopVo> getList(Criteria criteria) throws Exception {
+    public List<ShopVo> getListOfCategory(Map<String, Object> params) throws Exception {
         List<ShopVo> list = new ArrayList<>();
 
+        list = shopDao.getListOfCategory(params);
 
-        list = shopDao.getList(criteria);
+        if (list.isEmpty()) {
+            list = Collections.emptyList();
+
+            return list;
+        }
 
         return list;
     }
 
-    public Map<String, Object> getReadProduct(int productId) throws Exception {
+    public Map<String, Object> getDetail(int productId) throws Exception {
         Map<String, Object> info = new HashMap<>();
         List<ImageVo> imageList = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
@@ -46,8 +49,6 @@ public class ShopService {
 
         if (productVo == null) {
             info.put("product", null);
-
-            logger.info("productVo is null");
         }
 
         info.put("product", productVo);

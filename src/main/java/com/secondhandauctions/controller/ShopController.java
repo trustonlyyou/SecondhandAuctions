@@ -3,11 +3,13 @@ package com.secondhandauctions.controller;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.service.FileService;
 import com.secondhandauctions.service.ShopService;
+import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
-import com.secondhandauctions.utils.PageDTO;
-import com.secondhandauctions.vo.ImageVo;
+import com.secondhandauctions.utils.PagingUtil;
 import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class ShopController {
 
     private static final Logger logger = LoggerFactory.getLogger(ShopController.class);
@@ -42,26 +46,36 @@ public class ShopController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private Commons commons;
+
+    // TODO: 2021/11/29 categoryName = null 일때는?
     @GetMapping(value = "/shop")
-    public String shopList(@ModelAttribute Criteria criteria, Model model) {
+    public String shopList(@ModelAttribute Criteria criteria,
+                           @RequestParam(required = false) String categoryName, Model model) throws Exception {
         List<ShopVo> list = new ArrayList<>();
-        PageDTO pageDTO = new PageDTO();
-        String fileName = "";
+        Map<String, Object> params = new HashMap<>();
+        PagingUtil pagingUtil = new PagingUtil();
         int count = 0;
 
-        try {
-            count = shopService.getTotalCount();
-            list = shopService.getList(criteria);
+        if (StringUtils.isEmpty(categoryName)) {
+            list = shopService.getNewProductList(criteria);
+        } else {
+            params.put("categoryName", categoryName);
+            params.put("criteria", criteria);
 
-            pageDTO.setCriteria(criteria);
-            pageDTO.setTotalCount(count);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("error :: " + e);
         }
 
+        count = shopService.getTotalCount();
+        list = shopService.getListOfCategory(params);
+
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(count);
+
         model.addAttribute("list", list);
-        model.addAttribute("pageMaker", pageDTO);
+        model.addAttribute("pageMaker", pagingUtil);
+
+        log.info("category :: {}", categoryName);
 
         return "shop/shopList";
     }
@@ -75,69 +89,64 @@ public class ShopController {
      * shopList.jsp
      */
     @GetMapping(value = "/file/show")
-    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) {
+    public ResponseEntity<Resource> fileShow(@RequestParam String uploadPath, @RequestParam String fileName) throws Exception {
+        ResponseEntity<Resource> result = null;
         Resource resource = null;
         String path = "";
-        String type = "";
-
-        logger.info("uploadPath :: " + uploadPath);
-        logger.info("fileName :: " + fileName);
 
         path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
-
-        logger.info("Path :: " + path);
 
         // 이건 안쓰고
         // apache ftpservice 사용한다.
         resource = new FileSystemResource(path);
 
         if (!resource.exists()) {
+            log.error("error :: {}", HttpStatus.NOT_FOUND);
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         HttpHeaders headers = new HttpHeaders();
         Path filePath = null;
 
-        try {
-            filePath = Paths.get(path);
-            headers.add("Content-Type", Files.probeContentType(filePath));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        filePath = Paths.get(path);
+        headers.add("Content-Type", Files.probeContentType(filePath));
 
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+        result = new ResponseEntity<>(resource, headers, HttpStatus.OK);
+
+        log.info("Response ::  {}", result.toString());
+
+        return result;
     }
 
     // 디테일 페이지
     @GetMapping(value = "/shop/get")
-    public String shopDetail(@RequestParam int productId, @ModelAttribute("criteria") Criteria criteria, Model model) {
-        Map<String, Object> info = new HashMap<>();
-        List<ImageVo> imageList = new ArrayList<>();
-        List<String> fileNames = new ArrayList<>();
+    public String shopDetail(@RequestParam int productId,
+                             @ModelAttribute("criteria") Criteria criteria, Model model) throws Exception {
 
+        Map<String, Object> info = new HashMap<>();
+        List<String> fileNames = new ArrayList<>();
         ProductVo productVo = new ProductVo();
 
-        logger.info("productId :: " + productId);
+        log.info("productId :: '{}'", productId);
 
-        try {
-            info = shopService.getReadProduct(productId);
+        info = shopService.getDetail(productId);
 
-            productVo = (ProductVo) info.get("product");
+        productVo = (ProductVo) info.get("product");
 
-            if (productVo == null) {
-                model.addAttribute("msg", "productNull");
-            }
-
-            model.addAttribute("product", productVo);
-
-            fileNames = (List<String>) info.get("fileName");
-
-            model.addAttribute("fileName", fileNames);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("error :: " + e);
+        if (productVo == null) {
+            log.error("error :: {}", "product id null");
+            model.addAttribute("msg", "productNull");
         }
+
+        fileNames = (List<String>) info.get("fileName");
+
+        if (fileNames.isEmpty()) {
+            log.error("error :: {}", "Image is null");
+        }
+
+        model.addAttribute("product", productVo);
+        model.addAttribute("fileName", fileNames);
 
         return "shop/shopDetail";
     }
@@ -152,6 +161,22 @@ public class ShopController {
 
         if (result.getStatusCodeValue() == 404) {
             return null;
+        }
+
+        return result;
+    }
+
+    // Q&A
+    @GetMapping("/shop/question")
+    @ResponseBody
+    public Map<String, Object> loadQuestionAnswer(HttpServletRequest request) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        String memberId = "";
+
+        memberId = commons.getMemberSession(request);
+
+        if (StringUtils.isEmpty(memberId)) {
+            result.put("sessionCheck", 0);
         }
 
         return result;

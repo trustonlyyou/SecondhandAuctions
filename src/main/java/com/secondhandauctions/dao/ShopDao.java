@@ -6,12 +6,13 @@ import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShopDao {
 
     public int countProduct() throws Exception;
 
-    public List<ShopVo> getList(Criteria criteria) throws Exception;
+    public List<ShopVo> getListOfCategory(Map<String, Object> params) throws Exception;
 
     public ProductVo readProduct(int productId) throws Exception;
 

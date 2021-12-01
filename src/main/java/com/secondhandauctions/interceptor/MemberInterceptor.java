@@ -1,4 +1,4 @@
-package com.secondhandauctions.utils;
+package com.secondhandauctions.interceptor;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

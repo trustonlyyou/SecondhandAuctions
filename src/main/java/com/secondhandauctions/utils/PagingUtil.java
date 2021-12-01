@@ -7,7 +7,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @ToString
 @Getter
-public class PageDTO {
+public class PagingUtil {
 
     private int totalCount; // 전체 게시글의 갯수
     private int startPage; // 시작 페이지 번호

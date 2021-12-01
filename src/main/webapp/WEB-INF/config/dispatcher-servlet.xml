@@ -18,7 +18,7 @@
     </bean>
 
 <!--    <bean id="memberInterceptor" class="com.crud.util.MemberInterceptor"/>-->
-    <bean id="memberInterceptor" class="com.secondhandauctions.utils.MemberInterceptor"/>
+    <bean id="memberInterceptor" class="com.secondhandauctions.interceptor.MemberInterceptor"/>
 
     <mvc:interceptors>
         <mvc:interceptor>

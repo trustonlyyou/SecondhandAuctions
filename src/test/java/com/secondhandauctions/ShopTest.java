@@ -21,6 +21,7 @@ import java.util.Map;
 @ContextConfiguration(
         locations = {"file:src/main/webapp/WEB-INF/config/*.xml"}
 )
+
 @WebAppConfiguration
 public class ShopTest {
 
@@ -47,5 +48,9 @@ public class ShopTest {
 
         System.out.println(result);
 
+    }
+
+    @Test
+    public void test() throws Exception {
     }
 }

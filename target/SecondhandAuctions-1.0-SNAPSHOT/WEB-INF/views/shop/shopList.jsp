@@ -50,7 +50,6 @@
                             <img class="card-img-top" src="/file/show?uploadPath=${shopVo.uploadPath}&fileName=${shopVo.uploadFileName}" alt="test" width="700" height="200">
                             <div class="card-body">
                                 <h4 class="card-title">
-                                    <a href="/shop/get?productId=<c:out value="${shopVo.productId}" />">${shopVo.productTitle}</a>
                                     <a class="move" href="<c:out value="${shopVo.productId}"/>">${shopVo.productTitle}</a>
                                 </h4>
                                 <h5>경매 시작 가격 : ${shopVo.startPrice}</h5>

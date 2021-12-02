@@ -243,7 +243,7 @@ public class MyPageController {
             log.error("productId is 0");
         }
 
-        log.info("delete productId :: '{}'", productId);
+        log.info("target productId :: '{}'", productId);
 
         params.put("memberId", memberId);
         params.put("productId", productId);
@@ -257,35 +257,5 @@ public class MyPageController {
         return result;
     }
 
-    // 삭제 ajax로 수정
-//    @PostMapping(value = "/myPage/myShop/product/delete")
-//    public String myProductDelete(HttpServletRequest request,
-//                                  Model model, RedirectAttributes attributes) throws Exception {
-//        Map<String, Object> params = new HashMap<>();
-//
-//        String memberId = "";
-//        int productId = 0;
-//        int result = 0;
-//
-//        memberId = commons.getMemberSession(request);
-//        productId = Integer.parseInt(request.getParameter("deleteProductId"));
-//
-//        logger.info("delete productId :: " + productId);
-//        logger.info("Member ID :: " + memberId);
-//
-//        params.put("memberId", memberId);
-//        params.put("productId", productId);
-//
-//        result = myPageService.deleteProduct(params);
-//
-//
-//        if (result == 0) {
-//            attributes.addFlashAttribute("msg", "삭제 요청이 잘못 되었습니다.");
-//        } else if (result == 1) {
-//            attributes.addFlashAttribute("msg", "해당 게시물이 삭제 되었습니다.");
-//        }
-//
-//        return "redirect:/myPage/myShop/list";
-//    }
 
 }

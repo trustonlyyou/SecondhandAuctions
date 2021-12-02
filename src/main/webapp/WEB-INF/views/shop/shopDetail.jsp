@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -86,7 +87,6 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-                    <form class="form-signin" method="post" action="/register/product/submit" id="registerProduct" enctype="multipart/form-data">
                         <br>
 
 
@@ -115,14 +115,14 @@
                         <div>
                             <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
                         </div>
-                    </form>
                 </div>
             </div>
             <div class="card text-left">
                 <div class="card-body">
                     <h4>Q&A</h4><br>
                     <div>
-                        <input type="button" id="questionBtn" class="btn btn-primary btn-sm float-right" value="문의사항 등록">
+                        <a id="questionBtn" href="/shop/question/form?productId=${product.productId}"
+                           class="btn btn-primary btn-sm float-right">문의사항</a>
                     </div>
                     <br>
                     <br>
@@ -133,23 +133,49 @@
                             <th scope="col">아이디</th>
                             <th scope="col">제목</th>
                             <th scope="col">날짜</th>
+                            <th scope="col">답변 여부</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <%-- foreach --%>
+                        <c:forEach items="${qna}" var="qna">
                         <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>${qna.get("memberId")}</td>
+                            <td>${qna.get("questionTitle")}</td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value='${qna.get("regdate")}' /></td>
+                            <td>
+                                <c:if test='${qna.get("isAnswer") eq true}'>
+                                    <a style="color: green;" data-toggle="collapse" href='#${qna.get("questionId")}' role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        답변완료
+                                    </a>
+                                </c:if>
+                                <c:if test='${qna.get("isAnswer") eq false}'>
+                                    <a style="color: red;" data-toggle="collapse" href='#${qna.get("questionId")}' role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        미답변
+                                    </a>
+                                </c:if>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <td>Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                            <tr>
+                                <c:if test='${qna.get("isAnswer") eq true}'>
+                                    <td colspan="4">
+                                        <div class="collapse" id='${qna.get("questionId")}'>
+                                            <c:out value='${qna.get("answer")}' />
+                                        </div>
+                                    </td>
+                                </c:if>
+
+                                <c:if test='${qna.get("isAnswer") eq false}'>
+                                    <td colspan="4">
+                                        <div class="collapse" id='${qna.get("questionId")}'>
+                                            아직 답변이 달리지 않았습니다.
+                                        </div>
+                                    </td>
+                                </c:if>
+                            </tr>
+                        </c:forEach>
+                        <%-- end foreach --%>
+
                         </tbody>
                     </table>
                 </div>
@@ -161,7 +187,11 @@
         <form id="actionForm" action="/shop" method="get">
             <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
-            <input type="hidden" name="categoryName" id="categoryName" value="${product.categoryName}">
+        </form>
+    </div>
+    <div>
+        <form id="questionForm" action="/shop/question/form" method="get">
+            <input id="productId" type="hidden" value="${product.productId}">
         </form>
     </div>
 </div>
@@ -177,35 +207,34 @@
         var actionForm = $("#actionForm");
 
         if (msg === "productNull") {
-            alert(msg);
+            window.alert(msg);
             window.location.replace("/shop");
         }
 
+        // todo :: error!!
         $(".listBtn").on("click", function (e) {
             e.preventDefault();
             actionForm.submit();
         });
 
 
-        // 문의 사항
-        $("#questionBtn").on("click", function (e) {
-           e.preventDefault();
+        $("#questionBtn").on("click", function () {
 
-           $.ajax({
-               url: '/shop/question',
-               type: 'get',
+            var productWriter = "${product.memberId}";
+            var questionWriter = "${sessionScope.member}";
 
-               success: function (result) {
-                   var sessionCheck = result.sessionCheck;
+            if ((questionWriter === null) || (questionWriter === "")) {
+                window.alert("로그인 후 이용 가능합니다.");
+                return false;
+            }
 
-                   if (sessionCheck === 0) {
-                       window.alert("로그인 후 이용가능한 서비스 입니다.");
-                   }
-               },
-               error: function (request,status,error) {
+            if (productWriter === questionWriter) {
+                window.alert("자신의 글에는 문의사항을 남길 수 없습니다.");
+                return false;
+            }
 
-               }
-           });
+            $("#questionForm").submit();
+
         });
 
     });

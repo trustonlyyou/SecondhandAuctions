@@ -5,8 +5,6 @@ import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +40,7 @@ public class ShopService {
         List<ImageVo> imageList = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
         ProductVo productVo = new ProductVo();
+        List<Map<String, Object>> question = new ArrayList<>();
 
         String fileName = "";
 
@@ -66,6 +65,10 @@ public class ShopService {
         }
 
         info.put("fileName", fileNames);
+
+        question = shopDao.readProductQnA(productId);
+
+        info.put("qna", question);
 
         return info;
     }
@@ -92,5 +95,16 @@ public class ShopService {
         }
 
         return itemList;
+    }
+
+    public int setQuestion(Map<String, Object> params) throws Exception {
+        int check = 0;
+
+        if (params.isEmpty()) {
+            return check;
+        }
+        check = shopDao.registerQuestion(params);
+
+        return check;
     }
 }

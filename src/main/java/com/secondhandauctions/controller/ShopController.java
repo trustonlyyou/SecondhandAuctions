@@ -20,10 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
@@ -60,14 +57,17 @@ public class ShopController {
 
         if (StringUtils.isEmpty(categoryName)) {
             list = shopService.getNewProductList(criteria);
-        } else {
+            count = shopService.getTotalCount();
+
             params.put("categoryName", categoryName);
             params.put("criteria", criteria);
+        } else {
+            count = shopService.getTotalCount();
+            list = shopService.getListOfCategory(params);
 
+            params.put("categoryName", categoryName);
+            params.put("criteria", criteria);
         }
-
-        count = shopService.getTotalCount();
-        list = shopService.getListOfCategory(params);
 
         pagingUtil.setCriteria(criteria);
         pagingUtil.setTotalCount(count);
@@ -121,12 +121,13 @@ public class ShopController {
 
     // 디테일 페이지
     @GetMapping(value = "/shop/get")
-    public String shopDetail(@RequestParam int productId,
+    public String shopDetail(HttpServletRequest request, @RequestParam int productId,
                              @ModelAttribute("criteria") Criteria criteria, Model model) throws Exception {
 
         Map<String, Object> info = new HashMap<>();
         List<String> fileNames = new ArrayList<>();
         ProductVo productVo = new ProductVo();
+        List<Map<String, Object>> question = new ArrayList<>();
 
         log.info("productId :: '{}'", productId);
 
@@ -145,8 +146,15 @@ public class ShopController {
             log.error("error :: {}", "Image is null");
         }
 
+        question = (List<Map<String, Object>>) info.get("qna");
+
         model.addAttribute("product", productVo);
         model.addAttribute("fileName", fileNames);
+        model.addAttribute("qna", question);
+
+        for(Map<String, Object> map : question) {
+            log.info("type :: " + map.get("isAnswer").getClass().getName());
+        }
 
         return "shop/shopDetail";
     }
@@ -167,20 +175,54 @@ public class ShopController {
     }
 
     // Q&A
-    @GetMapping("/shop/question")
+    @GetMapping(value = "/shop/question/form")
+    public String questionForm(HttpServletRequest request,
+                                   @RequestParam int productId, Model model) {
+
+        String referer = request.getHeader("Referer");
+
+        log.info("prevPageUrl :: {}", referer);
+        log.info("target productId :: '{}'", productId);
+
+        model.addAttribute("targetProductId", productId);
+        model.addAttribute("prevPageUrl", referer);
+
+        return "shop/questionForm";
+    }
+
+    @PostMapping(value = "/shop/question/register")
     @ResponseBody
-    public Map<String, Object> loadQuestionAnswer(HttpServletRequest request) throws Exception {
+    public Map<String, Object> questionRegister(String questionTitle, String questionContent, int productId,
+                                                HttpServletRequest request, Model model) throws Exception {
         Map<String, Object> result = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+
         String memberId = "";
+        int check = 0;
 
         memberId = commons.getMemberSession(request);
 
-        if (StringUtils.isEmpty(memberId)) {
-            result.put("sessionCheck", 0);
+        if (StringUtils.isEmpty(questionTitle) || StringUtils.isEmpty(questionContent)) {
+            result.put("check", check);
+
+            return result;
         }
+
+        params.put("productId", productId);
+        params.put("memberId", memberId);
+        params.put("questionTitle", questionTitle);
+        params.put("questionContent", questionContent);
+
+        check = shopService.setQuestion(params);
+
+        log.info("check :: " + check);
+
+        result.put("check", check);
 
         return result;
     }
+
+
 
 
 }

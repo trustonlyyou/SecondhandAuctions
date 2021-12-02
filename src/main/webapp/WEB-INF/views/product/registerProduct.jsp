@@ -98,6 +98,7 @@
             <div class="form-label-group">
               내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
 
+<%--              <label for="productContent">내용</label>--%>
               <textarea name="productContent" id="productContent" cols="30" rows="10" class="product_textarea form-control"></textarea>
             </div>
             <div name="contentCheckMsg" id="contentCheckMsg"></div>

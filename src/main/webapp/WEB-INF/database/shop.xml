@@ -42,9 +42,20 @@
 
     <select id="readProduct" parameterType="int" resultType="com.secondhandauctions.vo.ProductVo">
         select
-            productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
+            productId, memberId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
         from
             product
+        where isProductCheck = 1 and product.productId = #{productId};
+    </select>
+
+    <select id="readProductQnA" parameterType="int" resultType="Map">
+        select
+            product.productId, question.questionId, question.memberId, questionTitle, questionContent, regdate, question.isAnswer, answer
+        from
+            product inner join question on product.productId = question.productId
+
+            left join answer on question.questionId = answer.questionId
+
         where isProductCheck = 1 and product.productId = #{productId};
     </select>
 
@@ -53,7 +64,7 @@
             image.productId, uploadPath, uploadFileName, fileExtension
         from
             image
-        left join
+        inner join
             product on image.productId = product.productId
         where
             isProductCheck = 1 and product.productId = #{productId};
@@ -110,5 +121,16 @@
         ]]>
 
     </select>
+
+    <insert id="registerQuestion" parameterType="Map">
+        insert into question
+        (
+         productId, memberId, questionTitle, questionContent
+         )
+        values
+        (
+         #{productId}, #{memberId}, #{questionTitle}, #{questionContent}
+        )
+    </insert>
 
 </mapper>

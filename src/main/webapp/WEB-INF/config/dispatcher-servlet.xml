@@ -25,6 +25,7 @@
             <mvc:mapping path="/member/modify/form"/>
             <mvc:mapping path="/register/product/form"/>
             <mvc:mapping path="/myPage/**/*"/>
+<!--            <mvc:mapping path="/shop/question/*"/>-->
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

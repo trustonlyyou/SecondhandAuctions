@@ -44,10 +44,6 @@
                     <br>
                     <br>
 
-                    <div>
-                        <a href="/member/search/id">아이디가 기억나지 않으세요?</a>
-                    </div>
-
                     <br>
 
                     <div>

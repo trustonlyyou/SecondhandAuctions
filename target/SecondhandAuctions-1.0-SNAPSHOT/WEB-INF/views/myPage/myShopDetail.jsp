@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -120,10 +121,7 @@
                             <form id="modifyForm">
                                 <input type="button" class="listBtn btn btn-warning btn-sm float-right" value="게시물 수정">
                             </form>&nbsp;
-                            <form id="actionForm">
-                                <input type="hidden" name="page" id="pageNum" value="${criteria.page}">
-                                <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">
-                                <input type="hidden" name="productId" id="productId" value="${product.productId}">
+                            <form id="actionForm" action="/myShop/list">
                                 <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
                             </form>
                         </div>
@@ -132,33 +130,60 @@
             <div class="card text-left">
                 <div class="card-body">
                     <h4>Q&A</h4><br>
+                    <br>
                     <table class="table">
                         <thead class="table-light">
                         <tr>
-                            <th scope="col">번호</th>
                             <th scope="col">아이디</th>
                             <th scope="col">제목</th>
                             <th scope="col">날짜</th>
+                            <th scope="col">답변 여부</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                        <%-- foreach --%>
+                        <c:forEach items="${qna}" var="qna">
+                            <tr>
+                                <td>${qna.get("memberId")}</td>
+                                <td>${qna.get("questionTitle")}</td>
+                                <td><fmt:formatDate pattern="yyyy-MM-dd" value='${qna.get("regdate")}' /></td>
+                                <td>
+                                    <c:if test='${qna.get("isAnswer") eq true}'>
+                                        <a style="color: green;" data-toggle="collapse" href='#${qna.get("questionId")}' role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            답변완료
+                                        </a>
+                                    </c:if>
+                                    <c:if test='${qna.get("isAnswer") eq false}'>
+                                        <a style="color: red;" data-toggle="collapse" href='#${qna.get("questionId")}' role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            미답변
+                                        </a>
+                                        &nbsp;&nbsp;
+<%--                                        <input type="button" class="answer_btn btn btn-primary btn-sm" value="답변 달기">--%>
+                                        <a href='/myShop/product/answer/form?productId=${product.productId}&questionId=${qna.get("questionId")}'
+                                           class="answer_btn btn btn-primary btn-sm">답변 달기</a>
+                                    </c:if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <c:if test='${qna.get("isAnswer") eq true}'>
+                                    <td colspan="4">
+                                        <div class="collapse" id='${qna.get("questionId")}'>
+                                            <c:out value='${qna.get("answer")}' />
+                                        </div>
+                                    </td>
+                                </c:if>
+
+                                <c:if test='${qna.get("isAnswer") eq false}'>
+                                    <td colspan="4">
+                                        <div class="collapse" id='${qna.get("questionId")}'>
+                                            아직 답변이 달리지 않았습니다.
+                                        </div>
+                                    </td>
+                                </c:if>
+                            </tr>
+                        </c:forEach>
+                        <%-- end foreach --%>
+
                         </tbody>
                     </table>
                 </div>
@@ -166,13 +191,6 @@
         </div>
     </div>
 
-<%--    <div>--%>
-<%--        <form id="actionForm" action="/myShop/list" method="get">--%>
-<%--            <input type="hidden" name="page" id="pageNum" value="${criteria.page}">--%>
-<%--            <input type="hidden" name="perPageNum" id="amount" value="${criteria.perPageNum}">--%>
-<%--            <input type="hidden" name="productId" id="productId" value="${product.productId}">--%>
-<%--        </form>--%>
-<%--    </div>--%>
 </div>
 <%--<./container>--%>
 
@@ -238,6 +256,10 @@
 
                 }
             });
+        });
+
+        $(".answer_btn").on("click", function () {
+
         });
     });
 </script>

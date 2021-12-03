@@ -5,7 +5,6 @@ import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.MyPageService;
 import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.*;
-import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -169,15 +167,17 @@ public class MyPageController {
     }
 
     @GetMapping(value = "/myShop/get/{productId}")
-    public String myShopDetail(@PathVariable Integer productId, @ModelAttribute("criteria") Criteria criteria, HttpServletRequest request, Model model) {
+    public String myShopDetail(@PathVariable Integer productId, @ModelAttribute("criteria") Criteria criteria,
+                               HttpServletRequest request, Model model) throws Exception {
         HttpSession session = request.getSession();
 
         Map<String, Object> info = new HashMap<>();
-        List<ImageVo> imageList = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
-        Map<String, Object> result = new HashMap<>();
-
         ProductVo productVo = new ProductVo();
+
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> qNa = new ArrayList<>();
+
 
         String memberId = "";
 
@@ -193,23 +193,19 @@ public class MyPageController {
 
         info.put("memberId", memberId);
 
-        try {
-            result = myPageService.getMyShopDetail(info);
+        result = myPageService.getMyShopDetail(info);
 
-            productVo = (ProductVo) result.get("product");
+        productVo = (ProductVo) result.get("product");
 
-            if (productVo != null) {
-                model.addAttribute("product", productVo);
-            }
+        fileNames = (List<String>) result.get("fileName");
 
-            fileNames = (List<String>) result.get("fileName");
+        qNa = (List<Map<String, Object>>) result.get("qna");
 
-            model.addAttribute("fileName", fileNames);
+        model.addAttribute("product", productVo);
+        model.addAttribute("fileName", fileNames);
+        model.addAttribute("qna", qNa);
 
-        } catch (Exception e) {
-            logger.error("error :: " + e);
-            e.printStackTrace();
-        }
+        log.info(qNa.toString());
 
         return "myPage/myShopDetail";
     }
@@ -257,5 +253,52 @@ public class MyPageController {
         return result;
     }
 
+    @GetMapping(value = "/myShop/product/answer/form")
+    public String myProductAnswerOfQuestion(HttpServletRequest request, Model model,
+                                            @RequestParam int productId,
+                                            @RequestParam int questionId) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> info = new HashMap<>();
+        String referer = "";
 
+        referer = request.getHeader("Referer");
+
+        log.info("referer :: '{}'", referer);
+
+        info.put("productId", productId);
+        info.put("questionId", questionId);
+
+        result = myPageService.getQuestion(info);
+
+        model.addAttribute("qna", result);
+        model.addAttribute("prevPageUrl", referer);
+
+        return "myPage/answerForm";
+    }
+
+    // TODO: 2021/12/03 NumberFormatException!!
+    // alter insert 트렌젝션 관리
+    @PostMapping(value = "/myShop/product/answer/register")
+    @ResponseBody
+    public Map<String, Object> registerAnswer(HttpServletRequest request,
+                                              String answer, int questionId) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> info = new HashMap<>();
+
+        int check = 0;
+
+        String writer = commons.getMemberSession(request);
+
+        info.put("memberId", writer);
+        info.put("questionId", questionId);
+        info.put("answer", answer);
+
+        check = myPageService.setAnswer(info, questionId);
+
+        log.info("answer service result :: '{}'", check);
+
+        result.put("check", check);
+
+        return result;
+    }
 }

@@ -18,6 +18,14 @@ public interface MyPageDao {
 
     public List<ImageVo> myShopDetailImage(Map<String, Object> info) throws Exception;
 
-    public int deleteProduct(Map<String, Object> params) throws Exception;
+    public List<Map<String, Object>> myShopProductQnA(Map<String, Object> params) throws Exception;
+
+    public int deleteProduct(Map<String, Object> info) throws Exception;
+
+    public Map<String, Object> readQuestion(Map<String, Object> info) throws Exception;
+
+    public int registerAnswer(Map<String, Object> info) throws Exception;
+
+    public int updateAnswerOfQuestion(int questionId) throws Exception;
 
 }

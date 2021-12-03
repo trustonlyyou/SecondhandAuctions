@@ -533,11 +533,9 @@
                 $("#mail_check").css('color', 'red');
                 $("#emailCheckMsg").text("이메일 인증을 해주세요.");
 
-                emailFlag = false;
+                $("#join_submit").attr('disabled', true);
 
-                if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                    $("#join_submit").attr('disabled', true);
-                }
+                emailFlag = false;
 
                 return false;
             } else {
@@ -551,7 +549,7 @@
                     $("#join_submit").attr('disabled', false);
                 }
 
-                return false;
+                return true;
             }
     });
 
@@ -609,11 +607,10 @@
             $("#phone_check").text('인증번호가 틀립니다.');
             $("#phone_check").css('color', 'red');
 
+            $("#join_submit").attr('disabled', true);
+
             phoneFlag = false;
 
-            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                $("#join_submit").attr('disabled', true);
-            }
             return false;
         }
     });

@@ -276,8 +276,6 @@ public class MyPageController {
         return "myPage/answerForm";
     }
 
-    // TODO: 2021/12/03 NumberFormatException!!
-    // alter insert 트렌젝션 관리
     @PostMapping(value = "/myShop/product/answer/register")
     @ResponseBody
     public Map<String, Object> registerAnswer(HttpServletRequest request,

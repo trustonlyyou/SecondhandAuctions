@@ -43,10 +43,10 @@
                             <a class="nav-link" href="/myPage/form">마이페이지</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/member/logout/action">로그아웃</a>
+                            <a class="nav-link" href="/register/product/form">상품 등록</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/register/product/form">상품 등록</a>
+                            <a class="nav-link" href="/member/logout/action">로그아웃</a>
                         </li>
                     </c:if>
                 </ul>

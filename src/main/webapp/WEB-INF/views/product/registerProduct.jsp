@@ -58,7 +58,7 @@
 </head>
 <body>
 
-
+<%@include file="../includes/footer.jsp"%>
 <div class="container">
   <div class="row">
     <div class="col-lg-10 col-xl-9 mx-auto">
@@ -103,16 +103,6 @@
             </div>
             <div name="contentCheckMsg" id="contentCheckMsg"></div>
             <br>
-
-            <%--                        <div class="filebox card-body">--%>
-            <%--                            <label for="file">이미지 첨부를 원하시면 버튼을 누르세요.</label>--%>
-            <%--                            <input type="file" id="file" multiple>--%>
-            <%--                        </div>--%>
-
-            <%--                        <div class="col-lg-12">--%>
-            <%--                            <div class="row" id="imgLoad">--%>
-            <%--                            </div>--%>
-            <%--                        </div>--%>
 
             <br>
 
@@ -178,8 +168,6 @@
         return;
       }
 
-
-
       formData.append(fileIndex, file);
 
       var fileReader = new FileReader();
@@ -213,47 +201,6 @@
   }
 
 
-  // $("#upload").on("click", function () {
-  //   $.ajax({
-  //     url: '/upload/ajax/test',
-  //     type: 'post',
-  //     data: formData,
-  //     processData: false,
-  //     contentType: false,
-  //
-  //     success: function (result) {
-  //       alert("hello");
-  //     }
-  //   });
-  // });
-
-  // todo :: 500 error
-  // $("#check").on("click", function () {
-  //   window.alert("click");
-  //   var productId = 18;
-  //
-  //   formData.append("productId", productId);
-  //
-  //   for (var value of formData.values()) {
-  //     console.log(value);
-  //   }
-  //
-  //   $.ajax({
-  //     url: '/upload/ajax/test',
-  //     type: 'post',
-  //     data: formData,
-  //     processData: false,
-  //     contentType: false,
-  //
-  //     success: function (result) {
-  //       alert("hello");
-  //     },
-  //     error: function (request,status,error) {
-  //       console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-  //     }
-  //   });
-  // });
-
   $("#registerSubmit").on('click', function () {
     $.ajax({
       url: '/product/submit',
@@ -266,7 +213,7 @@
 
         alert("product register result :: " + check);
 
-        if (check === 0) {
+        if (check !== 1) {
           window.alert("게시물 등록 실패, 다시 등록해주세요..");
           window.location.replace("/register/product/form");
           return;
@@ -277,17 +224,6 @@
           formData.append("productId", productId);
         }
 
-        // switch (check) {
-        //   case 0 :
-        //     window.alert("게시물 등록 실패, 다시 등록해주세요..");
-        //     window.location.replace("/register/product/form");
-        //     break;
-        //
-        //   case 1 :
-        //     formData.append("productId", productId);
-        //     break;
-        // }
-
         $.ajax({
           url: '/upload/image',
           type: 'post',
@@ -297,9 +233,6 @@
 
           success: function (result) {
             var check = result.check;
-
-            window.alert("이미지 업로드 성공");
-            window.alert("image result :: " + check);
 
             if (check === 1) {
               window.location.replace("/product/register/success");

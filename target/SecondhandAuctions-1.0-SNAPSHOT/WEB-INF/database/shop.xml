@@ -5,15 +5,41 @@
 
 <mapper namespace="com.secondhandauctions.dao.ShopDao">
 
+    <!--  상품의 개수를 가져온다.  -->
     <select id="countProduct" resultType="int">
+        <![CDATA[
         select
                count(*)
         from
              product
         where
-              productId > 0 and isProductCheck = 1;
+              productId > 0
+        and
+              isProductCheck = 1
+        and
+              expireTime > now()
+        ]]>
     </select>
 
+    <select id="countProductOfCategory" resultType="int" parameterType="String">
+        <![CDATA[
+        select
+            count(*)
+        from
+            product
+        where
+            productId > 0
+          and
+            isProductCheck = 1
+        and
+              expireTime > now()
+        and
+              categoryName = #{categoryName}
+        ]]>
+    </select>
+
+
+    <!--  카테고리에 따라서 제품 리스트를 가져온다.  -->
     <select id="getListOfCategory" parameterType="Map" resultType="com.secondhandauctions.vo.ShopVo">
         <![CDATA[
         select
@@ -50,7 +76,7 @@
 
     <select id="readProductQnA" parameterType="int" resultType="Map">
         select
-            product.productId, question.questionId, question.memberId, questionTitle, questionContent, regdate, question.isAnswer, answer
+            product.productId, question.questionId, question.memberId, questionTitle, questionContent, question.regdate, question.isAnswer, answer
         from
             product inner join question on product.productId = question.productId
 
@@ -119,8 +145,62 @@
             limit #{pageStart}, #{perPageNum}
 
         ]]>
-
     </select>
+
+    <select id="newProductListOfCategory" parameterType="Map" resultType="com.secondhandauctions.vo.ShopVo" >
+        <![CDATA[
+        select
+            product.productId, product.categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
+            min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
+        from
+            image
+                inner join product on image.productId = product.productId
+
+                inner join category on product.categoryName = category.categoryName
+
+        where
+            expireTime > now()
+        and
+            isProductCheck = 1
+        and
+            category.categoryName = #{categoryName}
+
+        group by image.productId
+
+        order by startTime desc
+
+        limit #{criteria.pageStart}, #{criteria.perPageNum}
+
+        ]]>
+    </select>
+
+    <select id="expireTimeProductListOfCategory" parameterType="Map" resultType="com.secondhandauctions.vo.ShopVo">
+                <![CDATA[
+        select
+            product.productId, product.categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
+            min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension
+        from
+            image
+                inner join product on image.productId = product.productId
+
+                inner join category on product.categoryName = category.categoryName
+
+        where
+            expireTime > now()
+        and
+            isProductCheck = 1
+        and
+            category.categoryName = #{categoryName}
+
+        group by image.productId
+
+        order by expireTime asc
+
+        limit #{criteria.pageStart}, #{criteria.perPageNum}
+
+        ]]>
+    </select>
+
 
     <insert id="registerQuestion" parameterType="Map">
         insert into question

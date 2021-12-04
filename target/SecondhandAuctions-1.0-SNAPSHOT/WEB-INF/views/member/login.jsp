@@ -92,6 +92,7 @@
 
     var idFlag = false;
     var passwordFlag = false;
+    var loginCount = 5;
 
     $("#memberId").on('keyup', function () {
         var memberId = $("#memberId").val();
@@ -146,7 +147,7 @@
                if (data.result === 1) {
                    window.location.replace("/"); // replace 로 처리하면 뒤로가기가 막힌다.
                } else {
-                   window.alert("아이디 또는 비밀번호가 틀립니다.")
+                   window.alert("아이디 또는 비밀번호가 틀립니다. 남은 로그인 횟수");
                    $("#memberPassword").val("");
                    $("#loginAjax").attr('disabled', true);
                }

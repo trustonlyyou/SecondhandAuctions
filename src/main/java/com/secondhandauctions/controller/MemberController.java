@@ -189,7 +189,7 @@ public class MemberController {
         String encryptionPassword = "";
         int loginResult = 0;
 
-        if (("".equals(memberId) || memberId == null) || ("".equals(memberPassword)) || memberPassword == null) {
+        if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(memberPassword)) {
             result.put("result", 0);
         }
 

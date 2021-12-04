@@ -12,6 +12,8 @@ public interface ShopDao {
 
     public int countProduct() throws Exception;
 
+    public int countProductOfCategory(String categoryName) throws Exception;
+
     public List<ShopVo> getListOfCategory(Map<String, Object> params) throws Exception;
 
     public ProductVo readProduct(int productId) throws Exception;
@@ -23,6 +25,10 @@ public interface ShopDao {
     public List<ShopVo> newProductList(Criteria criteria) throws Exception;
 
     public List<ShopVo> expireTimeProductList(Criteria criteria) throws Exception;
+
+    public List<ShopVo> newProductListOfCategory(Map<String, Object> params) throws Exception;
+
+    public List<ShopVo> expireTimeProductListOfCategory(Map<String, Object> params) throws Exception;
 
     public int registerQuestion(Map<String, Object> params) throws Exception;
 

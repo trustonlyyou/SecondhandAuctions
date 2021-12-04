@@ -49,7 +49,7 @@
 </style>
 <body>
 
-
+<%@include file="../includes/header.jsp"%>
 <div class="container">
 
     <div class="row">
@@ -157,20 +157,38 @@
                             </td>
                         </tr>
                             <tr>
-                                <c:if test='${qna.get("isAnswer") eq true}'>
+                                <c:if test="${empty sessionScope.member}">
                                     <td colspan="4">
                                         <div class="collapse" id='${qna.get("questionId")}'>
-                                            <c:out value='${qna.get("answer")}' />
+                                            <span style="color: red">권한이 없습니다.</span>
                                         </div>
                                     </td>
                                 </c:if>
+                                <c:if test="${not empty sessionScope.member}">
+                                    <c:if test='${sessionScope.get("member") eq product.memberId || sessionScope.get("member") eq qna.get("memberId")}'>
+                                        <c:if test='${qna.get("isAnswer") eq true}'>
+                                            <td colspan="4">
+                                                <div class="collapse" id='${qna.get("questionId")}'>
+                                                    <c:out value='${qna.get("answer")}' />
+                                                </div>
+                                            </td>
+                                        </c:if>
 
-                                <c:if test='${qna.get("isAnswer") eq false}'>
-                                    <td colspan="4">
-                                        <div class="collapse" id='${qna.get("questionId")}'>
-                                            아직 답변이 달리지 않았습니다.
-                                        </div>
-                                    </td>
+                                        <c:if test='${qna.get("isAnswer") eq false}'>
+                                            <td colspan="4">
+                                                <div class="collapse" id='${qna.get("questionId")}'>
+                                                    아직 답변이 달리지 않았습니다.
+                                                </div>
+                                            </td>
+                                        </c:if>
+                                    </c:if>
+                                    <c:if test='${sessionScope.get("member") ne product.memberId || sessionScope.get("member") ne qna.get("memberId")}'>
+                                        <td colspan="4">
+                                            <div class="collapse" id='${qna.get("questionId")}'>
+                                                <span style="color: red">답변을 보실 수 없는 계정 입니다.</span>
+                                            </div>
+                                        </td>
+                                    </c:if>
                                 </c:if>
                             </tr>
                         </c:forEach>

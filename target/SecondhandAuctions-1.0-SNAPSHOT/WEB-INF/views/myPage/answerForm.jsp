@@ -134,10 +134,6 @@
             questionId : targetQuestionId
         }
 
-        console.log("answer :: " + answer);
-        console.log("questionId :: " + targetQuestionId);
-        console.log("Url :: " + prevPageUrl);
-
         $.ajax({
             url: '/myShop/product/answer/register',
             type: 'post',
@@ -146,14 +142,11 @@
             success: function (result) {
                 var check = result.check;
 
-                alert(check);
-
                 if (check === 1) {
-                    alert("답변이 등록 되었습니다.");
+                    window.alert("답변이 등록 되었습니다.");
                     window.location.replace(prevPageUrl);
                 }
             }
-
         });
     });
 

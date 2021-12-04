@@ -26,10 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -46,34 +43,74 @@ public class ShopController {
     @Autowired
     private Commons commons;
 
-    // TODO: 2021/11/29 categoryName = null 일때는?
     @GetMapping(value = "/shop")
     public String shopList(@ModelAttribute Criteria criteria,
-                           @RequestParam(required = false) String categoryName, Model model) throws Exception {
+                           @RequestParam(required = false) String categoryName,
+                           @RequestParam(required = false) String status, Model model) throws Exception {
         List<ShopVo> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         PagingUtil pagingUtil = new PagingUtil();
         int count = 0;
 
         if (StringUtils.isEmpty(categoryName)) {
-            list = shopService.getNewProductList(criteria);
-            count = shopService.getTotalCount();
+            if (StringUtils.isEmpty(status)) {
+                list = shopService.getNewProductList(criteria);
+                count = shopService.getTotalCount();
+            } else {
+                switch (status) {
+                    case "" :
+                    case "newList" :
+                        count = shopService.getTotalCount();
+                        list = shopService.getNewProductList(criteria);
 
-            params.put("categoryName", categoryName);
-            params.put("criteria", criteria);
-        } else {
-            count = shopService.getTotalCount();
-            list = shopService.getListOfCategory(params);
+                        break;
 
-            params.put("categoryName", categoryName);
-            params.put("criteria", criteria);
+                    case "expireList" :
+                        count = shopService.getTotalCount();
+                        list = shopService.getExpireTimeProductList(criteria);
+
+                        break;
+                }
+            }
+        } else { // 카테고리 있음
+            if (StringUtils.isEmpty(status)) {
+                params.put("categoryName", categoryName);
+                params.put("criteria", criteria);
+
+                count = shopService.getProductCountOfCategory(categoryName);
+                list = shopService.getListOfCategory(params);
+            } else { // 카테고리 있고 status 있음
+                switch (status) {
+                    case "" :
+                    case "newList" :
+                        params.put("categoryName", categoryName);
+                        params.put("criteria", criteria);
+
+                        count = shopService.getProductCountOfCategory(categoryName);
+                        list = shopService.getNewProductListOfCategory(params);
+
+                        break;
+
+                    case "expireList" :
+                        params.put("categoryName", categoryName);
+                        params.put("criteria", criteria);
+
+                        count = shopService.getTotalCount();
+                        list = shopService.getExpireTimeProductListOfCategory(params);
+
+                        break;
+                }
+            }
+
         }
+
 
         pagingUtil.setCriteria(criteria);
         pagingUtil.setTotalCount(count);
 
         model.addAttribute("list", list);
         model.addAttribute("pageMaker", pagingUtil);
+        model.addAttribute("category", categoryName);
 
         log.info("category :: {}", categoryName);
 
@@ -143,6 +180,7 @@ public class ShopController {
         fileNames = (List<String>) info.get("fileName");
 
         if (fileNames.isEmpty()) {
+            model.addAttribute("fileName", Collections.EMPTY_MAP);
             log.error("error :: {}", "Image is null");
         }
 
@@ -151,10 +189,6 @@ public class ShopController {
         model.addAttribute("product", productVo);
         model.addAttribute("fileName", fileNames);
         model.addAttribute("qna", question);
-
-        for(Map<String, Object> map : question) {
-            log.info("type :: " + map.get("isAnswer").getClass().getName());
-        }
 
         return "shop/shopDetail";
     }
@@ -174,7 +208,7 @@ public class ShopController {
         return result;
     }
 
-    // Q&A
+    // ============== 질문 등록================
     @GetMapping(value = "/shop/question/form")
     public String questionForm(HttpServletRequest request,
                                    @RequestParam int productId, Model model) {
@@ -189,6 +223,7 @@ public class ShopController {
 
         return "shop/questionForm";
     }
+
 
     @PostMapping(value = "/shop/question/register")
     @ResponseBody
@@ -221,8 +256,4 @@ public class ShopController {
 
         return result;
     }
-
-
-
-
 }

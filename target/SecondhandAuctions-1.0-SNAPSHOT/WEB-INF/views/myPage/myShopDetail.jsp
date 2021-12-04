@@ -134,7 +134,7 @@
                     <table class="table">
                         <thead class="table-light">
                         <tr>
-                            <th scope="col">아이디</th>
+                            <th scope="col">작성자</th>
                             <th scope="col">제목</th>
                             <th scope="col">날짜</th>
                             <th scope="col">답변 여부</th>
@@ -144,7 +144,7 @@
                         <%-- foreach --%>
                         <c:forEach items="${qna}" var="qna">
                             <tr>
-                                <td>${qna.get("memberId")}</td>
+                                <td>${qna.get("questionMemberId")}</td>
                                 <td>${qna.get("questionTitle")}</td>
                                 <td><fmt:formatDate pattern="yyyy-MM-dd" value='${qna.get("regdate")}' /></td>
                                 <td>

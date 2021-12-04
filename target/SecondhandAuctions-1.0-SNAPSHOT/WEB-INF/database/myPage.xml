@@ -67,7 +67,7 @@
 
     <select id="myShopProductQnA" parameterType="Map" resultType="Map">
         select
-            product.memberId, product.productId, question.questionId, question.memberId, questionTitle, questionContent, regdate, question.isAnswer, answer
+            product.memberId, product.productId, question.questionId, question.memberId as questionMemberId, questionTitle, questionContent, question.regdate, question.isAnswer, answer
         from
             product
         inner join question on product.productId = question.productId

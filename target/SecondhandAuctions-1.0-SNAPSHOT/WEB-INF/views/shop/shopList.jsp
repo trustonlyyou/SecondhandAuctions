@@ -32,13 +32,27 @@
 
         <div class="row">
             <h3 class="my-4">실시간 상품</h3> &nbsp;&nbsp;
-            <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">신규등록순</button>
-        </span>
+            <c:if test="${category eq null}">
+                <span class="my-4">
+                        <a href="/shop?status=newList" class="btn btn-outline-secondary btn-sm">신규등록순</a>
+                </span>
+                &nbsp;
+                <span class="my-4">
+                    <a href="/shop?status=expireList" class="btn btn-outline-secondary btn-sm">마감임박순</a>
+                </span>
+
+            </c:if>
+            <c:if test="${category ne null}">
+                <span class="my-4">
+                    <a href="/shop?categoryName=${category}&status=newList" class="btn btn-outline-secondary btn-sm">신규등록순</a>
+                </span>
+                &nbsp;
+                <span class="my-4">
+                    <a href="/shop?categoryName=${category}&status=expireList" class="btn btn-outline-secondary btn-sm">마감임박순</a>
+                </span>
+
+            </c:if>
             &nbsp;
-            <span class="my-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm">마감임박순</button>
-        </span>
         </div>
 
         <div class="col-lg-12">

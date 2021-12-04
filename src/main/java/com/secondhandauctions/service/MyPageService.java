@@ -92,6 +92,8 @@ public class MyPageService {
 
         qna = myPageDao.myShopProductQnA(info);
 
+        log.info(qna.toString());
+
         result.put("product", productVo);
         result.put("fileName", fileNames);
         result.put("qna", qna);

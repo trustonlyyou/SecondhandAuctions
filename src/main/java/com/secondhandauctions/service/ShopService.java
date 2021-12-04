@@ -5,6 +5,7 @@ import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,10 @@ public class ShopService {
 
     public int getTotalCount() throws Exception {
         return shopDao.countProduct();
+    }
+
+    public int getProductCountOfCategory(String categoryName) throws Exception {
+        return shopDao.countProductOfCategory(categoryName);
     }
 
     public List<ShopVo> getListOfCategory(Map<String, Object> params) throws Exception {
@@ -93,6 +98,30 @@ public class ShopService {
         if (itemList.isEmpty()) {
             itemList = Collections.emptyList();
         }
+
+        return itemList;
+    }
+
+    public List<ShopVo> getNewProductListOfCategory(Map<String, Object> params) throws Exception {
+        List<ShopVo> itemList = new ArrayList<>();
+
+        if (params.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        itemList = shopDao.newProductListOfCategory(params);
+
+        return itemList;
+    }
+
+    public List<ShopVo> getExpireTimeProductListOfCategory(Map<String, Object> params) throws Exception {
+        List<ShopVo> itemList = new ArrayList<>();
+
+        if (params.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        itemList = shopDao.expireTimeProductListOfCategory(params);
 
         return itemList;
     }

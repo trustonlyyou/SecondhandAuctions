@@ -38,9 +38,6 @@ public class ProductController {
     @Autowired
     private Commons commons;
 
-    @Autowired
-    private FileService fileService;
-
     @GetMapping(value = "/register/product/form")
     public String register(HttpServletRequest request) {
         return "product/registerProduct";
@@ -61,7 +58,7 @@ public class ProductController {
 
         product = productService.setRegisterProduct(productVo);
 
-        log.info("product result :: " + product.get("check"));
+        log.info("Product register result :: '{}'", product.get("check"));
 
         if (product.get("check") == 0) {
             result.put("check", 0);
@@ -86,14 +83,11 @@ public class ProductController {
 
         Iterator<String> iterator = multipartRequest.getFileNames();
 
-        log.info("productId ::" + productId);
-
         while (iterator.hasNext()) {
             filedName = (String) iterator.next();
             uploadFiles.add(multipartRequest.getFile(filedName));
         }
 
-        // TODO: 2021/11/30 check file
         if (uploadFiles.isEmpty()) {
             check = -1;
             result.put("check", check);
@@ -102,10 +96,9 @@ public class ProductController {
         }
 
         check = productService.uploadImage(uploadFiles, productId);
-
-        log.info("image upload result :: " + check);
-
         result.put("check", check);
+
+        log.info("image upload result :: '{}'", check);
 
         return result;
     }

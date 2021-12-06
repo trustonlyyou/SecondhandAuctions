@@ -1,0 +1,36 @@
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: black;
+    vertical-align: middle;
+    background-color: #a6b3cd;
+    cursor: pointer;
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+}
+
+
+#att_zone{
+    width: 660px;
+    min-height:150px;
+    padding:10px;
+    border:1px dotted #00f;
+}
+#att_zone:empty:before{
+    content : attr(data-placeholder);
+    color : #999;
+    font-size:.9em;
+}
+
+.product_textarea {
+    resize: none;
+}

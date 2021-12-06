@@ -19,8 +19,4 @@ public interface ProductDao {
 
     public void registerImg(List<ImageVo> list) throws Exception;
 
-    public String getCategory(int categoryId) throws Exception;
-
-    public List<BoardVo> searchImgTest() throws Exception;
-
 }

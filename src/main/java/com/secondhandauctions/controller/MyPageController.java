@@ -209,7 +209,6 @@ public class MyPageController {
         return "myPage/myShopDetail";
     }
 
-    // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
     // 수정
     @GetMapping(value = "/myPage/myShop/product/modify/form")
     public String myProductModify(HttpServletRequest request, Model model) throws Exception {

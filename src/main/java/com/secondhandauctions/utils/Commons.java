@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 
 @Component
 public class Commons {
@@ -39,5 +40,14 @@ public class Commons {
         memberId = (String) session.getAttribute("member");
 
         return memberId;
+    }
+
+    public boolean isEmpty(List<String> list) {
+        for (String str : list) {
+            if ("".equals(str) || str == null) {
+                return true;
+            }
+        }
+        return false;
     }
 }

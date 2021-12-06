@@ -5,7 +5,7 @@
 
 <mapper namespace="com.secondhandauctions.dao.ProductDao">
 
-<!--  상품 등록  -->
+    <!--  상품 등록  -->
     <insert id="registerProduct" useGeneratedKeys="true" keyProperty="productId" parameterType="com.secondhandauctions.vo.ProductVo" >
 
         insert into product
@@ -19,6 +19,7 @@
 
     </insert>
 
+    <!--  이미지 등록  -->
     <insert id="registerImg" parameterType="java.util.List">
         insert into image
         (
@@ -31,20 +32,4 @@
             )
         </foreach>
     </insert>
-
-    <select id="searchImgTest" resultType="com.secondhandauctions.vo.BoardVo">
-        select
-            product.productId, categoryName, productTitle, productContent, startPrice, bidPrice,
-               startTime, expireTime, imagePath, s_FileName, fileExtension
-        from
-             product
-        left join
-             image
-        on
-             product.productId = image.productId
-        where
-             isProductCheck = 1
-             and
-             fileExtension is not null
-    </select>
 </mapper>

@@ -9,52 +9,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/css/product.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="/resources/js/product.js"></script>
+
 
   <title>상품 판매 | 중고 경매의 세계</title>
 
-  <style>
-    .filebox input[type="file"] {
-      position: absolute;
-      width: 0;
-      height: 0;
-      padding: 0;
-      overflow: hidden;
-      border: 0;
-    }
-
-    .filebox label {
-      display: inline-block;
-      padding: 10px 20px;
-      color: black;
-      vertical-align: middle;
-      background-color: #a6b3cd;
-      cursor: pointer;
-      border: 1px solid #ebebeb;
-      border-radius: 5px;
-    }
-
-
-    #att_zone{
-      width: 660px;
-      min-height:150px;
-      padding:10px;
-      border:1px dotted #00f;
-    }
-    #att_zone:empty:before{
-      content : attr(data-placeholder);
-      color : #999;
-      font-size:.9em;
-    }
-
-    .product_textarea {
-      resize: none;
-    }
-  </style>
 </head>
 <body>
 
@@ -126,8 +92,23 @@
             </div>
           </div>
           <br>
-          <input type="button" class="btn btn-lg btn-primary btn-block text-uppercase"
-                 value="상품 등록" id="registerSubmit" name="registerSubmit" disabled>
+            <input type="button" id="btn_registerModal" class="btn btn-lg btn-primary btn-block text-uppercase" data-toggle="modal" data-target="#registerModal" value="게시물 등록 하기" disabled>
+            <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="registerModalLabel">게시물을 정말 등록하시겠습니까??</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="취소">
+                            <input type="button" id="registerSubmit" class="btn btn-primary" value="확인">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
       </div>
     </div>
@@ -250,12 +231,12 @@
   var productContentFlag = false;
   var startPriceFlag = false;
 
-  function numberWithCommas(startPrice) {
-    startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
-    startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
-
-    $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
-  }
+  // function numberWithCommas(startPrice) {
+  //   startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
+  //   startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
+  //
+  //   $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
+  // }
 
   $(document).ready(function (e) {
     $("#startPrice").on('keyup', function() {
@@ -269,6 +250,8 @@
 
         startPriceFlag = false;
 
+        $("#btn_registerModal").attr('disabled', true);
+
         return false;
       }
 
@@ -277,7 +260,7 @@
       $("#priceCheckMsg").text('');
 
       if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#registerSubmit").attr('disabled', false);
+        $("#btn_registerModal").attr('disabled', false);
       }
 
       return true;
@@ -293,6 +276,8 @@
 
         productContentFlag = false;
 
+          $("#btn_registerModal").attr('disabled', true);
+
         return false;
       }
 
@@ -303,7 +288,7 @@
       console.log(productContentFlag);
 
       if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#registerSubmit").attr('disabled', false);
+        $("#btn_registerModal").attr('disabled', false);
       }
 
       return true;
@@ -322,6 +307,8 @@
 
       productTitleFlag = false;
 
+      $("#btn_registerModal").attr('disabled', true);
+
       return false;
     }
 
@@ -330,7 +317,7 @@
     $("#titleCheckMsg").text('');
 
     if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-      $("#registerSubmit").attr('disabled', false);
+      $("#btn_registerModal").attr('disabled', false);
     }
 
     return true;

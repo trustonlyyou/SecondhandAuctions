@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<%@include file="../includes/footer.jsp"%>
+<%@include file="../includes/header.jsp"%>
 <div class="container">
   <div class="row">
     <div class="col-lg-10 col-xl-9 mx-auto">
@@ -211,8 +211,6 @@
         var check = result.check;
         var productId = result.productId;
 
-        alert("product register result :: " + check);
-
         if (check !== 1) {
           window.alert("게시물 등록 실패, 다시 등록해주세요..");
           window.location.replace("/register/product/form");
@@ -220,7 +218,6 @@
         }
 
         if (check === 1) {
-          window.alert("게시물 등록 성공!!");
           formData.append("productId", productId);
         }
 

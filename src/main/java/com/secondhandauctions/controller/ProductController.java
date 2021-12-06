@@ -95,6 +95,7 @@ public class ProductController {
 
         // TODO: 2021/11/30 check file
         if (uploadFiles.isEmpty()) {
+            check = -1;
             result.put("check", check);
 
             return result;

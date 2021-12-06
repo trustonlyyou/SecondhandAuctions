@@ -5,6 +5,7 @@ import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.MyPageService;
 import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.*;
+import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
@@ -205,16 +206,100 @@ public class MyPageController {
         model.addAttribute("fileName", fileNames);
         model.addAttribute("qna", qNa);
 
-        log.info(qNa.toString());
-
         return "myPage/myShopDetail";
     }
 
     // TODO: 2021/11/16 myshopdetail :: 수정, 삭제 까지
     // 수정
-    @GetMapping(value = "/myPage/myShop/product/modify")
-    public String myProductModify(HttpServletRequest request, HttpServletResponse response) {
-        return "";
+    @GetMapping(value = "/myPage/myShop/product/modify/form")
+    public String myProductModify(HttpServletRequest request, Model model) throws Exception {
+        Map<String, Object> info = new HashMap<>();
+        ProductVo productVo = new ProductVo();
+        List<ImageVo> imageList = new ArrayList<>();
+
+        String memberId = "";
+        int productId = 0;
+        int bidCheck = 0;
+
+        productId = Integer.parseInt(request.getParameter("modifyProductId"));
+
+        bidCheck = myPageService.isBidCheck(productId);
+        model.addAttribute("bidCheck", bidCheck);
+
+        memberId = commons.getMemberSession(request);
+
+        info.put("productId", productId);
+        info.put("memberId", memberId);
+
+        productVo = myPageService.getProductDetail(info);
+        imageList = myPageService.getProductImages(info);
+
+        log.info(productVo.toString());
+        log.info("================================================");
+        log.info(imageList.toString());
+
+        model.addAttribute("product", productVo);
+        model.addAttribute("imageList", imageList);
+
+        return "myPage/myProductModify";
+    }
+
+    @PostMapping(value = "/myPage/myShop/product/modify/deleteImg")
+    @ResponseBody
+    public Map<String, Integer> deleteImg(int productId,
+                                          @RequestParam("deleteData[]") List<String> deleteData) throws Exception {
+        Map<String, Integer> result = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        int midCheck = 0;
+        int resultCheck = 0;
+
+        for (String uploadFileName : deleteData) {
+            log.info("target productId :: '{}'", productId);
+            log.info("delete image by modify | target FileName :: '{}'", uploadFileName);
+
+            params.put("uploadFileName", uploadFileName);
+            params.put("productId", productId);
+
+            midCheck = myPageService.deleteImg(params);
+
+            if (midCheck == 0) {
+                resultCheck = -1;
+                log.error("fail image delete :: target fileName '{}'", uploadFileName);
+            }
+
+            params.clear();
+        }
+
+        if (resultCheck == -1) {
+            result.put("check", resultCheck);
+        } else {
+            resultCheck = 1;
+            result.put("check", resultCheck);
+        }
+
+        log.info("delete image by modify service result :: '{}'", resultCheck);
+
+        return result;
+    }
+
+    @PostMapping(value = "/myPage/myShop/product/modify")
+    @ResponseBody
+    public Map<String, Integer> updateProduct(@RequestParam int productId, ProductVo productVo) throws Exception {
+        Map<String, Integer> result = new HashMap<>();
+        int check = 0;
+
+        log.info(productVo.toString());
+        log.info(String.valueOf(productId));
+
+        check = myPageService.setModifyProduct(productVo);
+
+        log.info("check :: " + check);
+
+        result.put("check", check);
+        result.put("productId", productId);
+
+
+        return result;
     }
 
 

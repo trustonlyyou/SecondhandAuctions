@@ -28,4 +28,10 @@ public interface MyPageDao {
 
     public int updateAnswerOfQuestion(int questionId) throws Exception;
 
+    public int isBidCheck(int productId) throws Exception;
+
+    public int imageDelete(Map<String, Object> params) throws Exception;
+
+    public int modifyProduct(ProductVo productVo) throws Exception;
+
 }

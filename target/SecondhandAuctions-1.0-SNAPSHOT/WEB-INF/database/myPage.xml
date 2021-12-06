@@ -39,15 +39,15 @@
 
     <select id="myShopDetail" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
         select
-            productId, categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime
+            productId, memberId, categoryName, productTitle, productContent, startPrice
         from
             product
         where
-              isProductCheck = 1
-            and
-              product.productId = #{productId}
-            and
-              memberId = #{memberId}
+            isProductCheck = 1
+        and
+            product.productId = #{productId}
+        and
+            memberId = #{memberId}
     </select>
 
     <select id="myShopDetailImage" parameterType="Map" resultType="com.secondhandauctions.vo.ImageVo">
@@ -55,7 +55,7 @@
             image.productId, uploadPath, uploadFileName, fileExtension
         from
             image
-                left join
+        left join
             product on image.productId = product.productId
         where
             isProductCheck = 1
@@ -122,5 +122,41 @@
             isAnswer = 1
         where
             questionId = #{questionId}
+    </update>
+
+    <select id="isBidCheck" resultType="int" parameterType="int">
+        select
+            count(bidNo)
+        from
+            product
+        inner join
+            bid
+        on
+            product.productId = bid.productId
+        where
+            product.productId = #{productId};
+    </select>
+
+    <delete id="imageDelete" parameterType="map">
+        delete from
+            image
+        where
+            uploadFileName = #{uploadFileName}
+        and
+            productId = #{productId}
+        limit 1
+    </delete>
+
+    <update id="modifyProduct" parameterType="com.secondhandauctions.vo.ProductVo">
+        update
+            product
+        set
+            productTitle = #{productTitle},
+            productContent = #{productContent},
+            categoryName = #{categoryName},
+            startPrice = #{startPrice}
+        where
+            productId = #{productId}
+            limit 1;
     </update>
 </mapper>

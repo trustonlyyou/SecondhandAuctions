@@ -79,7 +79,7 @@
                         <br>
                         <br>
 
-                        회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="">회원가입</a>
+                        회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/form">회원가입</a>
 
                     </form>
                 </div>

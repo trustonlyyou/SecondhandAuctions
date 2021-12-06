@@ -39,6 +39,10 @@
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-color: rgba(0, 0, 0, 1);
     }
+
+    .productText {
+        resize: none;
+    }
     /* .card {
       position: absolute;
     } */
@@ -47,7 +51,6 @@
 
 
 <div class="container">
-
     <div class="row">
         <div class="col-lg-10 col-xl-9 mx-auto">
             <div class="card text-center">
@@ -100,7 +103,7 @@
 <%--                            내용<br>--%>
 
                             <label for="productContent">내용</label>
-                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="form-control" readonly>
+                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="productText form-control" readonly>
                                 <c:out value="${product.productContent}"/>
                             </textarea>
                         </div>
@@ -110,7 +113,6 @@
 
                         <div class="form-label-group">
                             현재 가격 <c:out value="${product.startPrice}"/>
-                            <%--                            <input type="text" id="startPrice" name="startPrice" readonly value="">&nbsp;원--%>
                         </div>
                         <br>
                         <div class="row">
@@ -118,8 +120,9 @@
                                 <input class="deleteBtn btn btn-danger btn-sm float-right" type="button" name="deleteProduct" id="deleteProduct" value="게시물 삭제" >
                                 <input type="hidden" name="deleteProductId" id="deleteProductId" value="${product.productId}">
                             </form>&nbsp;
-                            <form id="modifyForm">
-                                <input type="button" class="listBtn btn btn-warning btn-sm float-right" value="게시물 수정">
+                            <form id="modifyForm" action="/myPage/myShop/product/modify/form">
+                                <input type="button" class="modifyBtn btn btn-warning btn-sm float-right" value="게시물 수정">
+                                <input type="hidden" name="modifyProductId" id="modifyProductId" value="${product.productId}">
                             </form>&nbsp;
                             <form id="actionForm" action="/myShop/list">
                                 <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
@@ -257,9 +260,14 @@
                 }
             });
         });
+        //
+        // $(".answer_btn").on("click", function () {
+        //
+        // });
 
-        $(".answer_btn").on("click", function () {
 
+        $(".modifyBtn").on("click", function () {
+            $("#modifyForm").submit();
         });
     });
 </script>

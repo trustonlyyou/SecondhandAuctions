@@ -5,6 +5,7 @@ import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,8 +93,6 @@ public class MyPageService {
 
         qna = myPageDao.myShopProductQnA(info);
 
-        log.info(qna.toString());
-
         result.put("product", productVo);
         result.put("fileName", fileNames);
         result.put("qna", qna);
@@ -157,5 +156,80 @@ public class MyPageService {
         }
 
         return check;
+    }
+
+    public int isBidCheck(int productId) throws Exception {
+        int check = 0;
+
+        if (productId < 1) {
+            log.error("bid check productId < 1");
+            check = -1;
+
+            return check;
+        }
+
+        check = myPageDao.isBidCheck(productId);
+
+        return check;
+    }
+
+    public ProductVo getProductDetail(Map<String, Object> info) throws Exception {
+        ProductVo productVo = new ProductVo();
+
+        if (info.isEmpty()) {
+            return productVo;
+        }
+
+        productVo = myPageDao.myShopDetail(info);
+
+        return productVo;
+    }
+
+    public List<ImageVo> getProductImages(Map<String, Object> info) throws Exception {
+        List<ImageVo> imageList = new ArrayList<>();
+
+        if (info.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        imageList = myPageDao.myShopDetailImage(info);
+
+        return imageList;
+    }
+
+    public int deleteImg(Map<String, Object> params) throws Exception {
+        int result = 0;
+
+        if (params.isEmpty()) {
+            log.info("params isEmpty");
+            return result;
+        }
+
+        result = myPageDao.imageDelete(params);
+
+        return result;
+    }
+
+    public int setModifyProduct(ProductVo productVo) throws Exception {
+        int result = 0;
+
+        String categoryName = "";
+        String productTitle = "";
+        String productContent = "";
+        String startPrice = "";
+
+        // TODO: 2021/12/05 리스트로 묶어서 따로 빈값 비교 메소드 만들자 귀찮다.
+        categoryName = productVo.getCategoryName();
+        productTitle = productVo.getProductTitle();
+        productContent = productVo.getProductContent();
+        startPrice = productVo.getStartPrice();
+
+        if (productVo == null) {
+            return result;
+        }
+
+        result = myPageDao.modifyProduct(productVo);
+
+        return result;
     }
 }

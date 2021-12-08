@@ -4,3 +4,18 @@ function numberWithCommas(startPrice) {
 
     $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
 }
+
+function numberComparison(bidPrice, startPrice) {
+    var chk = false;
+
+    bidPrice = Number(bidPrice.replaceAll(",", ""));
+    startPrice = Number(startPrice.replaceAll(",", ""));
+
+    if (bidPrice <= startPrice) {
+        return chk;
+    }
+
+    chk = true
+
+    return chk;
+}

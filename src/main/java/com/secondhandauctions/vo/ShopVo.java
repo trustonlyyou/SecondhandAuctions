@@ -17,7 +17,7 @@ public class ShopVo {
     private String productTitle;
     private String productContent;
     private String startPrice;
-    private int bidPrice;
+    private String bidPrice;
     private Date startTime;
     private Date expireTime;
     private String uploadPath;

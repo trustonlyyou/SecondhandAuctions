@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,6 +80,7 @@ public class ProductService {
     }
 
     // 이미지 저장
+    @Transactional(rollbackFor = Exception.class)
     public int registerImage(int productId, List<ImageVo> images) throws Exception {
         int result = 0;
 
@@ -98,6 +100,7 @@ public class ProductService {
     }
 
     // 게시물 등록
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Integer> setRegisterProduct(ProductVo productVo) throws Exception {
         Map<String, Integer> result = new HashMap<>();
         List<String> checkList = new ArrayList<>();
@@ -138,5 +141,18 @@ public class ProductService {
         result.put("productId", productId);
 
         return result;
+    }
+
+    @Transactional(rollbackFor = {Exception.class, NullPointerException.class})
+    public int updateBidPrice(Map<String, Object> params) throws Exception {
+        int check = 0;
+
+        if (params.isEmpty()) {
+            return check;
+        }
+
+        check = productDao.updateBidPrice(params);
+
+        return check;
     }
 }

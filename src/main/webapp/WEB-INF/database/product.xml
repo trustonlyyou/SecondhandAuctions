@@ -32,4 +32,15 @@
             )
         </foreach>
     </insert>
+
+    <update id="updateBidPrice" parameterType="Map">
+        update
+            product
+        set
+            bidPrice = #{bidPrice}
+        where
+            productId = #{productId}
+        and
+            isProductCheck = 1
+    </update>
 </mapper>

@@ -19,4 +19,6 @@ public interface ProductDao {
 
     public void registerImg(List<ImageVo> list) throws Exception;
 
+    public int updateBidPrice(Map<String, Object> params) throws Exception;
+
 }

@@ -63,7 +63,12 @@
                                     <p>경매 시작 가격 : ${shopVo.startPrice}</p>
                                     <p>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></p>
                                     <p>경매 마감 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.expireTime}" /></p>
-                                    <h6 class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</h6>
+                                    <c:if test="${empty shopVo.bidPrice}">
+                                        <h6 class="card-text">경매 시작가 : ${shopVo.startPrice}</h6>
+                                    </c:if>
+                                    <c:if test="${not empty shopVo.bidPrice}">
+                                        <h6 class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</h6>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>

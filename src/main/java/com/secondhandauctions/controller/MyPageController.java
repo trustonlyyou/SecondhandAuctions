@@ -383,4 +383,44 @@ public class MyPageController {
 
         return result;
     }
+
+//     나의 입찰 물품
+    @GetMapping(value = "/myBid/list")
+    public String myBidProduct(@ModelAttribute Criteria criteria,
+                               HttpServletRequest request, Model model) throws Exception {
+
+        List<ProductVo> result = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        PagingUtil pagingUtil = new PagingUtil();
+
+        String memberId = "";
+        int count = 0;
+
+        memberId = commons.getMemberSession(request);
+
+        count = myPageService.getMyBidProductCount(memberId);
+
+        if (count == 0) {
+            model.addAttribute("list", null);
+            return "myPage/myBidList";
+        }
+
+        params.put("criteria", criteria);
+        params.put("memberId", memberId);
+
+        result = myPageService.getMyBidProduct(params);
+
+        if (result.isEmpty()) {
+            model.addAttribute("list", null);
+            return "myPage/myBidList";
+        }
+
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(count);
+
+        model.addAttribute("list", result);
+        model.addAttribute("pageMaker", pagingUtil);
+
+        return "myPage/myBidList";
+    }
 }

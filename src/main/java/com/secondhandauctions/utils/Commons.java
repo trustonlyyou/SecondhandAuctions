@@ -50,4 +50,11 @@ public class Commons {
         }
         return false;
     }
+
+    public String printStackLog(Exception e) {
+        StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
+
+        return stringWriter.toString();
+    }
 }

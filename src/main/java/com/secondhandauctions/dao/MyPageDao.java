@@ -34,4 +34,8 @@ public interface MyPageDao {
 
     public int modifyProduct(ProductVo productVo) throws Exception;
 
+    public int myBidProductCount(String memberId) throws Exception;
+
+    public List<ProductVo> myBidProductList(Map<String, Object> params) throws Exception;
+
 }

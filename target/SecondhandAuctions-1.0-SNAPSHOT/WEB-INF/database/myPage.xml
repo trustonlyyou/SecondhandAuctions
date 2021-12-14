@@ -159,4 +159,35 @@
             productId = #{productId}
             limit 1;
     </update>
+
+    <select id="myBidProductCount" resultType="int" parameterType="String">
+        select
+            count(*)
+        from
+            bid
+        inner join
+            product on bid.productId = product.productId
+        where
+            bidMemberId = #{memberId}
+        and
+            product.isProductCheck = 1;
+    </select>
+
+    <select id="myBidProductList" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
+        select
+            member.memberId, bid.productId, productTitle, expireTime, bid.bidPrice, product.bidPrice as nowPrice
+        from
+            member
+        inner join
+            bid on member.memberId = bidMemberId
+        inner join
+            product on bid.productId = product.productId
+        where
+            bidMemberId = #{memberId}
+        and
+            product.isProductCheck = 1
+        order by expireTime desc
+
+        limit #{criteria.pageStart}, #{criteria.perPageNum}
+    </select>
 </mapper>

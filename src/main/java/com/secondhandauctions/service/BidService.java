@@ -32,7 +32,7 @@ public class BidService {
         List<String> checkList = new ArrayList<>();
 
         int productId = 0;
-        String memberId = "";
+        String bidMemberId = "";
         String bidPrice = "";
 
         boolean strCheck = false;
@@ -46,20 +46,27 @@ public class BidService {
         }
 
         productId = (int) params.get("productId");
-        memberId = (String) params.get("memberId");
+        bidMemberId = (String) params.get("bidMemberId");
         bidPrice = (String) params.get("bidPrice");
 
-        checkList.add(memberId);
+        log.info("bidMemberId :: '{}'", bidMemberId);
+        log.info("target productId :: '{}'", productId);
+        log.info("bidPrice :: '{}'", bidPrice);
+
+        checkList.add(bidMemberId);
         checkList.add(bidPrice);
 
         strCheck = commons.isEmpty(checkList);
 
         if (strCheck == true) {
+            log.info("null check is true");
             return result;
         }
 
         synchronized (this) {
             bidChk = biding(params);
+
+            log.info("bidChk :: '{}'", bidChk);
 
             if (bidChk != 1) {
                 log.error("bidChk result :: '{}'", bidChk);
@@ -85,13 +92,18 @@ public class BidService {
     public int biding(Map<String, Object> params) throws Exception {
         int chk = 0;
 
+        log.info((String) params.get("bidMemberId"));
+
         if (params.isEmpty()) {
             return chk;
         }
 
-        chk = bidDao.registerBid(params);
-
-        chk = 1;
+        try {
+            chk = bidDao.registerBid(params);
+        } catch (Exception e) {
+            log.error("Exception :: {}", commons.printStackLog(e));
+            return 0;
+        }
 
         return chk;
     }

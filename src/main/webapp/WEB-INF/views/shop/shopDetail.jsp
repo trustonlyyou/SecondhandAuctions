@@ -347,7 +347,6 @@
                        window.alert("해당 상품에 " + bidPrice + " 원을 입찰하셨습니다.");
                        window.location.reload();
                    }
-                   window.alert("입찰에 실패 했습니다.");
                }
             });
 

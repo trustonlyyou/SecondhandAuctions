@@ -1,6 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: junghwan
+  Date: 2021/12/13
+  Time: 10:53 오전
+  To change this template use File | Settings | File Templates.
+--%>
+<%--
+  Created by IntelliJ IDEA.
+  User: junghwan
   Date: 2021/10/13
   Time: 12:53 오후
   To change this template use File | Settings | File Templates.
@@ -19,11 +26,6 @@
 
     <title>중고 경매의 세계 | 마이페이지</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
 <body>
 <%@include file="../includes/header.jsp"%>
@@ -39,13 +41,13 @@
             <div class="list-group list-group-flush">
                 <a href="/myPage" class="list-group-item">나의 정보</a>
                 <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
-                <a href="/myBid/list" class="list-group-item">입찰 물품</a>
+                <a href="#" class="list-group-item">입찰 물품</a>
                 <a href="#" class="list-group-item">배송</a>
             </div>
         </div>
 
         <div class="col-lg-9">
-            <h4 class="my-4">나의 판매 리스트</h4>
+            <h4 class="my-4">나의 입찰 리스트</h4>
             <hr style="border: solid 1px;">
             <form>
                 <c:if test="${empty list}">
@@ -59,10 +61,18 @@
                     <c:forEach items="${list}" var="productVo">
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <h5>
+                                <h6>
                                     마감일 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${productVo.expireTime}"/><br>
-                                    제목 : <a href="/myShop/get/${productVo.productId}"><c:out value="${productVo.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </h5>
+                                </h6>
+                                <h6>
+                                    제목 : <a class="move" href="<c:out value="${productVo.productId}"/>"><c:out value="${productVo.productTitle}"/></a><br>
+                                </h6>
+                                <h6 style="color: red">
+                                    현재 가격 : <c:out value="${productVo.nowPrice}"/><br>
+                                </h6>
+                                <h6 style="color: green">
+                                    나의 입찰 가격 : <c:out value="${productVo.bidPrice}"/><br>
+                                </h6>
                             </div>
                         </div>
                         <hr>
@@ -92,7 +102,7 @@
         </ul>
     </div>
     <div>
-        <form id="actionForm" action="/myShop/list" method="get">
+        <form id="actionForm" action="/shop" method="get">
             <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${pageMaker.criteria.perPageNum}">
         </form>
@@ -123,17 +133,18 @@
             actionForm.submit();
         });
 
-        // var deleteForm = $("#deleteForm");
-        //
-        // $("#deleteProduct").on("click", function (e) {
-        //     if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") == true) {
-        //         alert("게시물 삭제");
-        //         deleteForm.submit();
-        //     } else {
-        //         alert("게시물 삭제 취소")
-        //     }
-        //     //todo :: form 을 foreach 하면 어떻게 하냐!!! 거기서 부터 다시하자
-        // });
+        $(".move").on("click", function (e) {
+            e.preventDefault();
+
+            var targetProductId = $(this).attr('href');
+
+            console.log(targetProductId);
+
+            actionForm.append("<input type='hidden' name='productId' value='"+targetProductId+"'>");
+            actionForm.attr("action", "/shop/get").submit();
+            // actionForm.submit();
+        });
     });
 </script>
 </html>
+

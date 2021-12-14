@@ -19,6 +19,7 @@ public class ProductVo {
     private String productContent;
     private String startPrice;
     private String bidPrice;
+    private String nowPrice;
     private Date startTime;
     private Date expireTime;
 }

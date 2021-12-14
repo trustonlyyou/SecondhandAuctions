@@ -7,11 +7,11 @@
     <insert id="registerBid" parameterType="Map">
         insert into bid
         (
-         productId, memberId, bidPrice
+         productId, bidMemberId, bidPrice
         )
         values
         (
-         #{productId}, #{memberId}, #{bidPrice}
+         #{productId}, #{bidMemberId}, #{bidPrice}
         )
     </insert>
 </mapper>

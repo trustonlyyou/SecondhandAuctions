@@ -25,10 +25,11 @@ public class BidController {
 
         int resultChk = 0;
 
+        log.info("bidMemberId :: '{}'", bidMemberId);
         log.info("target productId :: '{}'", productId);
         log.info("bidPrice :: '{}'", bidPrice);
 
-        info.put("memberId", bidMemberId);
+        info.put("bidMemberId", bidMemberId);
         info.put("bidPrice", bidPrice);
         info.put("productId", productId);
 
@@ -40,4 +41,5 @@ public class BidController {
 
         return result;
     }
+
 }

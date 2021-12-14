@@ -35,26 +35,10 @@
       <div class="list-group list-group-flush">
         <a href="/myPage/form" class="list-group-item">나의 정보</a>
         <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
-        <a href="#" class="list-group-item">입찰 물품</a>
+        <a href="/myBid/list" class="list-group-item">입찰 물품</a>
         <a href="#" class="list-group-item">배송</a>
       </div>
     </div>
-
-<%--    <c:if test="${check == null || check == 0}">--%>
-
-<%--      <div class="col-lg-9">--%>
-<%--        <h4>마이 페이지 이용하시기 위해서는 비밀번호를 한번 입력해주세요.</h4>--%>
-<%--        <br>--%>
-<%--        <form class="form-signin" id="checkForm" action="/myPage/check" method="post">--%>
-<%--          <div class="input-group input-group-lg">--%>
-<%--            <input type="password" id="checkPassword" name="checkPassword" class="form-control"--%>
-<%--                   placeholder="비밀번호를 입력해주세요.">&nbsp;&nbsp;--%>
-<%--            <input class="btn btn-primary btn-sm" type="submit" id="checkBtn" value="확인">--%>
-<%--          </div>--%>
-<%--          <div id="pwdCheckMsg"></div>--%>
-<%--        </form>--%>
-<%--      </div>--%>
-<%--    </c:if>--%>
 
     <div class="col-lg-9">
       <h4 class="my-4">회원 기본정보</h4>

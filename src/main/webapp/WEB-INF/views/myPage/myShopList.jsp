@@ -38,8 +38,8 @@
             <h2 class="my-4">마이 페이지</h2>
             <div class="list-group list-group-flush">
                 <a href="/myPage" class="list-group-item">나의 정보</a>
-                <a href="/myPage" class="list-group-item">나의 판매 정보</a>
-                <a href="#" class="list-group-item">입찰 물품</a>
+                <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
+                <a href="/myBid/list" class="list-group-item">입찰 물품</a>
                 <a href="#" class="list-group-item">배송</a>
             </div>
         </div>
@@ -100,8 +100,6 @@
 </div>
 </body>
 <script type="text/javascript">
-    // todo :: pagination jquery active, prev, next
-
     var status = "${msg}";
 
     if (status) {

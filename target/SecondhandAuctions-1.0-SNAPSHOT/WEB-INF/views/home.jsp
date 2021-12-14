@@ -20,7 +20,7 @@
     <title>중고 경매의 세계</title>
 </head>
 
-<body background="/resources/image/home.jpg">
+<body>
     <%@include file="includes/header.jsp"%>
 
     <!-- Page Content -->

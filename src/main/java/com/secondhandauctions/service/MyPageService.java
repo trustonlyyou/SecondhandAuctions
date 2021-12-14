@@ -232,4 +232,28 @@ public class MyPageService {
 
         return result;
     }
+
+    public int getMyBidProductCount(String memberId) throws Exception {
+        int count = 0;
+
+        if (StringUtils.isEmpty(memberId)) {
+            return count;
+        }
+
+        count = myPageDao.myBidProductCount(memberId);
+
+        return count;
+    }
+
+    public List<ProductVo> getMyBidProduct(Map<String, Object> params) throws Exception {
+        List<ProductVo> result = new ArrayList<>();
+
+        if (params.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        result = myPageDao.myBidProductList(params);
+
+        return result;
+    }
 }

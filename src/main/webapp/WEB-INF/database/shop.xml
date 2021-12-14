@@ -175,7 +175,7 @@
     </select>
 
     <select id="expireTimeProductListOfCategory" parameterType="Map" resultType="com.secondhandauctions.vo.ShopVo">
-                <![CDATA[
+        <![CDATA[
         select
             product.productId, product.categoryName, productTitle, productContent, startPrice, bidPrice, startTime, expireTime,
             min(uploadPath) as uploadPath, min(uploadFileName) as uploadFileName, min(fileExtension) as fileExtension

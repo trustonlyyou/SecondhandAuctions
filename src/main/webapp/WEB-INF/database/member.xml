@@ -57,8 +57,20 @@
         from
             member
         where
-            memberEmail = #{memberEmail} and
+            memberEmail = #{memberEmail}
+        and
             isMemberCheck = 1;
+    </select>
+
+    <select id="getMemberEmail" parameterType="String" resultType="String">
+        select
+            memberEmail
+        from
+            member
+        where
+            memberId = #{memberId}
+          and
+            isMemberCheck = 1
     </select>
 
     <!--  회원 존재 확인(핸드폰)  -->

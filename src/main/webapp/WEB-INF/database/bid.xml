@@ -14,4 +14,9 @@
          #{productId}, #{bidMemberId}, #{bidPrice}
         )
     </insert>
+
+    <!--  최상위 입찰자  -->
+    <select id="topBidMember" parameterType="int" resultType="String">
+        select bidMemberId from bid where productId = #{productId} and bidPrice = (select max(bidPrice) from bid);
+    </select>
 </mapper>

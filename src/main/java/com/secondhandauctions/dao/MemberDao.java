@@ -22,6 +22,8 @@ public interface MemberDao {
 
     public int isMemberEmail(String memberEmail) throws Exception;
 
+    public String getMemberEmail(String memberId) throws Exception;
+
     public int isMemberPhone(Map<String, Object> params) throws Exception;
 
     // 비밀번호 찾기

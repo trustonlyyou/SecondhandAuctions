@@ -12,11 +12,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/resources/css/detail.css">
+    <link rel="stylesheet" href="/resources/css/spinner.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="/resources/js/product.js"></script>
 
     <title>상품 조회 | 중고 경매의 세계</title>
@@ -120,6 +121,7 @@
                                 </div>
                             </div>
                         </c:if>
+
                         <c:if test="${not empty sessionScope.member}">
                             <c:if test="${sessionScope.member eq product.memberId}">
                                 <div class="modal fade" id="bidModal" tabindex="-1" role="dialog"
@@ -131,6 +133,26 @@
                                             </div>
                                             <div class="modal-body">
                                                 <h5>본인의 물품에는 입찰을 할 수 없습니다.</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${topBidMember eq sessionScope.member}">
+                                <div class="modal fade" id="bidModal" tabindex="-1" role="dialog"
+                                     aria-labelledby="bidModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">입찰</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>최고 입찰자는 추가 입찰을 할 수 없습니다.</h5>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
@@ -157,6 +179,9 @@
                                                 <div class="form-group">
                                                     <label for="startPrice" class="col-form-label">입찰 금액</label>
                                                     <input type="text" class="form-control" id="startPrice" onkeyup="numberWithCommas(this.value)"> 원
+                                                </div>
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
                                                 </div>
                                             </form>
                                         </div>
@@ -279,6 +304,8 @@
 </body>
 <script>
     $(document).ready(function () {
+        $(".spinner-border").hide();
+
         var msg = "${msg}";
         var actionForm = $("#actionForm");
 
@@ -323,13 +350,21 @@
             var bidPrice = $("#startPrice").val();
             var startPrice = "${product.startPrice}";
             var productId = ${product.productId};
+            var pageUrl = "";
 
             chk = numberComparison(bidPrice, startPrice);
+            pageUrl = document.location.href;
 
             if (chk === false) {
                 alert("입찰금액은 현재가격 보다 커야 합니다.");
                 return;
             }
+
+            $(".spinner-border").show();
+            $("#bidModal").css({
+                'pointer-events': 'none',
+                'opacity': '0.5'
+            });
 
             $.ajax({
                url: '/bid',
@@ -337,7 +372,8 @@
                data: {
                    bidMemberId : bidMemberId,
                    bidPrice : bidPrice,
-                   productId : productId
+                   productId : productId,
+                   pageUrl : pageUrl
                },
 
                success: function (result) {

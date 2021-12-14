@@ -1,6 +1,7 @@
 package com.secondhandauctions.controller;
 
 import com.secondhandauctions.dao.ProductDao;
+import com.secondhandauctions.service.BidService;
 import com.secondhandauctions.service.FileService;
 import com.secondhandauctions.service.ShopService;
 import com.secondhandauctions.utils.Commons;
@@ -39,6 +40,9 @@ public class ShopController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    BidService bidService;
 
     @Autowired
     private Commons commons;
@@ -166,6 +170,8 @@ public class ShopController {
         ProductVo productVo = new ProductVo();
         List<Map<String, Object>> question = new ArrayList<>();
 
+        String topBidMember = "";
+
         log.info("productId :: '{}'", productId);
 
         info = shopService.getDetail(productId);
@@ -186,9 +192,12 @@ public class ShopController {
 
         question = (List<Map<String, Object>>) info.get("qna");
 
+        topBidMember = bidService.getTopBidMember(productId);
+
         model.addAttribute("product", productVo);
         model.addAttribute("fileName", fileNames);
         model.addAttribute("qna", question);
+        model.addAttribute("topBidMember", topBidMember);
 
         return "shop/shopDetail";
     }

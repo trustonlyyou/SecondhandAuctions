@@ -1,5 +1,6 @@
 package com.secondhandauctions.service;
 
+import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -16,6 +18,9 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private Commons commons;
 
     public int certificationSendEmail(String toEmail) throws Exception {
 
@@ -49,6 +54,49 @@ public class EmailService {
         log.info("인증번호 :: {}", checkNum);
 
         return checkNum;
+    }
+
+    public int sendEmailToBidMember(String toEmail, String pageUrl) throws Exception {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+
+        String setFrom = "";
+        String title = "";
+        String content = "";
+
+        int check = 0;
+
+        if (StringUtils.isEmpty(toEmail)) {
+            log.info("to email is null");
+            return check;
+        }
+
+        setFrom = "SecondhandAuctions";
+        title = "중고 경매의 세계 입찰 메시지 입니다.";
+        content = "해당 상품의 입찰을 완료하였습니다." +
+                "<br> 물품 보기 : " + pageUrl;
+
+        helper.setFrom(setFrom);
+        helper.setTo(toEmail);
+        helper.setSubject(title);
+        helper.setText(content);
+
+        try {
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            log.error(commons.printStackLog(e));
+            return check;
+        }
+
+        check = 1;
+
+        return check;
+    }
+
+    public void sendEmailToBidMembers(List<String> memberEmailList) throws Exception {
+        String setFrom = "SecondhandAuctions";
+        String title = "중고 경매의 세계 입찰 메시지 입니다.";
+        String content = "";
     }
 
     public void sendEmail(String toEmail, String title, String content) throws Exception {

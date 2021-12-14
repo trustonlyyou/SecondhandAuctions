@@ -19,25 +19,29 @@ public class BidController {
 
     @PostMapping(value = "/bid")
     @ResponseBody
-    public Map<String, Integer> bidProduct(String bidMemberId, String bidPrice, int productId) throws Exception {
+    public Map<String, Integer> bidProduct(String bidMemberId, String bidPrice, int productId, String pageUrl) throws Exception {
         Map<String, Object> info = new HashMap<>();
         Map<String, Integer> result = new HashMap<>();
 
         int resultChk = 0;
+        int emailChk = 0;
 
         log.info("bidMemberId :: '{}'", bidMemberId);
         log.info("target productId :: '{}'", productId);
         log.info("bidPrice :: '{}'", bidPrice);
+        log.info("pageUrl :: '{}'", pageUrl);
 
         info.put("bidMemberId", bidMemberId);
         info.put("bidPrice", bidPrice);
         info.put("productId", productId);
+        info.put("pageUrl", pageUrl);
 
         resultChk = bidService.setBid(info);
-
         log.info("bidProduct Result :: '{}'", resultChk);
-
         result.put("check", resultChk);
+
+        emailChk = bidService.sendEmailToMember(bidMemberId, pageUrl);
+        log.info("SendEmail to bid member result :: '{}'", emailChk);
 
         return result;
     }

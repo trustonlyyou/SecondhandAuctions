@@ -1,10 +1,12 @@
 package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.BidDao;
+import com.secondhandauctions.dao.MemberDao;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ar.ArArchiveEntry;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +25,13 @@ public class BidService {
     private BidDao bidDao;
 
     @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
     private ProductService productService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private Commons commons;
@@ -48,10 +56,6 @@ public class BidService {
         productId = (int) params.get("productId");
         bidMemberId = (String) params.get("bidMemberId");
         bidPrice = (String) params.get("bidPrice");
-
-        log.info("bidMemberId :: '{}'", bidMemberId);
-        log.info("target productId :: '{}'", productId);
-        log.info("bidPrice :: '{}'", bidPrice);
 
         checkList.add(bidMemberId);
         checkList.add(bidPrice);
@@ -106,5 +110,32 @@ public class BidService {
         }
 
         return chk;
+    }
+
+    public int sendEmailToMember(String memberId, String pageUrl) throws Exception {
+        String memberEmail = "";
+        int check = 0;
+
+        memberEmail = memberDao.getMemberEmail(memberId);
+
+        if (StringUtils.isEmpty(memberEmail)) {
+            return check;
+        }
+
+        check = emailService.sendEmailToBidMember(memberEmail, pageUrl);
+
+        return check;
+    }
+
+    public String getTopBidMember(int productId) throws Exception {
+        String memberId = "";
+
+        if (productId == 0) {
+            return "";
+        }
+
+        memberId = bidDao.topBidMember(productId);
+
+        return memberId;
     }
 }

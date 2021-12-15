@@ -80,7 +80,6 @@ public class ProductService {
     }
 
     // 이미지 저장
-    @Transactional(rollbackFor = Exception.class)
     public int registerImage(int productId, List<ImageVo> images) throws Exception {
         int result = 0;
 
@@ -100,7 +99,6 @@ public class ProductService {
     }
 
     // 게시물 등록
-    @Transactional(rollbackFor = Exception.class)
     public Map<String, Integer> setRegisterProduct(ProductVo productVo) throws Exception {
         Map<String, Integer> result = new HashMap<>();
         List<String> checkList = new ArrayList<>();
@@ -131,6 +129,8 @@ public class ProductService {
             result.put("check", 0);
             return result;
         }
+
+        productVo.setExpireTime(commons.getExpireTime());
 
         // 게시물 등록
         productDao.registerProduct(productVo);

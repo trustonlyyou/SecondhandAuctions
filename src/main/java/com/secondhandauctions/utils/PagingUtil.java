@@ -92,19 +92,6 @@ public class PagingUtil {
         return criteria;
     }
 
-    @Override
-    public String toString() {
-        return "PageMaker{" +
-                "totalCount=" + totalCount +
-                ", startPage=" + startPage +
-                ", endPage=" + endPage +
-                ", prev=" + prev +
-                ", next=" + next +
-                ", displayPageNum=" + displayPageNum +
-                ", criteria=" + criteria +
-                '}';
-    }
-
     public String makeQuery(int page) {
         UriComponents uriComponents =
                 UriComponentsBuilder.newInstance()

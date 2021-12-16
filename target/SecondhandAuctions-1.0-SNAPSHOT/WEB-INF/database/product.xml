@@ -14,7 +14,7 @@
         )
         values
         (
-            #{memberId}, #{categoryName}, #{productTitle}, #{productContent} , #{startPrice}, DATE_ADD(NOW(), interval 7 day)
+            #{memberId}, #{categoryName}, #{productTitle}, #{productContent}, #{startPrice}, #{expireTime}
         )
 
     </insert>

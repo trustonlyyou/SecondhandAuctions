@@ -4,14 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.secondhandauctions.dao.BidDao">
+
+    <!--  입찰  -->
+    <!--  isProductCheck = 1 인것만 입찰  -->
+<!--    <insert id="registerBid" parameterType="Map">-->
+<!--        insert into bid-->
+<!--        (-->
+<!--         productId, bidMemberId, bidPrice-->
+<!--        )-->
+<!--        values-->
+<!--        (-->
+<!--         #{productId}, #{bidMemberId}, #{bidPrice}-->
+<!--        )-->
+<!--    </insert>-->
+
     <insert id="registerBid" parameterType="Map">
         insert into bid
         (
          productId, bidMemberId, bidPrice
         )
-        values
+         select #{productId}, #{bidMemberId}, #{bidPrice} from dual where exists
         (
-         #{productId}, #{bidMemberId}, #{bidPrice}
+         select isProductCheck from product where productId = #{productId} and isProductCheck = 1;
         )
     </insert>
 

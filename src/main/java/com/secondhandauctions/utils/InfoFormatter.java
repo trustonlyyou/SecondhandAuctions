@@ -11,8 +11,6 @@ import java.util.List;
 @Component
 public class InfoFormatter {
 
-    private static final Logger logger = LoggerFactory.getLogger(InfoFormatter.class);
-
     public String passwordFormat(String memberPassword) {
         String formatPassword = "";
 

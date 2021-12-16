@@ -185,7 +185,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="modal-footer">
+                                        <div class="bid_Btns modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기
                                             </button>
                                             <input type="button" class="bidBtn btn btn-primary" value="입찰하기">
@@ -347,24 +347,37 @@
         $(".bidBtn").on("click", function () {
             var chk = false;
             var bidMemberId = "${sessionScope.member}";
-            var bidPrice = $("#startPrice").val();
-            var startPrice = "${product.startPrice}";
+            var bidPrice = $("#startPrice").val(); // 고객이 입찰하는 금액
+            var startPrice = "${product.startPrice}"; // 최초 시작 금액
+            var bidingPrice = "${product.bidPrice}"; // 입찰이 진행 중인 금액
             var productId = ${product.productId};
             var pageUrl = "";
 
-            chk = numberComparison(bidPrice, startPrice);
+            if (bidingPrice !== "" || bidingPrice !== null) {
+                chk = numberComparison(bidPrice, bidingPrice);
+                console.log("bidingPrice is not null")
+            } else {
+                chk = numberComparison(bidPrice, startPrice);
+                console.log("bidingPrice is null")
+            }
+
             pageUrl = document.location.href;
 
             if (chk === false) {
                 alert("입찰금액은 현재가격 보다 커야 합니다.");
                 return;
             }
+            console.log(chk)
 
             $(".spinner-border").show();
             $("#bidModal").css({
                 'pointer-events': 'none',
                 'opacity': '0.5'
             });
+            $(".bid_Btns").css({
+                'pointer-events': 'none',
+                'opacity': '0.5'
+            })
 
             $.ajax({
                url: '/bid',
@@ -385,7 +398,6 @@
                    }
                }
             });
-
         });
 
     });

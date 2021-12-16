@@ -110,6 +110,7 @@ public class ProductService {
         String productTitle = "";
         String productContent = "";
         String startPrice = "";
+        Date expireTime = null;
 
         memberId = productVo.getMemberId();
         categoryName = productVo.getCategoryName();
@@ -130,7 +131,8 @@ public class ProductService {
             return result;
         }
 
-        productVo.setExpireTime(commons.getExpireTime());
+        expireTime = commons.getExpireTime();
+        productVo.setExpireTime(expireTime);
 
         // 게시물 등록
         productDao.registerProduct(productVo);
@@ -143,7 +145,6 @@ public class ProductService {
         return result;
     }
 
-    @Transactional(rollbackFor = {Exception.class, NullPointerException.class})
     public int updateBidPrice(Map<String, Object> params) throws Exception {
         int check = 0;
 

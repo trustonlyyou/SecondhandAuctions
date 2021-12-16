@@ -24,8 +24,6 @@ import java.util.UUID;
 
 public class FileUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
-
     public static String getUploadPath() {
         String uploadPath = "";
         String convert = "";

@@ -11,6 +11,9 @@ function numberComparison(bidPrice, startPrice) {
     bidPrice = Number(bidPrice.replaceAll(",", ""));
     startPrice = Number(startPrice.replaceAll(",", ""));
 
+    console.log("bidPrice :: " + bidPrice);
+    console.log("startPrice :: " + startPrice);
+
     if (bidPrice <= startPrice) {
         return chk;
     }

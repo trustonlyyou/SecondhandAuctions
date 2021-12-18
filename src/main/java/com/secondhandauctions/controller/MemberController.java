@@ -137,7 +137,7 @@ public class MemberController {
         Map<String, Object> map = new HashMap<>();
         String strNum = "";
 
-        strNum = smsService.sendSms(memberPhone);
+        strNum = smsService.authenticationNum(memberPhone);
 
         if (("".equals(strNum)) || (strNum == null)) {
             log.info("smsService sendSms return is null");

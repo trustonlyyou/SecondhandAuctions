@@ -5,7 +5,6 @@ import com.secondhandauctions.dao.MemberDao;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.archivers.ar.ArArchiveEntry;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +35,9 @@ public class BidService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private SmsService smsService;
 
     @Autowired
     private Commons commons;
@@ -185,7 +185,45 @@ public class BidService {
         }
 
         productDao.insertSuccessBidInfo(successBidProductId); // 입찰 성공
+    }
 
-        // TODO: 2021/12/18 입찰 성공한 사람들한테 문자로 알려주고, url 까지 보내줘야 한다.
+    @Scheduled(cron = "0 0 7 * * *") // 매일 새벽 7시에 실행, return void & Don't have parameter
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = Exception.class)
+    public void successBidderSendSms() throws Exception {
+        List<Map<String, String>> sellersPhoneList = new ArrayList<>();
+        List<Map<String, String>> biddersPhoneList = new ArrayList<>();
+
+        String sellerText = "판매 하신 상품이 낙찰되셨습니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
+        String bidderText = "입찰 하신 상품이 낙찰되었습니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
+
+        sellersPhoneList = bidDao.successSellerPhone();
+        biddersPhoneList = bidDao.successBiddersPhone();
+
+
+        for (Map<String, String> info : sellersPhoneList) {
+            String memberId = info.get("memberId");
+            String memberPhone = info.get("memberPhone");
+
+            // test
+            log.info("memberId :: '{}'", memberId);
+            log.info("memberPhone :: '{}'", memberPhone);
+
+            smsService.sendSms(memberPhone, sellerText);
+        }
+
+        for (Map<String, String> info : biddersPhoneList) {
+            String memberId = info.get("memberId");
+            String memberPhone = info.get("memberPhone");
+
+            // test
+            log.info("memberId :: '{}'", memberId);
+            log.info("memberPhone :: '{}'", memberPhone);
+
+            smsService.sendSms(memberPhone, sellerText);
+
+        }
+
     }
 }

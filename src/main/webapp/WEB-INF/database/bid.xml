@@ -5,19 +5,6 @@
 
 <mapper namespace="com.secondhandauctions.dao.BidDao">
 
-    <!--  입찰  -->
-    <!--  isProductCheck = 1 인것만 입찰  -->
-<!--    <insert id="registerBid" parameterType="Map">-->
-<!--        insert into bid-->
-<!--        (-->
-<!--         productId, bidMemberId, bidPrice-->
-<!--        )-->
-<!--        values-->
-<!--        (-->
-<!--         #{productId}, #{bidMemberId}, #{bidPrice}-->
-<!--        )-->
-<!--    </insert>-->
-
     <insert id="registerBid" parameterType="Map">
         insert into bid
         (
@@ -33,4 +20,36 @@
     <select id="topBidMember" parameterType="int" resultType="String">
         select bidMemberId from bid where productId = #{productId} and bidPrice = (select max(bidPrice) from bid);
     </select>
+
+    <!--  낙찰자들의 핸드폰 번호  -->
+    <select id="successBiddersPhone" resultType="Map">
+        <![CDATA[
+        select
+            memberId, memberPhone
+        from
+            member
+        where
+            memberId
+        in  (
+            select bidMemberId from successBid where date_format(regdate, '%Y-%m-%d') = curdate()
+            )
+        ]]>
+    </select>
+
+    <!--  판매자들의 핸드폰 번호  -->
+    <select id="successSellerPhone" resultType="Map">
+        <![CDATA[
+        select
+            memberId, memberPhone
+        from
+            member
+        where
+                memberId
+                in  (
+                    select memberId from successBid where date_format(regdate, '%Y-%m-%d') = curdate()
+                )
+        ]]>
+    </select>
+
+
 </mapper>

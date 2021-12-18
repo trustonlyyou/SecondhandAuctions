@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,7 +92,7 @@ public class MyPageController {
         Map<String, Object> map = new HashMap<>();
         String strNum = "";
 
-        strNum = smsService.sendSms(memberPhone);
+        strNum = smsService.authenticationNum(memberPhone);
 
         if (StringUtils.isEmpty(strNum)) {
             log.info("smsService sendSms return is null");

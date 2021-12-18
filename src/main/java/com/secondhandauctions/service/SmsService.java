@@ -1,9 +1,12 @@
 package com.secondhandauctions.service;
 
+import com.secondhandauctions.utils.Commons;
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class SmsService {
 
     @Value("${api.key}")
@@ -24,10 +28,10 @@ public class SmsService {
     @Value("${fromPhoneNumber}")
     private String fromPhoneNumber;
 
-    private static final Logger logger = LoggerFactory.getLogger(SmsService.class);
+    @Autowired
+    private Commons commons;
 
-
-    public String sendSms(String toPhoneNumber) throws Exception {
+    public String authenticationNum(String toPhoneNumber) throws Exception {
         Message message = new Message(api_key, api_secret);
         HashMap<String, String> params = new HashMap<>();
 
@@ -48,16 +52,37 @@ public class SmsService {
 //            JSONObject obj = (JSONObject) message.send(params);
 //
 //            logger.info(obj.toString());
-            logger.info("인증번호 :: " + numStr);
+            log.info("인증번호 :: " + numStr);
         } catch (Exception e) {
-            logger.error("error :: " + e);
-            e.printStackTrace();
+            log.error(commons.printStackLog(e));
+
         }
-
         return numStr;
-
     }
 
+    public int sendSms(String toPhoneNumber, String text) throws Exception {
+        Message message = new Message(api_key, api_secret);
+        HashMap<String, String> params = new HashMap<>();
 
+        int check = 0;
 
+//        params.put("to", toPhoneNumber);
+//        params.put("from", fromPhoneNumber);
+//        params.put("type", "SMS");
+//        params.put("text", text);
+//        params.put("app_version", "test app 1.2");
+
+        try {
+//            JSONObject obj = (JSONObject) message.send(params);
+        } catch (Exception e) {
+            log.error(commons.printStackLog(e));
+            return check;
+        }
+
+        check = 1;
+
+        log.info("send sms is success");
+
+        return check;
+    }
 }

@@ -31,6 +31,9 @@ public class BidService {
     private MemberDao memberDao;
 
     @Autowired
+    private ProductDao productDao;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
@@ -151,12 +154,38 @@ public class BidService {
      * fixedRate 은 이전에 실행된 Task 의 시작시간으로 부터 정의된 시간만큼 지난 후 Task 를 실행한다.(밀리세컨드 단위)
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행
-    public void successfulBid() throws Exception {
+    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = Exception.class)
+    public void closeBidOfProductAndSuccessBid() throws Exception {
         /**
          * 1. 마감 (입찰 할 때 살아 있는 것만)
          * 2. 입찰하게 있으면 성공으로 넘기기
          *
          */
+
+        List<Integer> targetProductIds = new ArrayList<>(); // 오늘 마감 할 게시물 id
+        List<Integer> successBidProductId = new ArrayList<>(); // 오늘 마강 할 게시물 id 중에 입찰에 성공한
+
+        // 마감
+        targetProductIds = productDao.closeTargetProducts(); // 오늘 마감할 게시물들
+        successBidProductId = productDao.successBidProductIds(); // 오늘 마감할 게시물들 중에 입찰 된 것들
+
+        if (targetProductIds.isEmpty()) {
+            log.info("There are no closing products today.");
+            return;
+        }
+
+        if (successBidProductId.isEmpty()) { // 입찰 된게 없으니까, 모든 게시물 마감
+            for (int productId : targetProductIds) {
+                log.info("target productId :: '{}'", productId);
+            }
+            productDao.closeProducts(targetProductIds); // 게시물 마감하기
+        }
+
+        productDao.insertSuccessBidInfo(successBidProductId); // 입찰 성공
+
+        // TODO: 2021/12/18 입찰 성공한 사람들한테 문자로 알려주고, url 까지 보내줘야 한다.
     }
 }

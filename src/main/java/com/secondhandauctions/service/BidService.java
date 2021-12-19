@@ -154,7 +154,7 @@ public class BidService {
      * fixedRate 은 이전에 실행된 Task 의 시작시간으로 부터 정의된 시간만큼 지난 후 Task 를 실행한다.(밀리세컨드 단위)
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    @Scheduled(cron = "0 17 23 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
@@ -165,26 +165,29 @@ public class BidService {
          *
          */
 
-        List<Integer> targetProductIds = new ArrayList<>(); // 오늘 마감 할 게시물 id
-        List<Integer> successBidProductId = new ArrayList<>(); // 오늘 마강 할 게시물 id 중에 입찰에 성공한
+        List<Integer> notSuccessBidProductId = new ArrayList<>(); // 오늘 마감 할 게시물 id 중 낙찰에 실패한
+        List<Integer> successBidProductId = new ArrayList<>(); // 오늘 마강 할 게시물 id 중에 낙찰에 성공한
 
         // 마감
-        targetProductIds = productDao.closeTargetProducts(); // 오늘 마감할 게시물들
-        successBidProductId = productDao.successBidProductIds(); // 오늘 마감할 게시물들 중에 입찰 된 것들
+        notSuccessBidProductId = productDao.notSuccessBidProductIds(); // 오늘 마감할 게시물중 낙철 실패
+        successBidProductId = productDao.successBidProductIds(); // 오늘 마감할 게시물들 중에 낙찰 된 것들
 
-        if (targetProductIds.isEmpty()) {
-            log.info("There are no closing products today.");
-            return;
-        }
-
-        if (successBidProductId.isEmpty()) { // 입찰 된게 없으니까, 모든 게시물 마감
-            for (int productId : targetProductIds) {
-                log.info("target productId :: '{}'", productId);
+        if (!notSuccessBidProductId.isEmpty()) {
+            for (int targetId : notSuccessBidProductId) {
+                log.info("notSuccessBidProductId :: '{}'", targetId);
             }
-            productDao.closeProducts(targetProductIds); // 게시물 마감하기
+
+            productDao.closeProducts(notSuccessBidProductId);
         }
 
-        productDao.insertSuccessBidInfo(successBidProductId); // 입찰 성공
+        if (!successBidProductId.isEmpty()) {
+            for (int targetId : successBidProductId) {
+                log.info("successBidProductId :: '{}'", successBidProductId);
+            }
+
+            productDao.insertSuccessBidInfo(successBidProductId);
+            productDao.closeProducts(successBidProductId);
+        }
     }
 
     @Scheduled(cron = "0 0 7 * * *") // 매일 새벽 7시에 실행, return void & Don't have parameter
@@ -221,8 +224,7 @@ public class BidService {
             log.info("memberId :: '{}'", memberId);
             log.info("memberPhone :: '{}'", memberPhone);
 
-            smsService.sendSms(memberPhone, sellerText);
-
+            smsService.sendSms(memberPhone, bidderText);
         }
 
     }

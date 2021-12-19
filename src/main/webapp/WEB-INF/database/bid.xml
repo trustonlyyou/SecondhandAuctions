@@ -12,7 +12,7 @@
         )
          select #{productId}, #{bidMemberId}, #{bidPrice} from dual where exists
         (
-         select isProductCheck from product where productId = #{productId} and isProductCheck = 1;
+         select isProductCheck from product where productId = #{productId} and isProductCheck = 1
         )
     </insert>
 
@@ -44,10 +44,10 @@
         from
             member
         where
-                memberId
-                in  (
-                    select memberId from successBid where date_format(regdate, '%Y-%m-%d') = curdate()
-                )
+            memberId
+        in  (
+            select memberId from successBid where date_format(regdate, '%Y-%m-%d') = curdate()
+            )
         ]]>
     </select>
 

@@ -346,6 +346,7 @@
 
         $(".bidBtn").on("click", function () {
             var chk = false;
+            var priceChk = false;
             var bidMemberId = "${sessionScope.member}";
             var bidPrice = $("#startPrice").val(); // 고객이 입찰하는 금액
             var startPrice = "${product.startPrice}"; // 최초 시작 금액
@@ -353,51 +354,60 @@
             var productId = ${product.productId};
             var pageUrl = "";
 
-            if (bidingPrice !== "" || bidingPrice !== null) {
+            if (bidingPrice !== "") {
                 chk = numberComparison(bidPrice, bidingPrice);
-                console.log("bidingPrice is not null")
+                priceChk = lowPriceChk(bidPrice, bidingPrice);
             } else {
                 chk = numberComparison(bidPrice, startPrice);
-                console.log("bidingPrice is null")
+                priceChk = lowPriceChk(bidPrice, bidingPrice);
             }
 
             pageUrl = document.location.href;
 
             if (chk === false) {
                 alert("입찰금액은 현재가격 보다 커야 합니다.");
+                $("#startPrice").val("");
                 return;
             }
-            console.log(chk)
+
+            if (priceChk === false) {
+                alert("최소입찰 금액은 1000원 입니다.");
+                $("#startPrice").val("");
+                return;
+            }
+
 
             $(".spinner-border").show();
+
             $("#bidModal").css({
                 'pointer-events': 'none',
                 'opacity': '0.5'
             });
+
             $(".bid_Btns").css({
                 'pointer-events': 'none',
                 'opacity': '0.5'
             })
 
-            $.ajax({
-               url: '/bid',
-               type: 'post',
-               data: {
-                   bidMemberId : bidMemberId,
-                   bidPrice : bidPrice,
-                   productId : productId,
-                   pageUrl : pageUrl
-               },
-
-               success: function (result) {
-                   var check = result.check;
-
-                   if (check === 1) {
-                       window.alert("해당 상품에 " + bidPrice + " 원을 입찰하셨습니다.");
-                       window.location.reload();
-                   }
-               }
-            });
+            // $.ajax({
+            //    url: '/bid',
+            //    type: 'post',
+            //    data: {
+            //        bidMemberId : bidMemberId,
+            //        bidPrice : bidPrice,
+            //        productId : productId,
+            //        pageUrl : pageUrl
+            //    },
+            //
+            //    success: function (result) {
+            //        var check = result.check;
+            //
+            //        if (check === 1) {
+            //            window.alert("해당 상품에 " + bidPrice + " 원을 입찰하셨습니다.");
+            //            window.location.reload();
+            //        }
+            //    }
+            // });
         });
 
     });

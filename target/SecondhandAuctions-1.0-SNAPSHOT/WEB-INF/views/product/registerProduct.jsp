@@ -19,101 +19,104 @@
     <script src="/resources/js/product.js"></script>
 
 
-  <title>상품 판매 | 중고 경매의 세계</title>
+    <title>상품 판매 | 중고 경매의 세계</title>
 
 </head>
 <body>
 
-<%@include file="../includes/header.jsp"%>
+<%@include file="../includes/header.jsp" %>
 <div class="container">
-  <div class="row">
-    <div class="col-lg-10 col-xl-9 mx-auto">
-      <div class="card card-signin flex-row my-5">
-        <div class="card-body">
-          <br>
-          <a href="/">메인 페이지</a>
-          <h2 class="card-title text-center">상품 등록</h2>
-          <!-- Form 시작 -->
-          <form class="form-signin" id="registerProduct" enctype="multipart/form-data">
-            <br>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <label class="input-group-text" for="categoryName">카테고리</label>
-              </div>
-              <select class="custom-select" id="categoryName" name="categoryName" required>
-                <option selected>카테고리 선택</option>
-                <option value="digital">전자</option>
-                <option value="computer">컴퓨터</option>
-                <option value="cloths">의류</option>
-                <option value="shoes">신발</option>
-                <option value="book">도서</option>
+    <div class="row">
+        <div class="col-lg-10 col-xl-9 mx-auto">
+            <div class="card card-signin flex-row my-5">
+                <div class="card-body">
+                    <br>
+                    <a href="/">메인 페이지</a>
+                    <h2 class="card-title text-center">상품 등록</h2>
+                    <!-- Form 시작 -->
+                    <form class="form-signin" id="registerProduct" enctype="multipart/form-data">
+                        <br>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="categoryName">카테고리</label>
+                            </div>
+                            <select class="custom-select" id="categoryName" name="categoryName" required>
+                                <option selected>카테고리 선택</option>
+                                <option value="digital">전자</option>
+                                <option value="computer">컴퓨터</option>
+                                <option value="cloths">의류</option>
+                                <option value="shoes">신발</option>
+                                <option value="book">도서</option>
 
-              </select>
-            </div>
-            <div id="category_check" name="category_check" class="check_font"></div>
-            <br>
-
-            <div class="form-label-group">
-              제목 <img src="/resources/image/check.gif" alt="필수 입력사항">
-              <input type="text" id="productTitle" name="productTitle" class="form-control"
-                     placeholder="상품의 제목을 입력해주세요." minlength="5" maxlength="20">
-            </div>
-            <div name="titleCheckMsg" id="titleCheckMsg"></div>
-            <br>
-
-            <div class="form-label-group">
-              내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
-
-<%--              <label for="productContent">내용</label>--%>
-              <textarea name="productContent" id="productContent" cols="30" rows="10" class="product_textarea form-control"></textarea>
-            </div>
-            <div name="contentCheckMsg" id="contentCheckMsg"></div>
-            <br>
-
-            <br>
-
-            <div class="form-label-group">
-              경매 시작 가격<img src="/resources/image/check.gif" alt="필수 입력사항">
-              <input type="text" id="startPrice" name="startPrice" onkeyup="numberWithCommas(this.value)">&nbsp;원
-            </div>
-            <div id="priceCheckMsg" name="priceCheckMsg" class="check_font"></div>
-
-            <br>
-
-            <hr class="my-4">
-          </form>
-          <div class="filebox card-body">
-            <label for="file">이미지 첨부를 원하시면 버튼을 누르세요.</label>
-            <input type="file" id="file" multiple>
-          </div>
-
-          <div class="col-lg-12">
-            <div class="row" id="imgLoad">
-            </div>
-          </div>
-          <br>
-            <input type="button" id="btn_registerModal" class="btn btn-lg btn-primary btn-block text-uppercase" data-toggle="modal" data-target="#registerModal" value="게시물 등록 하기" disabled>
-            <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="registerModalLabel">게시물을 정말 등록하시겠습니까??</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            </select>
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="취소">
-                            <input type="button" id="registerSubmit" class="btn btn-primary" value="확인">
+                        <div id="category_check" name="category_check" class="check_font"></div>
+                        <br>
+
+                        <div class="form-label-group">
+                            제목 <img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <input type="text" id="productTitle" name="productTitle" class="form-control"
+                                   placeholder="상품의 제목을 입력해주세요." minlength="5" maxlength="20">
+                        </div>
+                        <div name="titleCheckMsg" id="titleCheckMsg"></div>
+                        <br>
+
+                        <div class="form-label-group">
+                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
+
+                            <%--              <label for="productContent">내용</label>--%>
+                            <textarea name="productContent" id="productContent" cols="30" rows="10"
+                                      class="product_textarea form-control"></textarea>
+                        </div>
+                        <div name="contentCheckMsg" id="contentCheckMsg"></div>
+                        <br>
+
+                        <br>
+
+                        <div class="form-label-group">
+                            경매 시작 가격<img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <input type="text" id="startPrice" name="startPrice" onkeyup="numberWithCommas(this.value)">&nbsp;원
+                        </div>
+                        <div id="priceCheckMsg" name="priceCheckMsg" class="check_font"></div>
+
+                        <br>
+
+                        <hr class="my-4">
+                    </form>
+                    <div class="filebox card-body">
+                        <label for="file">이미지 첨부를 원하시면 버튼을 누르세요.</label>
+                        <input type="file" id="file" multiple>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="row" id="imgLoad">
+                        </div>
+                    </div>
+                    <br>
+                    <input type="button" id="btn_registerModal" class="btn btn-lg btn-primary btn-block text-uppercase"
+                           data-toggle="modal" data-target="#registerModal" value="게시물 등록 하기" disabled>
+                    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog"
+                         aria-labelledby="registerModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="registerModalLabel">게시물을 정말 등록하시겠습니까??</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-secondary" data-dismiss="modal" value="취소">
+                                    <input type="button" id="registerSubmit" class="btn btn-primary" value="확인">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </div>
 
 
@@ -121,207 +124,207 @@
 </body>
 
 <script>
-  var uploadFiles = [];
-  var formData = new FormData();
-  var imgIndex = 0;
-  var fileIndex = 0;
+    var uploadFiles = [];
+    var formData = new FormData();
+    var imgIndex = 0;
+    var fileIndex = 0;
 
-  var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
-  var maxSize = 1048576; //1MB
+    var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
+    var maxSize = 1048576; //1MB
 
-  $("#file").on("change", function (e) {
-    var files = e.target.files;
-    var filesArr = Array.prototype.slice.call(files);
+    $("#file").on("change", function (e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
 
-    for (var i = 0; i < filesArr.length; i++, fileIndex++) {
+        for (var i = 0; i < filesArr.length; i++, fileIndex++) {
 
-      var file = filesArr[i];
+            var file = filesArr[i];
 
-      for (var value of formData.values()) {
-        if (value.name === filesArr[i].name) {
-          window.alert("중복된 사진이 있습니다.");
-          return;
-        }
-      }
-
-      if (!regex.test(filesArr[i].type)) {
-        window.alert("확장자는 이미지 확장자만 가능합니다.");
-        return;
-      }
-
-      formData.append(fileIndex, file);
-
-      var fileReader = new FileReader();
-
-      fileReader.onload = function (e) {
-        var img_html =
-                "<div class='col-lg-4 col-md-4 mb-4' id=\"img_"+imgIndex+"\">"
-                + "<div class='card h-100'>"
-                + "<img id=\"img_id_" + imgIndex + "\" src=\"" + e.target.result + "\" width='100%' height='100px'  />"
-                + "<input type='button' id=\"deleteBtn_"+imgIndex+"\" value='X' onclick=\"deleteImg("+imgIndex+")\">"
-                + "</div>"
-                + "</div>";
-
-        $("#imgLoad").append(img_html);
-        imgIndex++;
-      }
-      fileReader.readAsDataURL(file);
-    }
-
-  });
-
-  function deleteImg(index) {
-    console.log("delete index :: " + index);
-
-    formData.delete(index);
-
-    var imageDivId = "#img_" + index;
-
-    $(imageDivId).remove();
-
-  }
-
-
-  $("#registerSubmit").on('click', function () {
-    $.ajax({
-      url: '/product/submit',
-      type: 'post',
-      data: $("form").serialize(),
-
-      success: function (result) {
-        var check = result.check;
-        var productId = result.productId;
-
-        if (check !== 1) {
-          window.alert("게시물 등록 실패, 다시 등록해주세요..");
-          window.location.replace("/register/product/form");
-          return;
-        }
-
-        if (check === 1) {
-          formData.append("productId", productId);
-        }
-
-        $.ajax({
-          url: '/upload/image',
-          type: 'post',
-          data: formData,
-          processData: false,
-          contentType: false,
-
-          success: function (result) {
-            var check = result.check;
-
-            if (check === 1) {
-              window.location.replace("/product/register/success");
+            for (var value of formData.values()) {
+                if (value.name === filesArr[i].name) {
+                    window.alert("중복된 사진이 있습니다.");
+                    return;
+                }
             }
-          },
-          error: function (request,status,error) {
-            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-          }
+
+            if (!regex.test(filesArr[i].type)) {
+                window.alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }
+
+            formData.append(fileIndex, file);
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (e) {
+                var img_html =
+                    "<div class='col-lg-4 col-md-4 mb-4' id=\"img_" + imgIndex + "\">"
+                    + "<div class='card h-100'>"
+                    + "<img id=\"img_id_" + imgIndex + "\" src=\"" + e.target.result + "\" width='100%' height='100px'  />"
+                    + "<input type='button' id=\"deleteBtn_" + imgIndex + "\" value='X' onclick=\"deleteImg(" + imgIndex + ")\">"
+                    + "</div>"
+                    + "</div>";
+
+                $("#imgLoad").append(img_html);
+                imgIndex++;
+            }
+            fileReader.readAsDataURL(file);
+        }
+
+    });
+
+    function deleteImg(index) {
+        console.log("delete index :: " + index);
+
+        formData.delete(index);
+
+        var imageDivId = "#img_" + index;
+
+        $(imageDivId).remove();
+
+    }
+
+
+    $("#registerSubmit").on('click', function () {
+        $.ajax({
+            url: '/product/submit',
+            type: 'post',
+            data: $("form").serialize(),
+
+            success: function (result) {
+                var check = result.check;
+                var productId = result.productId;
+
+                if (check !== 1) {
+                    window.alert("게시물 등록 실패, 다시 등록해주세요..");
+                    window.location.replace("/register/product/form");
+                    return;
+                }
+
+                if (check === 1) {
+                    formData.append("productId", productId);
+                }
+
+                $.ajax({
+                    url: '/upload/image',
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+
+                    success: function (result) {
+                        var check = result.check;
+
+                        if (check === 1) {
+                            window.location.replace("/product/register/success");
+                        }
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    }
+                });
+            }
         });
-      }
-    });
-  });
-
-
-  // ================================================================================
-  var categoryFlag = false;
-  var productTitleFlag = false;
-  var productContentFlag = false;
-  var startPriceFlag = false;
-
-  // function numberWithCommas(startPrice) {
-  //   startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
-  //   startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
-  //
-  //   $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
-  // }
-
-  $(document).ready(function (e) {
-    $("#startPrice").on('keyup', function() {
-      var startPrice = $("#startPrice").val();
-      var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
-      var replacePrice = "";
-
-      if (startPrice == "") {
-        $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
-        $("#priceCheckMsg").css('color', 'red');
-
-        startPriceFlag = false;
-
-        $("#btn_registerModal").attr('disabled', true);
-
-        return false;
-      }
-
-      startPriceFlag = true;
-
-      $("#priceCheckMsg").text('');
-
-      if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#btn_registerModal").attr('disabled', false);
-      }
-
-      return true;
-
     });
 
-    $("#productContent").on('keyup', function () {
-      var productContent = $("#productContent").val();
 
-      if (productContent == "") {
-        $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
-        $("#contentCheckMsg").css('color', 'red');
+    // ================================================================================
+    var categoryFlag = false;
+    var productTitleFlag = false;
+    var productContentFlag = false;
+    var startPriceFlag = false;
 
-        productContentFlag = false;
+    // function numberWithCommas(startPrice) {
+    //   startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
+    //   startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
+    //
+    //   $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
+    // }
 
-          $("#btn_registerModal").attr('disabled', true);
+    $(document).ready(function (e) {
+        $("#startPrice").on('keyup', function () {
+            var startPrice = $("#startPrice").val();
+            var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
+            var replacePrice = "";
 
-        return false;
-      }
+            if (startPrice == "") {
+                $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
+                $("#priceCheckMsg").css('color', 'red');
 
-      productContentFlag = true;
+                startPriceFlag = false;
 
-      $("#contentCheckMsg").text('');
+                $("#btn_registerModal").attr('disabled', true);
 
-      console.log(productContentFlag);
+                return false;
+            }
 
-      if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-        $("#btn_registerModal").attr('disabled', false);
-      }
+            startPriceFlag = true;
 
-      return true;
+            $("#priceCheckMsg").text('');
 
+            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+                $("#btn_registerModal").attr('disabled', false);
+            }
+
+            return true;
+
+        });
+
+        $("#productContent").on('keyup', function () {
+            var productContent = $("#productContent").val();
+
+            if (productContent == "") {
+                $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
+                $("#contentCheckMsg").css('color', 'red');
+
+                productContentFlag = false;
+
+                $("#btn_registerModal").attr('disabled', true);
+
+                return false;
+            }
+
+            productContentFlag = true;
+
+            $("#contentCheckMsg").text('');
+
+            console.log(productContentFlag);
+
+            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+                $("#btn_registerModal").attr('disabled', false);
+            }
+
+            return true;
+
+        });
     });
-  });
 
-  $("#productTitle").on('keyup', function () {
-    var productTitle = $("#productTitle").val();
+    $("#productTitle").on('keyup', function () {
+        var productTitle = $("#productTitle").val();
 
-    console.log(productTitle);
+        console.log(productTitle);
 
-    if (productTitle == "") {
-      $("#titleCheckMsg").text('제목은 필수 입력 사항 입니다.');
-      $("#titleCheckMsg").css('color', 'red');
+        if (productTitle == "") {
+            $("#titleCheckMsg").text('제목은 필수 입력 사항 입니다.');
+            $("#titleCheckMsg").css('color', 'red');
 
-      productTitleFlag = false;
+            productTitleFlag = false;
 
-      $("#btn_registerModal").attr('disabled', true);
+            $("#btn_registerModal").attr('disabled', true);
 
-      return false;
-    }
+            return false;
+        }
 
-    productTitleFlag = true;
+        productTitleFlag = true;
 
-    $("#titleCheckMsg").text('');
+        $("#titleCheckMsg").text('');
 
-    if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
-      $("#btn_registerModal").attr('disabled', false);
-    }
+        if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+            $("#btn_registerModal").attr('disabled', false);
+        }
 
-    return true;
-  });
+        return true;
+    });
 
 </script>
 </html>

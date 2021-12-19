@@ -21,7 +21,7 @@ public interface ProductDao {
 
     public int updateBidPrice(Map<String, Object> params) throws Exception;
 
-    public List<Integer> closeTargetProducts() throws Exception;
+    public List<Integer> notSuccessBidProductIds() throws Exception;
 
     public List<Integer> successBidProductIds() throws Exception;
 

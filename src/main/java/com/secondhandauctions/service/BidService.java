@@ -198,8 +198,8 @@ public class BidService {
         List<Map<String, String>> sellersPhoneList = new ArrayList<>();
         List<Map<String, String>> biddersPhoneList = new ArrayList<>();
 
-        String sellerText = "판매 하신 상품이 낙찰되셨습니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
-        String bidderText = "입찰 하신 상품이 낙찰되었습니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
+        String sellerText = "판매 하신 상품이 낙찰되셨습니다. 판매 승인을 해주셔야 판매가 진행이 됩니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
+        String bidderText = "입찰 하신 상품이 낙찰되었습니다. 구매 승인을 해주셔야 구매가 진행이 됩니다. 자세한 내용은 홈페이지의 마이페이지를 이용해 주세요.";
 
         sellersPhoneList = bidDao.successSellerPhone();
         biddersPhoneList = bidDao.successBiddersPhone();
@@ -226,6 +226,5 @@ public class BidService {
 
             smsService.sendSms(memberPhone, bidderText);
         }
-
     }
 }

@@ -38,4 +38,12 @@ public interface MyPageDao {
 
     public List<ProductVo> myBidProductList(Map<String, Object> params) throws Exception;
 
+    public int myBidSuccessCountBySeller(String memberId) throws Exception;
+
+    public int myBidSuccessCountByBidder(String memberId) throws Exception;
+
+    public List<Map<String, Object>> myBidSuccessListByBidder(Map<String, Object> params) throws Exception;
+
+    public List<Map<String, Object>> myBidSuccessListBySeller(Map<String, Object> params) throws Exception;
+
 }

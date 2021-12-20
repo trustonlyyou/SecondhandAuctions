@@ -187,7 +187,7 @@ public class MyPageController {
 
         memberId = (String) session.getAttribute("member");
 
-        if (("".equals(memberId) || memberId == null)) {
+        if (StringUtils.isEmpty(memberId)) {
             return "redirect:/member/login/form";
         }
 
@@ -422,4 +422,86 @@ public class MyPageController {
 
         return "myPage/myBidList";
     }
+
+    @GetMapping(value = "/myBid/success/sell")
+    public String mySellSuccessProduct(@ModelAttribute Criteria criteria,
+                                      HttpServletRequest request, Model model) throws Exception {
+
+        List<Map<String, Object>> bidingSellerList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        PagingUtil pagingUtil = new PagingUtil();
+
+        String memberId = "";
+        int totalCount = 0;
+
+        memberId = commons.getMemberSession(request);
+        totalCount = myPageService.countSuccessSell(memberId);
+
+        if (totalCount == 0) {
+            model.addAttribute("list", null);
+            return "myPage/mySuccessSell";
+        }
+
+        params.put("memberId", memberId);
+        params.put("criteria", criteria);
+
+        bidingSellerList = myPageService.getSuccessSellList(params);
+
+        if (bidingSellerList.isEmpty()) {
+            model.addAttribute("list", null);
+            return "myPage/mySuccessSell";
+        }
+
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(totalCount);
+
+        model.addAttribute("list", bidingSellerList);
+        model.addAttribute("pageMaker", pagingUtil);
+
+        return "myPage/mySuccessSell";
+    }
+
+    @GetMapping("/myBid/success/bid")
+    public String myBidSuccessProduct(@ModelAttribute Criteria criteria,
+                                      HttpServletRequest request, Model model) throws Exception {
+
+        List<Map<String, Object>> bidingList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        PagingUtil pagingUtil = new PagingUtil();
+
+        String memberId = "";
+        int totalCount = 0;
+
+        memberId = commons.getMemberSession(request);
+
+        if (StringUtils.isEmpty(memberId)) {
+            return "redirect:/";
+        }
+
+        totalCount = myPageService.countSuccessBid(memberId);
+
+        if (totalCount == 0) {
+            model.addAttribute("list", null);
+            return "myPage/mySuccessBid";
+        }
+
+        params.put("memberId", memberId);
+        params.put("criteria", criteria);
+
+        bidingList = myPageService.getSuccessBidList(params);
+
+        if (bidingList.isEmpty()) {
+            model.addAttribute("list", null);
+            return "myPage/mySuccessBid";
+        }
+
+        pagingUtil.setCriteria(criteria);
+        pagingUtil.setTotalCount(totalCount);
+
+        model.addAttribute("list", bidingList);
+        model.addAttribute("pageMaker", pagingUtil);
+
+        return "myPage/mySuccessBid";
+    }
+
 }

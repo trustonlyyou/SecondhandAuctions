@@ -36,7 +36,7 @@
         <a href="/myPage/form" class="list-group-item">나의 정보</a>
         <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
         <a href="/myBid/list" class="list-group-item">입찰 물품</a>
-        <a href="#" class="list-group-item">배송</a>
+        <a href="/myBid/success/sell" class="list-group-item">낙찰 정보</a>
       </div>
     </div>
 

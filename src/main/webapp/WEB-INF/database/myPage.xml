@@ -173,6 +173,7 @@
             product.isProductCheck = 1;
     </select>
 
+    <!--  내가 입찰한 게시  -->
     <select id="myBidProductList" parameterType="Map" resultType="com.secondhandauctions.vo.ProductVo">
         select
             member.memberId, bid.productId, productTitle, expireTime, bid.bidPrice, product.bidPrice as nowPrice
@@ -190,4 +191,39 @@
 
         limit #{criteria.pageStart}, #{criteria.perPageNum}
     </select>
+
+    <!--  내가 판매한것 중에 낙찰 받은 것들  -->
+    <select id="myBidSuccessCountBySeller" resultType="int" parameterType="String">
+        select count(*) from successBid where memberId = #{memberId} and resultChk = 0;
+    </select>
+
+    <!--  내가 입찰한 것 중에 낙찰 받은 것들  -->
+    <select id="myBidSuccessCountByBidder" resultType="int" parameterType="String">
+        select count(*) from successBid where bidMemberId = #{memberId} and resultChk = 0;
+    </select>
+
+    <select id="myBidSuccessListByBidder" parameterType="Map" resultType="Map">
+        select
+            successBidNo, successBid.productId, bidNo, productTitle, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
+        from
+            successBid
+        inner join
+            product on successBid.productId = product.productId
+        where bidMemberId = #{memberId}
+            and isProductCheck = 0 and ResultChk = 0 order by regdate desc
+        limit #{criteria.pageStart}, #{criteria.perPageNum};
+    </select>
+
+    <select id="myBidSuccessListBySeller" parameterType="Map" resultType="Map">
+        select
+            successBidNo, successBid.productId, bidNo, productTitle, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
+        from
+            successBid
+                inner join
+            product on successBid.productId = product.productId
+        where successBid.memberId = #{memberId}
+          and isProductCheck = 0 and ResultChk = 0 order by regdate desc
+            limit #{criteria.pageStart}, #{criteria.perPageNum};
+    </select>
+
 </mapper>

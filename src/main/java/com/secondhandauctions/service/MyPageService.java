@@ -256,4 +256,60 @@ public class MyPageService {
 
         return result;
     }
+
+    public int countSuccessSell(String memberId) throws Exception {
+        int count = 0;
+
+        if (StringUtils.isEmpty(memberId)) {
+            return count;
+        }
+
+        count = myPageDao.myBidSuccessCountBySeller(memberId);
+
+        return count;
+    }
+
+    public int countSuccessBid(String memberId) throws Exception {
+        int count = 0;
+
+        if (StringUtils.isEmpty(memberId)) {
+            return count;
+        }
+
+        count = myPageDao.myBidSuccessCountByBidder(memberId);
+
+        return count;
+    }
+
+    // 입찰 한 것 중 낙찰에 성공한 것.
+    public List<Map<String, Object>> getSuccessBidList(Map<String, Object> info) throws Exception {
+        List<Map<String, Object>> result = new ArrayList<>();
+        String memberId = "";
+
+        memberId = (String) info.get("memberId");
+
+        if (StringUtils.isEmpty(memberId)) {
+            return Collections.emptyList();
+        }
+
+        result = myPageDao.myBidSuccessListByBidder(info);
+
+        return result;
+    }
+
+    // 판매한 것 중 낙찰에 성공한 것.
+    public List<Map<String, Object>> getSuccessSellList(Map<String, Object> info) throws Exception {
+        List<Map<String, Object>> result = new ArrayList<>();
+        String memberId = "";
+
+        memberId = (String) info.get("memberId");
+
+        if (StringUtils.isEmpty(memberId)) {
+            return Collections.emptyList();
+        }
+
+        result = myPageDao.myBidSuccessListBySeller(info);
+
+        return result;
+    }
 }

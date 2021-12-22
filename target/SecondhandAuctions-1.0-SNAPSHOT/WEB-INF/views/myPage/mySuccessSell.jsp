@@ -121,18 +121,6 @@
             actionForm.find("[name='page']").val(targetPage);
             actionForm.submit();
         });
-
-        // var deleteForm = $("#deleteForm");
-        //
-        // $("#deleteProduct").on("click", function (e) {
-        //     if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") == true) {
-        //         alert("게시물 삭제");
-        //         deleteForm.submit();
-        //     } else {
-        //         alert("게시물 삭제 취소")
-        //     }
-        //     //todo :: form 을 foreach 하면 어떻게 하냐!!! 거기서 부터 다시하자
-        // });
     });
 </script>
 </html>

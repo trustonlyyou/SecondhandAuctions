@@ -504,4 +504,74 @@ public class MyPageController {
         return "myPage/mySuccessBid";
     }
 
+
+    @GetMapping(value = "/myBid/success/sell/detail")
+    public String myBidSuccessSellDetail(@RequestParam int successBidNo,
+                                         @RequestParam int productId,
+                                         HttpServletRequest request, Model model) throws Exception {
+
+        Map<String, Object> info = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        Map<String, Object> product = new HashMap<>();
+
+        String memberId = "";
+
+        memberId = commons.getMemberSession(request);
+
+        info.put("memberId", memberId);
+        info.put("successBidNo", successBidNo);
+        info.put("productId", productId);
+
+        result = myPageService.getSuccessBidSellDetail(info);
+
+        if (result.isEmpty()) {
+            log.error("result is empty, target SuccessBidNo :: '{}'", successBidNo);
+            model.addAttribute("product", null);
+            return "";
+        }
+
+        product = (Map<String, Object>) result.get("successProduct");
+        imageList = (List<ImageVo>) result.get("imageList");
+
+        model.addAttribute("product", product);
+        model.addAttribute("images", imageList);
+
+        return "";
+    }
+
+    @GetMapping(value = "/myBid/success/bid/detail")
+    public String myBidSuccessBidDetail(@RequestParam int successBidNo,
+                                        @RequestParam int productId,
+                                        HttpServletRequest request, Model model) throws Exception {
+
+        Map<String, Object> info = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        Map<String, Object> product = new HashMap<>();
+
+        String memberId = "";
+
+        memberId = commons.getMemberSession(request);
+
+        info.put("memberId", memberId);
+        info.put("successBidNo", successBidNo);
+        info.put("productId", productId);
+
+        result = myPageService.getSuccessBidDetail(info);
+
+        if (result.isEmpty()) {
+            log.error("result is empty, target SuccessBidNo :: '{}'", successBidNo);
+            model.addAttribute("product", null);
+            return "";
+        }
+
+        product = (Map<String, Object>) result.get("successProduct");
+        imageList = (List<ImageVo>) result.get("imageList");
+
+        model.addAttribute("product", product);
+        model.addAttribute("images", imageList);
+
+        return "";
+    }
 }

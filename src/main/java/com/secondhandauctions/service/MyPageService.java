@@ -1,6 +1,7 @@
 package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.MyPageDao;
+import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
@@ -20,6 +21,9 @@ public class MyPageService {
 
     @Autowired
     private MyPageDao myPageDao;
+
+    @Autowired
+    private Commons commons;
 
     public int checkPassword(Map<String, String> info) throws Exception {
         int check = 0;
@@ -211,7 +215,9 @@ public class MyPageService {
     }
 
     public int setModifyProduct(ProductVo productVo) throws Exception {
+        List<String> checkList = new ArrayList<>();
         int result = 0;
+        boolean chk = false;
 
         String categoryName = "";
         String productTitle = "";
@@ -224,7 +230,14 @@ public class MyPageService {
         productContent = productVo.getProductContent();
         startPrice = productVo.getStartPrice();
 
-        if (productVo == null) {
+        checkList.add(categoryName);
+        checkList.add(productTitle);
+        checkList.add(productContent);
+        checkList.add(startPrice);
+
+        chk = commons.isEmpty(checkList);
+
+        if (chk == true) {
             return result;
         }
 
@@ -309,6 +322,76 @@ public class MyPageService {
         }
 
         result = myPageDao.myBidSuccessListBySeller(info);
+
+        return result;
+    }
+
+    public Map<String, Object> getSuccessBidDetail(Map<String, Object> info) throws Exception {
+        Map<String, Object> detail = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        Map<String, Object> result = new HashMap<>();
+
+        String memberId = "";
+        int successBidNo = 0;
+        int productId = 0;
+
+        memberId = (String) info.get("memberId");
+        successBidNo = (int) info.get("successBidNo");
+        productId = (int) info.get("productId");
+
+        if (StringUtils.isEmpty(memberId) || (successBidNo == 0) || (productId == 0)) {
+            log.error("memberId :: '{}'", memberId);
+            log.error("successBidNo :: '{}'", successBidNo);
+            log.error("productId :: '{}'", productId);
+            return Collections.emptyMap();
+        }
+
+        detail = myPageDao.mySuccessBidDetail(info);
+
+        if (detail.isEmpty()) {
+            log.error("Do not search detail, successBidNo :: '{}'", successBidNo);
+            return Collections.emptyMap();
+        }
+
+        imageList = myPageDao.myShopDetailImage(info);
+
+        result.put("successProduct", detail);
+        result.put("imageList", imageList);
+
+        return result;
+    }
+
+    public Map<String, Object> getSuccessBidSellDetail(Map<String, Object> info) throws Exception {
+        Map<String, Object> detail = new HashMap<>();
+        List<ImageVo> imageList = new ArrayList<>();
+        Map<String, Object> result = new HashMap<>();
+
+        String memberId = "";
+        int successBidNo = 0;
+        int productId = 0;
+
+        memberId = (String) info.get("memberId");
+        successBidNo = (int) info.get("successBidNo");
+        productId = (int) info.get("productId");
+
+        if (StringUtils.isEmpty(memberId) || (successBidNo == 0) || (productId == 0)) {
+            log.error("memberId :: '{}'", memberId);
+            log.error("successBidNo :: '{}'", successBidNo);
+            log.error("productId :: '{}'", productId);
+            return Collections.emptyMap();
+        }
+
+        detail = myPageDao.mySuccessBidSellDetail(info);
+
+        if (detail.isEmpty()) {
+            log.error("Do not search detail, successBidNo :: '{}'", successBidNo);
+            return Collections.emptyMap();
+        }
+
+        imageList = myPageDao.myShopDetailImage(info);
+
+        result.put("successProduct", detail);
+        result.put("imageList", imageList);
 
         return result;
     }

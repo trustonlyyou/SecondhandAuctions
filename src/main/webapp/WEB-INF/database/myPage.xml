@@ -58,8 +58,6 @@
         left join
             product on image.productId = product.productId
         where
-            isProductCheck = 1
-        and
             product.productId = #{productId}
         and
             product.memberId = #{memberId}
@@ -224,6 +222,32 @@
         where successBid.memberId = #{memberId}
           and isProductCheck = 0 and ResultChk = 0 order by regdate desc
             limit #{criteria.pageStart}, #{criteria.perPageNum};
+    </select>
+
+    <select id="mySuccessBidDetail" parameterType="Map" resultType="Map">
+        select
+            successBidNo, successBid.productId, bidNo, productTitle, productContent, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
+        from
+            successBid
+        inner join
+            product on successBid.productId = product.productId
+        where
+            successBid.bidMemberId = #{memberId}
+        and
+            successBidNo = #{successBidNo} and isProductCheck = 0 and ResultChk = 0;
+    </select>
+
+    <select id="mySuccessBidSellDetail" parameterType="Map" resultType="Map">
+        select
+            successBidNo, successBid.productId, bidNo, productTitle, productContent, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
+        from
+            successBid
+                inner join
+            product on successBid.productId = product.productId
+        where
+            successBid.memberId = #{memberId}
+          and
+            successBidNo = #{successBidNo} and isProductCheck = 0 and ResultChk = 0;
     </select>
 
 </mapper>

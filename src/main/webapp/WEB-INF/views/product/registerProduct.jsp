@@ -62,7 +62,9 @@
                         <br>
 
                         <div class="form-label-group">
-                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
+                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <span id="nowByte">0</span>/500bytes
+                            <br>
 
                             <%--              <label for="productContent">내용</label>--%>
                             <textarea name="productContent" id="productContent" cols="30" rows="10"
@@ -272,6 +274,9 @@
 
         $("#productContent").on('keyup', function () {
             var productContent = $("#productContent").val();
+            var maxByte = 500; //최대 500바이트
+            var productContentLength = productContent.length;
+            var totalByte = 0;
 
             if (productContent == "") {
                 $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
@@ -283,6 +288,34 @@
 
                 return false;
             }
+
+            for(var i = 0; i < productContentLength; i++){
+                var eachChar = productContent.charAt(i);
+                var uniChar = escape(eachChar) //유니코드 형식으로 변환
+
+                if(uniChar.length>4){
+                    // 한글 : 2Byte
+                    totalByte += 2;
+                }else{
+                    // 영문,숫자,특수문자 : 1Byte
+                    totalByte += 1;
+                }
+            }
+
+            if(totalByte > maxByte){
+                alert('최대 500Byte까지만 입력가능합니다.');
+                $("#nowByte").text(totalByte);
+                $("#nowByte").css('color', 'red');
+
+                productContentFlag = false;
+
+                $("#btn_registerModal").attr('disabled', true);
+
+                return false;
+            }
+
+            $("#nowByte").text(totalByte);
+            $("#nowByte").css('color', 'green');
 
             productContentFlag = true;
 

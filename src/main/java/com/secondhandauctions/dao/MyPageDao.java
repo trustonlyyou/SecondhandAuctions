@@ -46,4 +46,8 @@ public interface MyPageDao {
 
     public List<Map<String, Object>> myBidSuccessListBySeller(Map<String, Object> params) throws Exception;
 
+    public Map<String, Object> mySuccessBidDetail(Map<String, Object> info) throws Exception;
+
+    public Map<String, Object> mySuccessBidSellDetail(Map<String, Object> info) throws Exception;
+
 }

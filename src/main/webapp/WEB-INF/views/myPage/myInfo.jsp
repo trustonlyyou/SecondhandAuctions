@@ -92,7 +92,6 @@
 
   $(document).ready(function () {
 
-
     $("#checkPassword").on("keyup", function () {
       var pwd = $("#checkPassword").val();
 

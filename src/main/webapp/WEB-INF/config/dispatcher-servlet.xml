@@ -39,6 +39,18 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--     todo :: mapping paths       -->
+            <mvc:mapping path="/myPage/form"/>
+            <mvc:mapping path="/myShop/list"/>
+            <mvc:mapping path="/myBid/list"/>
+            <mvc:mapping path="/myBid/success/sell"/>
+            
+            <ref bean="myPageInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 
 
     <!--  캐시 안됨  -->

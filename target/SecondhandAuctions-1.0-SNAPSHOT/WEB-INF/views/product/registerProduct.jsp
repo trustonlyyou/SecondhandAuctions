@@ -63,7 +63,7 @@
 
                         <div class="form-label-group">
                             내용 <img src="/resources/image/check.gif" alt="필수 입력사항">
-                            <span id="nowByte">0</span>/300bytes
+                            <span id="nowByte">0</span>/500bytes
                             <br>
 
                             <%--              <label for="productContent">내용</label>--%>
@@ -274,7 +274,7 @@
 
         $("#productContent").on('keyup', function () {
             var productContent = $("#productContent").val();
-            var maxByte = 200; //최대 100바이트
+            var maxByte = 500; //최대 500바이트
             var productContentLength = productContent.length;
             var totalByte = 0;
 
@@ -303,7 +303,7 @@
             }
 
             if(totalByte > maxByte){
-                alert('최대 200Byte까지만 입력가능합니다.');
+                alert('최대 500Byte까지만 입력가능합니다.');
                 $("#nowByte").text(totalByte);
                 $("#nowByte").css('color', 'red');
 

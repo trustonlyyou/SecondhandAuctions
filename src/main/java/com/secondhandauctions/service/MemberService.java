@@ -1,7 +1,10 @@
 package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.MemberDao;
+import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.vo.MemberVo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class MemberService {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
@@ -35,6 +39,23 @@ public class MemberService {
     }
 
     public int getLoginResult(Map<String, Object> loginInfo) throws Exception {
+        String memberId = "";
+        String memberPassword = "";
+
+        if (loginInfo.isEmpty()) {
+            log.error("loginInfo parma isEmpty");
+            return 0;
+        }
+
+        memberId = (String) loginInfo.get("memberId");
+        memberPassword = (String) loginInfo.get("memberPassword");
+
+        if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(memberPassword)) {
+            log.error("memberId isEmpty result :: '{}'", StringUtils.isEmpty(memberId));
+            log.error("memberPassword isEmpty result :: '{}'", StringUtils.isEmpty(memberPassword));
+            return 0;
+        }
+
         return memberDao.login(loginInfo);
     }
 

@@ -388,26 +388,6 @@
                 'pointer-events': 'none',
                 'opacity': '0.5'
             })
-
-            // $.ajax({
-            //    url: '/bid',
-            //    type: 'post',
-            //    data: {
-            //        bidMemberId : bidMemberId,
-            //        bidPrice : bidPrice,
-            //        productId : productId,
-            //        pageUrl : pageUrl
-            //    },
-            //
-            //    success: function (result) {
-            //        var check = result.check;
-            //
-            //        if (check === 1) {
-            //            window.alert("해당 상품에 " + bidPrice + " 원을 입찰하셨습니다.");
-            //            window.location.reload();
-            //        }
-            //    }
-            // });
         });
 
     });

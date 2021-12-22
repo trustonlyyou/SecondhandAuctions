@@ -8,6 +8,7 @@ import com.secondhandauctions.utils.*;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -49,6 +50,47 @@ public class MyPageController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private EncryptionSHA256 encryptionSHA256;
+
+
+    @GetMapping(value = "/myPage/authority/form")
+    public String authorityForm() {
+        return "/myPage/myAuthority";
+    }
+
+    @PostMapping(value = "/myPage/authority", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Integer> authorityChk(HttpServletRequest request, @RequestBody String memberPassword) throws Exception {
+        Map<String, Integer> check = new HashMap<>();
+        Map<String, Object> info = new HashMap<>();
+        HttpSession session = request.getSession();
+
+        String memberId = "";
+        String encryptionPassword = "";
+        int result = 0;
+
+        memberId = commons.getMemberSession(request);
+        encryptionPassword = encryptionSHA256.encrypt(memberPassword);
+
+        if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(encryptionPassword)) {
+            check.put("check", result);
+        }
+
+        info.put("memberId", memberId);
+        info.put("memberPassword", encryptionPassword);
+
+        result = memberService.getLoginResult(info);
+        log.info("authorityChk result :: '{}'", result);
+
+        if (result == 1) {
+            session.setAttribute("authority", true);
+        }
+
+        check.put("check", result);
+
+        return check;
+    }
 
     @GetMapping(value = "/myPage/form")
     public String myPageForm(HttpServletRequest request, Model model) throws Exception {

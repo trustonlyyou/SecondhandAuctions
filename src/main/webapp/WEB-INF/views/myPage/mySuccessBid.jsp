@@ -29,7 +29,6 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-
             <h2 class="my-4">마이 페이지</h2>
             <div class="list-group list-group-flush">
                 <a href="/myPage" class="list-group-item">나의 정보</a>

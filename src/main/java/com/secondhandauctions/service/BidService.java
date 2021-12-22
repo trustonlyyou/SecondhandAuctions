@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -165,8 +166,8 @@ public class BidService {
          *
          */
 
-        List<Integer> notSuccessBidProductId = new ArrayList<>(); // 오늘 마감 할 게시물 id 중 낙찰에 실패한
-        List<Integer> successBidProductId = new ArrayList<>(); // 오늘 마강 할 게시물 id 중에 낙찰에 성공한
+        List<Integer> notSuccessBidProductId = new LinkedList<>(); // 오늘 마감 할 게시물 id 중 낙찰에 실패한
+        List<Integer> successBidProductId = new LinkedList<>(); // 오늘 마강 할 게시물 id 중에 낙찰에 성공한
 
         // 마감
         notSuccessBidProductId = productDao.notSuccessBidProductIds(); // 오늘 마감할 게시물중 낙철 실패

@@ -16,12 +16,12 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <nav class="navbar navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;
-                        <button class="btn btn-outline-light" type="submit">검색</button>
-                    </form>
-                </div>
+<%--                <div class="container-fluid">--%>
+<%--                    <form class="form-inline my-2 my-lg-0">--%>
+<%--                        <input class="form-control me-2" type="search" placeholder="상품을 검색해 보세요." aria-label="Search">&nbsp;--%>
+<%--                        <button class="btn btn-outline-light" type="submit">검색</button>--%>
+<%--                    </form>--%>
+<%--                </div>--%>
             </nav>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">

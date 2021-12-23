@@ -238,9 +238,7 @@ public class MyPageController {
         result = myPageService.getMyShopDetail(info);
 
         productVo = (ProductVo) result.get("product");
-
         fileNames = (List<String>) result.get("fileName");
-
         qNa = (List<Map<String, Object>>) result.get("qna");
 
         model.addAttribute("product", productVo);

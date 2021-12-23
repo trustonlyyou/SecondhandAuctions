@@ -65,7 +65,7 @@
   $(document).ready(function () {
 
     // controller 는 타지만 ajax success:function 부터 안탄다.
-    $("#memberPassword").on('keypress', function (e) {
+    $("#memberPassword").on('keydown', function (e) {
       if (e.keyCode === 13) {
         $("#checkSubmit").click();
       }

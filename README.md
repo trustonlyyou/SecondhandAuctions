@@ -10,5 +10,5 @@
     - Bootstrap4.1
     - Spring 5.2.3.RELEASE
 - DataBase : Mysql
-- API : coolsms api
+- API : kakao login api(REST API), coolsms api, toss payments api
 - 사용 기술 : Java, Spring, Html, CSS, BootStrap, JavaScript, jquery, Ajax, jsp, MySQL, Mybatis, hikerie DBCP

@@ -14,7 +14,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
+    <style>
+        .loginAjax {
+            width: 300px;
+            height: 45px;
+        }
+    </style>
 
     <title>로그인 | 중고 경매의 세계</title>
 
@@ -49,8 +56,12 @@
                         <br>
 
                         <div>
-                            <input type="button" id="loginAjax" class="btn btn-dark btn-lg btn-block" value="로그인" disabled>
-
+                            <input type="button" id="loginAjax" class="btn btn-dark btn-lg" value="로그인" disabled>
+                        </div>
+                        <br>
+                        <div>
+<%--                            <input type="image" src="/resources/image/kakaobtn.png"  id="kakaoLogin">--%>
+                            <a href="/member/kakao/login/init"><img src="/resources/image/kakaobtn.png"></a>
                         </div>
 
                         <br>
@@ -65,16 +76,7 @@
                         <hr>
 
                         <br>
-                        <div>
-                            <input type="submit" id="kakaoLogin" class="btn btn-warning btn-lg btn-block" value="카카오톡 로그인" disabled>
 
-                        </div>
-
-                        <br>
-
-                        <div>
-                            <input type="submit" id="appleLogin" class="btn btn-outline-dark btn-lg btn-block" value="애플 로그인" disabled>
-                        </div>
 
                         <br>
                         <br>
@@ -157,5 +159,14 @@
            }
        });
     });
+
+    $(document).ready(function () {
+
+    });
+    $("#kakaoLogin").on('click', function () {
+
+    });
+
+
 </script>
 </html>

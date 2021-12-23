@@ -1,6 +1,8 @@
 package com.secondhandauctions.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhandauctions.service.EmailService;
+import com.secondhandauctions.service.KakaoService;
 import com.secondhandauctions.service.MemberService;
 import com.secondhandauctions.service.SmsService;
 import com.secondhandauctions.utils.Commons;
@@ -12,11 +14,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +58,12 @@ public class MemberController {
 
     @Autowired
     private InfoFormatter formatter;
+
+    @Value("${KAKAO_JS}")
+    private String KAKAO_KEY;
+
+    @Autowired
+    private KakaoService kakaoService;
 
     @GetMapping(value = "/join/form")
     public String joinForm(HttpServletRequest request, HttpServletResponse response) {
@@ -209,6 +221,86 @@ public class MemberController {
         result.put("result", loginResult);
 
         return result;
+    }
+
+    // 카카오 로그인
+    /**
+     * GET /oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code HTTP/1.1
+     * Host: kauth.kakao.com
+     */
+    @GetMapping("/kakao/login/init")
+    public String initKakao() {
+        StringBuffer stringBuffer = new StringBuffer();
+        String redirectURI = "http://localhost:8080/member/kakao/login/callback";
+
+        stringBuffer.append("https://kauth.kakao.com/oauth/authorize?client_id=");
+        stringBuffer.append(KAKAO_KEY);
+        stringBuffer.append("&redirect_uri=");
+        stringBuffer.append(redirectURI);
+        stringBuffer.append("&response_type=code");
+
+        return "redirect:"+stringBuffer.toString();
+    }
+
+    // Kakao login
+    @GetMapping(value = "/kakao/login/callback")
+    public String kakaoCallback(@RequestParam String code, Model model) throws Exception {
+
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//
+//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//        params.add("grant_type", "authorization_code");
+//        params.add("client_id", KAKAO_KEY);
+//        params.add("redirect_uri", "http://localhost:8080/member/kakao/login/callback");
+//        params.add("code", code);
+//
+//        HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(params, headers);
+//
+//        // 요청 - 응답
+//        ResponseEntity<String> response = restTemplate.exchange(
+//                "https://kauth.kakao.com/oauth/token",
+//                HttpMethod.POST, tokenRequest, String.class
+//        );
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        OAuthToken oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+//
+//        log.info(oAuthToken.getAccess_token());
+//
+//        ResponseEntity<String> userInfo = kakaoService.getKakaoClientInfo(oAuthToken.getAccess_token());
+//
+//        log.info(userInfo.getBody());
+//
+//        return userInfo.getBody();
+
+
+        Map<String, Object> memberInfo = new HashMap<>();
+        Map oAuthToken = new HashMap();
+        String accessToken = "";
+
+        oAuthToken = kakaoService.getKakaoToken(code, KAKAO_KEY);
+
+        if (oAuthToken.isEmpty()) {
+            log.error("token isEmpty");
+            return "";
+        }
+
+        accessToken = (String) oAuthToken.get("access_token");
+
+        memberInfo = kakaoService.getKakaoClientInfo(accessToken);
+
+        if (memberInfo.isEmpty()) {
+            log.error("memberInfo is empty");
+            return "";
+        }
+
+        model.addAttribute("memberName", memberInfo.get("memberName"));
+        model.addAttribute("memberEmail", memberInfo.get("memberEmail"));
+
+        return "member/kakaoLoginResult";
     }
 
     @GetMapping(value = "/logout/action")

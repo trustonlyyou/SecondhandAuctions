@@ -30,12 +30,7 @@
     <div class="row">
         <div class="col-lg-3">
             <h2 class="my-4">마이 페이지</h2>
-            <div class="list-group list-group-flush">
-                <a href="/myPage" class="list-group-item">나의 정보</a>
-                <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>
-                <a href="/myBid/list" class="list-group-item">입찰 물품</a>
-                <a href="/myBid/success/sell" class="list-group-item">낙찰 정보</a>
-            </div>
+            <%@include file="../includes/myPageCategory.jsp"%>
         </div>
 
         <div class="col-lg-9">
@@ -58,8 +53,7 @@
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <h5>
-                                        <%-- todo :: change Url --%>
-                                    제목 : <a href="/myShop/get/${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    제목 : <a href="/myBid/success/bid/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </h5>
                             </div>
                         </div>

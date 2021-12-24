@@ -1,6 +1,9 @@
 package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.ProductDao;
+import com.secondhandauctions.utils.Commons;
+import com.secondhandauctions.vo.ImageVo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +15,22 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
+@Slf4j
 public class FileService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileService.class);
+    @Autowired
+    private Commons commons;
 
     public ResponseEntity<byte[]> getImageAjax(String fileName) {
         ResponseEntity<byte[]> result = null;
 
-        logger.info("fileName :: " + fileName);
+        log.info("fileName :: " + fileName);
 
         String uploadFolder = ProductDao.UPLOAD_PATH;
 
@@ -33,15 +42,14 @@ public class FileService {
             return result;
         }
 
-        logger.info("filePath :: " + file.getPath());
+        log.info("filePath :: " + file.getPath());
 
         try {
             HttpHeaders header = new HttpHeaders();
             header.add("Content-type", Files.probeContentType(file.toPath())); // contentType 을 알 수 있다.
             result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("error :: " + e);
+            log.error(commons.printStackLog(e));
 
             result = new ResponseEntity<>(null, null, HttpStatus.NOT_IMPLEMENTED);
 
@@ -49,5 +57,22 @@ public class FileService {
         }
 
         return result;
+    }
+
+    public List<String> getImageFileNames(List<ImageVo> imageList) {
+        List<String> fileNames = new ArrayList<>();
+        String fileName = "";
+
+        if (imageList.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            for (ImageVo imageVo : imageList) {
+                fileName = Paths.get("/" + imageVo.getUploadPath() + "/" + imageVo.getUploadFileName()).toString();
+
+                fileNames.add(fileName);
+            }
+
+            return fileNames;
+        }
     }
 }

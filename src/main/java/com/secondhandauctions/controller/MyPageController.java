@@ -8,7 +8,6 @@ import com.secondhandauctions.utils.*;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -546,18 +545,22 @@ public class MyPageController {
 
 
     @GetMapping(value = "/myBid/success/sell/detail")
-    public String myBidSuccessSellDetail(@RequestParam int successBidNo,
+    public String myBidSuccessSellDetail(@ModelAttribute("criteria") Criteria criteria,
+                                         @RequestParam int successBidNo,
                                          @RequestParam int productId,
                                          HttpServletRequest request, Model model) throws Exception {
 
         Map<String, Object> info = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
-        List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
         Map<String, Object> product = new HashMap<>();
 
         String memberId = "";
 
         memberId = commons.getMemberSession(request);
+
+        log.info("successBidNo :: '{}'", successBidNo);
+        log.info("productId :: '{}'", productId);
 
         info.put("memberId", memberId);
         info.put("successBidNo", successBidNo);
@@ -567,32 +570,36 @@ public class MyPageController {
 
         if (result.isEmpty()) {
             log.error("result is empty, target SuccessBidNo :: '{}'", successBidNo);
-            model.addAttribute("product", null);
-            return "";
+            return "redirect:/myBid/success/sell";
         }
 
         product = (Map<String, Object>) result.get("successProduct");
-        imageList = (List<ImageVo>) result.get("imageList");
+        fileNames = (List<String>) result.get("fileNames");
 
         model.addAttribute("product", product);
-        model.addAttribute("images", imageList);
+        model.addAttribute("fileNames", fileNames);
 
-        return "";
+
+        return "myPage/mySuccessSellDetail";
     }
 
     @GetMapping(value = "/myBid/success/bid/detail")
-    public String myBidSuccessBidDetail(@RequestParam int successBidNo,
+    public String myBidSuccessBidDetail(@ModelAttribute("criteria") Criteria criteria,
+                                        @RequestParam int successBidNo,
                                         @RequestParam int productId,
                                         HttpServletRequest request, Model model) throws Exception {
 
         Map<String, Object> info = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
-        List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
         Map<String, Object> product = new HashMap<>();
 
         String memberId = "";
 
         memberId = commons.getMemberSession(request);
+
+        log.info("successBidNo :: '{}'", successBidNo);
+        log.info("productId :: '{}'", productId);
 
         info.put("memberId", memberId);
         info.put("successBidNo", successBidNo);
@@ -602,16 +609,15 @@ public class MyPageController {
 
         if (result.isEmpty()) {
             log.error("result is empty, target SuccessBidNo :: '{}'", successBidNo);
-            model.addAttribute("product", null);
-            return "";
+            return "redirect:/myBid/success/bid";
         }
 
         product = (Map<String, Object>) result.get("successProduct");
-        imageList = (List<ImageVo>) result.get("imageList");
+        fileNames = (List<String>) result.get("fileNames");
 
         model.addAttribute("product", product);
-        model.addAttribute("images", imageList);
+        model.addAttribute("images", fileNames);
 
-        return "";
+        return "myPage/mySuccessBidDetail";
     }
 }

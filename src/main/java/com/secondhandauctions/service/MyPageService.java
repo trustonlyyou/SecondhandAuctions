@@ -23,6 +23,9 @@ public class MyPageService {
     private MyPageDao myPageDao;
 
     @Autowired
+    private FileService fileService;
+
+    @Autowired
     private Commons commons;
 
     public int checkPassword(Map<String, String> info) throws Exception {
@@ -329,6 +332,7 @@ public class MyPageService {
     public Map<String, Object> getSuccessBidDetail(Map<String, Object> info) throws Exception {
         Map<String, Object> detail = new HashMap<>();
         List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
         Map<String, Object> result = new HashMap<>();
 
         String memberId = "";
@@ -354,9 +358,10 @@ public class MyPageService {
         }
 
         imageList = myPageDao.myShopDetailImage(info);
+        fileNames = fileService.getImageFileNames(imageList);
 
         result.put("successProduct", detail);
-        result.put("imageList", imageList);
+        result.put("fileNames", fileNames);
 
         return result;
     }
@@ -364,6 +369,7 @@ public class MyPageService {
     public Map<String, Object> getSuccessBidSellDetail(Map<String, Object> info) throws Exception {
         Map<String, Object> detail = new HashMap<>();
         List<ImageVo> imageList = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
         Map<String, Object> result = new HashMap<>();
 
         String memberId = "";
@@ -389,9 +395,10 @@ public class MyPageService {
         }
 
         imageList = myPageDao.myShopDetailImage(info);
+        fileNames = fileService.getImageFileNames(imageList);
 
         result.put("successProduct", detail);
-        result.put("imageList", imageList);
+        result.put("fileNames", fileNames);
 
         return result;
     }

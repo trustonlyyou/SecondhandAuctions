@@ -36,11 +36,6 @@ import java.util.Map;
 @Slf4j
 public class MemberController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     @Autowired
     private MemberService memberService;
 
@@ -68,9 +63,9 @@ public class MemberController {
     @GetMapping(value = "/join/form")
     public String joinForm(HttpServletRequest request, HttpServletResponse response) {
 
-        logger.info(Commons.getClientIp(request));
+        log.info(Commons.getClientIp(request));
 
-        return "member/join"; // join_sample
+        return "member/join";
     }
 
     // 비동기 통신시 데이터를 본문에 담아서 보낸다.
@@ -78,15 +73,21 @@ public class MemberController {
     // RequestBody :: 요청 본문
     @PostMapping(value = "/join/idCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Integer> iDCheck(@RequestBody String memberId, HttpServletRequest request) throws Exception {
+    public Map<String, Integer> idCheck(@RequestBody String memberId) throws Exception {
         Map<String, Integer> result = new HashMap<>();
         int isIdCheck = 0;
 
+        if (StringUtils.isEmpty(memberId)) {
+            log.error("Input memberId is null");
+            result.put("result", 0);
+            return result;
+        }
+
         isIdCheck = memberService.idCheck(memberId);
 
-        log.info("IdCheck :: {}", isIdCheck);
-
         result.put("result", isIdCheck);
+
+        log.info("IdCheck :: {}", isIdCheck);
 
         return result;
     }

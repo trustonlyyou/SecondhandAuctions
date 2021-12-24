@@ -31,7 +31,7 @@ public class EmailService {
         // 난수 생성
         Random random = new Random();
 
-        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111를 사용하였습니다.
+        // 111111 ~ 999999 범위의 숫자를 얻기 위해서 nextInt(888888) + 111111
         int checkNum = random.nextInt(888888) + 11111;
 
         String setFrom = "SecondhandAuctions";

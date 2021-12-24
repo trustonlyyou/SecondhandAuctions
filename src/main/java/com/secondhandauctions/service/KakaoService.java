@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,6 +25,17 @@ public class KakaoService {
 
     @Autowired
     private Commons commons;
+
+    private final String CLIENT_INFO_URL = "";
+
+    @Value("${REDIRECT_URI}")
+    private String redirectURI;
+
+    @Value("${OAUTH_TOKEN_URL}")
+    private String oauthTokenURL;
+
+    @Value("${CLIENT_INFO_URL}")
+    private String clientInfoURL;
 
     /**
      *
@@ -56,13 +68,13 @@ public class KakaoService {
 
         params.add("grant_type", "authorization_code");
         params.add("client_id", client_id);
-        params.add("redirect_uri", "http://localhost:8080/member/kakao/login/callback");
+        params.add("redirect_uri", redirectURI);
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                oauthTokenURL,
                 HttpMethod.POST,
                 request,
                 String.class
@@ -90,6 +102,7 @@ public class KakaoService {
      * Authorization	사용자 인증 수단, 액세스 토큰 값
      * Authorization: Bearer {ACCESS_TOKEN}	O
      *
+     *
      */
     public Map<String, Object> getKakaoClientInfo(String access_token) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
@@ -107,7 +120,7 @@ public class KakaoService {
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                clientInfoURL,
                 HttpMethod.POST,
                 kakaoProfileRequest,
                 String.class

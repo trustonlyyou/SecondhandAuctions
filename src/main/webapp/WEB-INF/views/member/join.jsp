@@ -15,6 +15,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="/resources/js/join.js"/>
 </head>
 
 <body>
@@ -29,15 +30,14 @@
                     <h2 class="card-title text-center">회원가입</h2>
 
                     <!-- Form 시작 -->
-                    <form class="form-signin" action="/member/join/action" id="join" name="join" method="post"
-                          name="joinform">
+                    <form class="form-signin" action="/member/join/action" id="join" name="join" method="post">
                         <div class="form-label-group">
                             아이디<img src="/resources/image/check.gif" alt="필수 입력사항">
                             <input type="text" id="memberId" name="memberId" class="form-control"
                                    placeholder="아이디 입력(5~11자)" minlength="5" maxlength="20">
                         </div>
                         <div>
-                            <input type="button" id="idCheck" name="idCheck" value="중복확인"><br>
+                            <input class="btn btn-primary btn-sm" type="button" id="idCheck" name="idCheck" value="중복확인"><br>
                         </div>
                         <div name="IdCheckMsg" id="IdCheckMsg"></div>
                         <br>
@@ -141,8 +141,6 @@
              data: id,
 
              success: function (data) {
-                 console.log("data :: " + data.result);
-
                  if (data.result == 0) {
                      $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
                      $("#IdCheckMsg").css('color', 'green');
@@ -162,9 +160,8 @@
                  }
              },
 
-             error: function (error) {
-                 console.log("error :: " + error);
-                 window.alert(error);
+             error: function (request,status,error) {
+                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
              }
          });
      });
@@ -182,16 +179,12 @@
             data: email,
 
             success: function (data) {
-
-                console.log("EmailCheck :: " + data.result)
-
                 if (data.result === 0) {
                     $("#mailCheck").attr("disabled", true);
                     $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
 
 
                     $.ajax({
-                        // url: "/join/emailCheck?email" + email,
                         url: '/member/sendEmail',
                         type: 'POST',
                         dataType: 'json',
@@ -202,13 +195,17 @@
                             $("#input_mail").attr("disabled", false);
                             code = data.num;
 
+                            if (code === 0) {
+                                $("#emailCheckMsg").text("이메일 전송에 실패 하였습니다. 이메일을 확인해주세요.");
+                                $("#mailCheck").attr("disabled", false);
+                            }
+
                             $("#emailCheckMsg").text("메일로 인증번호가 전송되었습니다. 메일은 확인해주세요.")
                         },
 
                         error: function (request,status,error) {
-                            window.alert("error!!!");
                             $("#mailCheck").attr("disabled", false);
-                            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
                         }
                     });
@@ -230,33 +227,9 @@
     // // ========================= 핸드폰 인증 =========================
     var phoneCheckKey;
 
-    // $("#test").click(function () {
-    //     var memberName = $("#memberName").val();
-    //     var memberPhone = $("#memberPhone").val();
-    //
-    //     var formData = {
-    //         memberName : memberName,
-    //         memberPhone : memberPhone
-    //     }
-    //
-    //     $.ajax({
-    //         url: '/member/phoneCheck',
-    //         type: 'post',
-    //         data: formData,
-    //
-    //         success: function (data) {
-    //             window.alert(data);
-    //         },
-    //         error: function (request,status,error) {
-    //             window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
-    //         }
-    //     });
-    // });
-
     $("#phoneInputNumCheck").click(function () {
         var memberName = $("#memberName").val();
         var memberPhone = $("#memberPhone").val();
-
         var isName = /^[가-힣]+$/;
 
         if ((memberName == "") || (memberPhone == "")) {
@@ -274,6 +247,7 @@
             memberPhone : memberPhone
         }
 
+        // 중복 확인
         $.ajax({
             url: '/member/phoneCheck',
             type: 'post',
@@ -284,6 +258,7 @@
                     $("#phoneCheckMsg").text("인증번호가 전송 중 입니다. 잠시만 기다려주세요.");
                     $("#phoneInputNumCheck").attr("disabled", true);
 
+                    // Send sms
                     $.ajax({
                         url: '/member/check/phone/sendSms',
                         type: 'POST',
@@ -304,12 +279,15 @@
                             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
-                } else {
+                } else if (data === 1) {
                     window.alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
+                } else {
+                    window.alert("핸드폰 번호와 이름을 확인해주세요.");
                 }
             },
             error: function (request,status,error) {
-                window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+                window.alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                $("#phoneInputNumCheck").attr("disabled", false);
             }
         });
     });
@@ -346,47 +324,47 @@
         }
     });
 
-    function checkSpace(str) {
-        if (str.search(/\s/) != -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function isValidationPwd(str) {
-        var cnt = 0; // 중복된 숫자 걸러내기
-        var isPW = /^[A-Za-z0-9`\-=\\\[\];',\./~!@#\$%\^&\*\(\)_\+|\{\}:"<>\?]{8,16}$/;
-
-        if (str == "") {
-            return false;
-        }
-
-        var retVal = checkSpace(str);
-
-        if (retVal) {
-            return false;
-        }
-
-        if (str.length < 8) {
-            return false;
-        }
-
-        // 중복된 숫자 걸러 내기
-        for (var i = 0; i < str.length; ++i) {
-            if (str.charAt(0) == str.substring(i, i + 1))
-                ++cnt;
-        }
-        if (cnt == str.length) {
-            return false;
-        }
-
-        if (!isPW.test(str)) {
-            return false;
-        }
-
-        return true;
-    }
+    // function checkSpace(str) {
+    //     if (str.search(/\s/) != -1) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+    //
+    // function isValidationPwd(str) {
+    //     var cnt = 0; // 중복된 숫자 걸러내기
+    //     var isPW = /^[A-Za-z0-9`\-=\\\[\];',\./~!@#\$%\^&\*\(\)_\+|\{\}:"<>\?]{8,16}$/;
+    //
+    //     if (str == "") {
+    //         return false;
+    //     }
+    //
+    //     var retVal = checkSpace(str);
+    //
+    //     if (retVal) {
+    //         return false;
+    //     }
+    //
+    //     if (str.length < 8) {
+    //         return false;
+    //     }
+    //
+    //     // 중복된 숫자 걸러 내기
+    //     for (var i = 0; i < str.length; ++i) {
+    //         if (str.charAt(0) == str.substring(i, i + 1))
+    //             ++cnt;
+    //     }
+    //     if (cnt == str.length) {
+    //         return false;
+    //     }
+    //
+    //     if (!isPW.test(str)) {
+    //         return false;
+    //     }
+    //
+    //     return true;
+    // }
 
     // pwd1
     $("#memberPassword").on('keyup', function () {

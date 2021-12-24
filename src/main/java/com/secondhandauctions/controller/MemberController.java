@@ -68,9 +68,6 @@ public class MemberController {
         return "member/join";
     }
 
-    // 비동기 통신시 데이터를 본문에 담아서 보낸다.
-    // ResponseBody :: 응답 본문
-    // RequestBody :: 요청 본문
     @PostMapping(value = "/join/idCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Integer> idCheck(@RequestBody String memberId) throws Exception {
@@ -79,12 +76,11 @@ public class MemberController {
 
         if (StringUtils.isEmpty(memberId)) {
             log.error("Input memberId is null");
-            result.put("result", 0);
+            result.put("result", -1);
             return result;
         }
 
         isIdCheck = memberService.idCheck(memberId);
-
         result.put("result", isIdCheck);
 
         log.info("IdCheck :: {}", isIdCheck);
@@ -99,11 +95,15 @@ public class MemberController {
         Map<String, Integer> result = new HashMap<>();
         int isEmailCheck = 0;
 
+        if (StringUtils.isEmpty(email)) {
+            log.error("Input email is null");
+            result.put("result", -1);
+        }
+
         isEmailCheck = memberService.isEmail(email);
+        result.put("result", isEmailCheck);
 
         log.info("emailCheck Result :: " + isEmailCheck);
-
-        result.put("result", isEmailCheck);
 
         return result;
     }
@@ -119,13 +119,15 @@ public class MemberController {
 
         if (checkNum != 0) {
             num = Integer.toString(checkNum);
+            result.put("num", num);
+
+            return  result;
         } else {
             log.error("emailService joinCheckSendEmail return is 0");
+            result.put("num", 0);
+
+            return result;
         }
-
-        result.put("num", num);
-
-        return result;
     }
 
     // 사용자 핸드폰 check
@@ -134,6 +136,13 @@ public class MemberController {
     public int isCheckPhone(String memberName, String memberPhone) throws Exception {
         Map<String, Object> prams = new HashMap<>();
         int result = 0;
+
+        if (StringUtils.isEmpty(memberName) || StringUtils.isEmpty(memberPhone)) {
+            log.error("memberName or memberPhone is null");
+            result = -1;
+
+            return result;
+        }
 
         prams.put("memberName", memberName);
         prams.put("memberPhone", memberPhone);
@@ -224,7 +233,7 @@ public class MemberController {
         return result;
     }
 
-    // 카카오 로그인
+    // ================= 카카오 로그인 =================
     /**
      * GET /oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code HTTP/1.1
      * Host: kauth.kakao.com

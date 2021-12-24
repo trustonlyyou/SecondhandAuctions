@@ -246,6 +246,7 @@ public class MemberController {
     }
 
     // ================= 카카오 로그인 =================
+    // TODO: 2021/12/24 카카오 로그인 (기존 회원 check, 추가 내용 받기(핸드폰 번호)
     /**
      * GET /oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code HTTP/1.1
      * Host: kauth.kakao.com
@@ -327,11 +328,6 @@ public class MemberController {
 
     @GetMapping(value = "/logout/action")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-//        Object object = commons.getMemberSession(request);
-//
-//        if (object != null) {
-//            request.getSession().invalidate();
-//        }
         HttpSession session = request.getSession();
 
         session.invalidate();
@@ -350,26 +346,35 @@ public class MemberController {
     // 이메일로 아이디 찾기
     @PostMapping(value = "/search/id/email")
     @ResponseBody
-    public Map<String, Object> searchIdFromEmail(String memberName, String memberEmail) throws Exception {
+    public Map<String, Object> searchIdFromEmail(HttpServletRequest request, String memberName, String memberEmail) throws Exception {
         Map<String, Object> info = new HashMap<>();
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         String memberId = "";
         String title = "";
         String content = "";
         int check = 0;
 
+        if (StringUtils.isEmpty(memberName) || StringUtils.isEmpty(memberEmail)) {
+            log.error("Request URI :: '{}'", request.getRequestURI());
+            log.error("memberName or memberEmail is null");
+
+            result.put("check", -1);
+
+            return result;
+        }
+
         info.put("memberName", memberName);
         info.put("memberEmail", memberEmail);
 
-        map = memberService.getMemberIdFromEmail(info);
+        result = memberService.getMemberIdFromEmail(info);
 
-        check = (int) map.get("check");
+        check = (int) result.get("check");
 
         log.info("Search id from email check {}", check);
 
         if (check == 1) {
-            memberId = (String) map.get("memberId");
+            memberId = (String) result.get("memberId");
 
             title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
             content = "아이디 찾기 서비스를 이용해 해주셔서 감사합니다." +
@@ -378,7 +383,7 @@ public class MemberController {
             emailService.sendEmail(memberEmail, title, content);
         }
 
-        return map;
+        return result;
     }
 
     @GetMapping(value = "/searchIdResult")
@@ -400,12 +405,11 @@ public class MemberController {
 
         memberId = memberService.getMemberIdFromPhone(info);
 
-        if ("".equals(memberId) || memberId == null) {
+        if (StringUtils.isEmpty(memberId)) {
             result.put("check", 0);
             result.put("memberId", "");
         }
 
-        // TODO: 2021/11/23 AES256 암호화 해서 넘기기 
         result.put("check", 1);
         result.put("memberId", memberId);
 
@@ -414,7 +418,6 @@ public class MemberController {
 
     @GetMapping(value = "/searchIdResultPhone")
     public String IdResultPhone(@RequestParam String memberId, Model model) {
-        // TODO: 2021/11/23 AES256 복호화해서 넘기기
         model.addAttribute("memberId", memberId);
 
         return "member/searchIdResultPhone";

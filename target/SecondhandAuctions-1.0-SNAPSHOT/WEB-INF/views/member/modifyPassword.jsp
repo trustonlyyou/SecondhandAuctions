@@ -61,22 +61,10 @@
                      class="btn btn-dark btn-lg btn-block" value="비밀번호 변경" disabled>
             </div>
           </form>
-
-
-
+          
           <br>
-
-          <span>
-              <a href="/member/login/form">로그인</a>&nbsp;
-          </span>
 
           <hr>
-
-          <br>
-
-
-          회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/form">회원가입</a>
-
         </div>
       </div>
     </div>

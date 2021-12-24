@@ -130,22 +130,9 @@
 
 
                     <br>
-
-                    <span>
-                            <a href="/member/login/form">로그인</a>&nbsp;
-                        </span>
-
-                    <span>
-                            <a href="/member/search/id">비밀번호 찾기</a>
-                        </span>
-
                     <hr>
 
                     <br>
-
-
-                    회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/form">회원가입</a>
-
                 </div>
             </div>
         </div>

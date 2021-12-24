@@ -42,12 +42,9 @@
                     <br>
                     <br>
                     <br>
-                    <br>
-
-                    <br>
 
                     <div>
-                        <a href="/member/login/form" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
+                        <a href="/member/login/list" class="btn btn-primary mb-3" role="button" aria-pressed="true">로그인</a>
                     </div>
                 </div>
             </div>

@@ -53,8 +53,7 @@
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <h5>
-                                        <%-- todo :: change Url --%>
-                                    제목 : <a href="/myShop/get/${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    제목 : <a href="/myBid/success/bid/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </h5>
                             </div>
                         </div>

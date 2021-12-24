@@ -60,6 +60,13 @@ public class MemberController {
     @Autowired
     private KakaoService kakaoService;
 
+    // =============== 회원가입 ===============
+
+    @GetMapping(value = "/join/list")
+    public String joinList() {
+        return "member/joinList";
+    }
+
     @GetMapping(value = "/join/form")
     public String joinForm(HttpServletRequest request, HttpServletResponse response) {
 
@@ -198,6 +205,11 @@ public class MemberController {
 
 
     // ======================== 로그인 ============================
+    @GetMapping(value = "/login/list")
+    public String loginList() {
+        return "member/loginList";
+    }
+
     @GetMapping(value = "/login/form")
     public String loginForm() {
         return "member/login";

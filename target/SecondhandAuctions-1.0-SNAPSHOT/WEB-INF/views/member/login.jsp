@@ -6,8 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -15,13 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-
-    <style>
-        .loginAjax {
-            width: 300px;
-            height: 45px;
-        }
-    </style>
 
     <title>로그인 | 중고 경매의 세계</title>
 
@@ -56,12 +47,7 @@
                         <br>
 
                         <div>
-                            <input type="button" id="loginAjax" class="btn btn-dark btn-lg" value="로그인" disabled>
-                        </div>
-                        <br>
-                        <div>
-<%--                            <input type="image" src="/resources/image/kakaobtn.png"  id="kakaoLogin">--%>
-                            <a href="/member/kakao/login/init"><img src="/resources/image/kakaobtn.png"></a>
+                            <input type="button" id="loginAjax" class="btn btn-dark btn-block" value="로그인" disabled>
                         </div>
 
                         <br>
@@ -81,7 +67,7 @@
                         <br>
                         <br>
 
-                        회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/form">회원가입</a>
+                        회원이 아니시라면 회원 가입을 해주세요. &nbsp; <a href="/member/join/list">회원가입</a>
 
                     </form>
                 </div>
@@ -169,4 +155,3 @@
 
 
 </script>
-</html>

@@ -54,7 +54,7 @@
                         <div class="form-group row">
                             <div class="col-sm-10">
                                 <h5>
-                                    제목 : <a href="/myBid/success/sell/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}">test</a>
+                                    제목 : <a href="/myBid/success/sell/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}"><c:out value="${bid.productTitle}"/></a>
                                 </h5>
                             </div>
                         </div>

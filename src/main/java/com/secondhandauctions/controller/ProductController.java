@@ -47,14 +47,13 @@ public class ProductController {
     @ResponseBody
     public Map<String, Object> uploadProduct(HttpServletRequest request, ProductVo productVo) throws Exception {
         Map<String, Object> result = new HashMap<>();
+        Map<String, Integer> product = new HashMap<>();
+
         String memberId = "";
         int productId = 0;
 
         memberId = commons.getMemberSession(request);
-
         productVo.setMemberId(memberId);
-
-        Map<String, Integer> product = new HashMap<>();
 
         product = productService.setRegisterProduct(productVo);
 

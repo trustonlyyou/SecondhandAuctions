@@ -15,7 +15,7 @@ import java.io.StringWriter;
 @Slf4j
 public class CommonException {
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(value = Exception.class)
     private ModelAndView errorModelAndView(Exception ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/error_common");

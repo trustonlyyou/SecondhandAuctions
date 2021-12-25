@@ -12,22 +12,47 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/resources/css/detail.css">
     <link rel="stylesheet" href="/resources/css/spinner.css">
+    <script src="/resources/js/product.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="/resources/js/product.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 
     <title>상품 조회 | 중고 경매의 세계</title>
 
+    <style>
+        .card {
+            width: 800px;
+        }
+        .carousel {
+            /* width: 750px; */
+            width: 100%;
+            height: 500px;
+        }
+
+        .carousel-inner > .carousel-item > img{
+            /* width: 700px;  */
+            width: 80%;
+            height: 500px;
+        }
+
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 1);
+        }
+
+        .productText {
+            resize: none;
+        }
+        /* .card {
+          position: absolute;
+        } */
+    </style>
+
 </head>
-<style>
-    /* .card {
-      position: absolute;
-    } */
-</style>
 <body>
 
 <%@include file="../includes/header.jsp" %>
@@ -199,20 +224,22 @@
 
                 </div>
             </div>
+
+
+            <%--      Q&A 시작      --%>
             <div class="card text-left">
                 <div class="card-body">
-                    <h4>Q&A</h4><br>
-                    <div>
-                        <a id="questionBtn" href="/shop/question/form?productId=${product.productId}"
-                           class="btn btn-primary btn-sm float-right">문의사항 남기기</a>
-                    </div>
+                    <h4>Q&A</h4>
                     <br>
+                    <div>
+                        <a id="questionBtn" href="/shop/question/form?productId=${product.productId}" class="btn btn-primary btn-sm float-right">문의사항 남기기</a>
+                    </div>
                     <br>
                     <br>
                     <table class="table">
                         <thead class="table-light">
                         <tr>
-                            <th scope="col">아이디</th>
+                            <th scope="col">작성자</th>
                             <th scope="col">제목</th>
                             <th scope="col">날짜</th>
                             <th scope="col">답변 여부</th>
@@ -224,7 +251,7 @@
                             <tr>
                                 <td>${qna.get("memberId")}</td>
                                 <td>${qna.get("questionTitle")}</td>
-                                <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value='${qna.get("regdate")}'/></td>
+                                <td><fmt:formatDate pattern="yyyy-MM-dd" value='${qna.get("regdate")}'/></td>
                                 <td>
                                     <c:if test='${qna.get("isAnswer") eq true}'>
                                         <a style="color: green;" data-toggle="collapse" href='#${qna.get("questionId")}'
@@ -240,6 +267,17 @@
                                     </c:if>
                                 </td>
                             </tr>
+<%--                            &lt;%&ndash; =========== TEST ===========&ndash;%&gt;--%>
+<%--                            <tr>--%>
+<%--                                <c:if test="${empty sessionScope.member}">--%>
+<%--                                    <td colspan="4">--%>
+<%--                                        <div class="collapse" id='${qna.get("questionId")}'>--%>
+<%--                                            <span style="color: red">읽을 수 없는 계정입니다.</span>--%>
+<%--                                        </div>--%>
+<%--                                    </td>--%>
+<%--                                </c:if>--%>
+<%--                            </tr>--%>
+<%--                            &lt;%&ndash; =========== TEST ===========&ndash;%&gt;--%>
                             <tr>
                                 <c:if test="${empty sessionScope.member}">
                                     <td colspan="4">
@@ -253,6 +291,10 @@
                                         <c:if test='${qna.get("isAnswer") eq true}'>
                                             <td colspan="4">
                                                 <div class="collapse" id='${qna.get("questionId")}'>
+                                                    <h5>질문</h5>
+                                                    <c:out value='${qna.get("questionContent")}'/>
+                                                    <hr>
+                                                    <h5>답변</h5>
                                                     <c:out value='${qna.get("answer")}'/>
                                                 </div>
                                             </td>
@@ -261,6 +303,10 @@
                                         <c:if test='${qna.get("isAnswer") eq false}'>
                                             <td colspan="4">
                                                 <div class="collapse" id='${qna.get("questionId")}'>
+                                                    <h5>질문</h5>
+                                                    <c:out value='${qna.get("questionContent")}'/>
+                                                    <hr>
+                                                    <h5>답변</h5>
                                                     아직 답변이 달리지 않았습니다.
                                                 </div>
                                             </td>
@@ -314,7 +360,6 @@
             window.location.replace("/shop");
         }
 
-        // todo :: error!!
         $(".listBtn").on("click", function (e) {
             e.preventDefault();
             actionForm.submit();
@@ -388,6 +433,36 @@
                 'pointer-events': 'none',
                 'opacity': '0.5'
             })
+
+            if (chk == true && priceChk == true) {
+                $.ajax({
+                    url: '/bid',
+                    type: 'post',
+                    data : {
+                        bidMemberId : bidMemberId,
+                        bidPrice : bidPrice,
+                        productId : productId,
+                        pageUrl : pageUrl
+                    },
+
+                    success: function (data) {
+                        var result = data.check;
+
+                        if (result === 0) {
+                            alert("잘못된 정보 입니다.");
+                            window.location.href(pageUrl);
+                        } else if (result === 1) {
+                            alert("입찰이 완료 되었습니다.");
+                            window.location.replace(pageUrl);
+                        }
+                    },
+
+                    error: function () {
+
+                    }
+                });
+
+            }
         });
 
     });

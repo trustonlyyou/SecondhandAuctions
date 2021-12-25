@@ -29,9 +29,11 @@
 <!-- Page Content -->
 <div class="container">
     <div class="row">
+        <%@include file="../includes/shopCategory.jsp"%>
+
+        <div class="col-lg-10">
 
         <div class="row">
-            <h3 class="my-4">실시간 상품</h3> &nbsp;&nbsp;
             <c:if test="${category eq null}">
                 <span class="my-4">
                         <a href="/shop?status=newList" class="btn btn-outline-secondary btn-sm">신규등록순</a>
@@ -55,8 +57,6 @@
             &nbsp;
         </div>
 
-        <div class="col-lg-12">
-
             <div class="row">
                 <c:forEach items="${list}" var="shopVo">
                     <div class="col-lg-4 col-md-6 mb-4">
@@ -69,7 +69,12 @@
                                 <p>경매 시작 가격 : ${shopVo.startPrice}</p>
                                 <p>경매 시작 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.startTime}" /></p>
                                 <p>경매 마감 시간 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${shopVo.expireTime}" /></p>
-                                <h6 class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</h6>
+                                <c:if test="${shopVo.bidPrice eq null}">
+                                    <h6 class="card-text">시작 가격 : ${shopVo.startPrice}</h6>
+                                </c:if>
+                                <c:if test="${shopVo.bidPrice ne null}">
+                                    <h6 class="card-text">현재 입찰가격 : ${shopVo.bidPrice}</h6>
+                                </c:if>
                             </div>
                         </div>
                     </div>

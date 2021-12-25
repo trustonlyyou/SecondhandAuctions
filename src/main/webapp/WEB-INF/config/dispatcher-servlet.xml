@@ -20,14 +20,13 @@
     </bean>
 
     <!--  Interceptor  -->
-    <bean id="memberInterceptor" class="com.secondhandauctions.interceptor.MemberInterceptor"/>
-
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/member/modify/form"/>
             <mvc:mapping path="/register/product/form"/>
             <mvc:mapping path="/myPage/**/*"/>
-<!--            <mvc:mapping path="/shop/question/*"/>-->
+            <mvc:mapping path="/myShop/**/*"/>
+            <mvc:mapping path="/myBid/**/*"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -42,11 +41,9 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <!--     todo :: mapping paths       -->
-            <mvc:mapping path="/myPage/form"/>
-            <mvc:mapping path="/myShop/list"/>
-            <mvc:mapping path="/myBid/list"/>
-            <mvc:mapping path="/myBid/success/sell"/>
-            
+            <mvc:mapping path="/myPage/**/*"/>
+            <mvc:mapping path="/myShop/**/*"/>
+            <mvc:mapping path="/myBid/**/*"/>
             <ref bean="myPageInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -54,14 +51,14 @@
 
 
     <!--  캐시 안됨  -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/**/*"/>
-            <bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-                <property name="cacheSeconds" value="0"/>
-            </bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
+<!--    <mvc:interceptors>-->
+<!--        <mvc:interceptor>-->
+<!--            <mvc:mapping path="/**/*"/>-->
+<!--            <bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">-->
+<!--                <property name="cacheSeconds" value="0"/>-->
+<!--            </bean>-->
+<!--        </mvc:interceptor>-->
+<!--    </mvc:interceptors>-->
 
     <context:component-scan base-package="com.secondhandauctions"/>
 

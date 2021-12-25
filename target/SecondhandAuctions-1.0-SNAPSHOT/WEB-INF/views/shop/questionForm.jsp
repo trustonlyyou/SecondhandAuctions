@@ -85,7 +85,9 @@
                         <br>
 
                         <div class="form-label-group">
-                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항"><br>
+                            내용 <img src="/resources/image/check.gif" alt="필수 입력사항">
+                            <span id="nowByte">0</span>/500bytes
+                            <br>
 
                             <textarea name="questionContent" id="questionContent" cols="30" rows="10" class="product_textarea form-control"></textarea>
                         </div>
@@ -146,9 +148,6 @@
                         window.location.replace(prevPageUrl);
                         break;
                 }
-
-                window.alert("product register result :: " + check);
-
             }
         });
     });
@@ -163,6 +162,10 @@
 
         $("#questionContent").on('keyup', function () {
             var questionContent = $("#questionContent").val();
+            var maxByte = 500; //최대 500바이트
+            var questionContentLength = questionContent.length;
+            var totalByte = 0;
+
 
             if (questionContent == "") {
                 $("#contentCheckMsg").text('내용은 필수 입력 사항 입니다.');
@@ -170,8 +173,38 @@
 
                 questionContentFlag = false;
 
+                $("#registerSubmit").attr('disabled', true);
+
                 return false;
             }
+
+            for (var i = 0; i < questionContentLength; i++){
+                var eachChar = questionContent.charAt(i);
+                var uniChar = escape(eachChar) //유니코드 형식으로 변환
+
+                if(uniChar.length>4){
+                    // 한글 : 2Byte
+                    totalByte += 2;
+                }else{
+                    // 영문,숫자,특수문자 : 1Byte
+                    totalByte += 1;
+                }
+            }
+
+            if (totalByte > maxByte){
+                alert('최대 500Byte까지만 입력가능합니다.');
+                $("#nowByte").text(totalByte);
+                $("#nowByte").css('color', 'red');
+
+                questionContentFlag = false;
+
+                $("#registerSubmit").attr('disabled', true);
+
+                return false;
+            }
+
+            $("#nowByte").text(totalByte);
+            $("#nowByte").css('color', 'green');
 
             questionContentFlag = true;
 

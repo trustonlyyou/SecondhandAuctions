@@ -414,10 +414,11 @@
                     $("#searchIdSubmitEmail").attr('disabled', true);
                     emailFlag = false;
                     nameEmailFlag = false;
-                }
-
-                if (data.check === 1) {
+                } else if (data.check === 1) {
                     window.location.replace("/member/searchIdResult")
+                } else {
+                    alert("이름과 이메일을 정확히 입력해주세요. 다시 시도해주세요.");
+                    window.location.replace("/member/search/id");
                 }
             }
         });

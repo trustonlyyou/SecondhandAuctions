@@ -12,7 +12,6 @@ public interface MemberDao {
 
     public int login(Map<String, Object> memberInfo) throws Exception;
 
-    // todo ::  비밀번호도 체크해야지
     public MemberVo memberInfo(String memberId) throws Exception;
 
     // 아이디 찾기

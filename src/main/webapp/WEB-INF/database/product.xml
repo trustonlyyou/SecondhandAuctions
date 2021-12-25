@@ -79,10 +79,14 @@
 
     <insert id="insertSuccessBidInfo" parameterType="List">
         <foreach collection="list" item="item" close=";" separator=";">
-            insert into successBid (productId, bidNo, memberId, bidMemberId, bidPrice)
-            select product.productId as productId, bidNo, memberId, bidMemberId, product.bidPrice from product
-            inner join bid on product.productId = bid.productId
-            where product.bidPrice is not null and product.bidPrice = bid.bidPrice and
+            insert into
+                successBid (productId, bidNo, memberId, bidMemberId, bidPrice)
+            select
+                product.productId as productId, bidNo, memberId, bidMemberId, product.bidPrice from product
+            inner join
+                bid on product.productId = bid.productId
+            where
+                product.bidPrice is not null and product.bidPrice = bid.bidPrice and
             product.productId = #{item}
         </foreach>
     </insert>

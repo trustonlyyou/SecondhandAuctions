@@ -5,6 +5,7 @@ import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.FileUtils;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,8 @@ import java.nio.file.Files;
 import java.util.*;
 
 @Service
+@Slf4j
 public class ProductService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @Autowired
     private ProductDao productDao;
@@ -56,11 +56,11 @@ public class ProductService {
             String uuidFileName = FileUtils.getUUID();
             String uploadFileName = uuidFileName + "_" + file.getOriginalFilename();
 
-            logger.info("uploadPath :: " + uploadDir); // /Users/junghwan/Desktop/upload/2021/10/20
-            logger.info("originalFileName :: " + file.getOriginalFilename());
-            logger.info("fileExtension :: " + FilenameUtils.getExtension(file.getOriginalFilename()));
-            logger.info("uploadFileName :: " + uploadFileName); // b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
-            logger.info("fileSize :: " + file.getSize());
+            log.info("uploadPath :: " + uploadDir); // /Users/junghwan/Desktop/upload/2021/10/20
+            log.info("originalFileName :: " + file.getOriginalFilename());
+            log.info("fileExtension :: " + FilenameUtils.getExtension(file.getOriginalFilename()));
+            log.info("uploadFileName :: " + uploadFileName); // b5483f69-3f4e-473c-afb6-2e0d12b9773a_bag.png
+            log.info("fileSize :: " + file.getSize());
 
             File target = new File(uploadPath, uploadFileName);
 

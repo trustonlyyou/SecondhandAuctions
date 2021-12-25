@@ -22,7 +22,6 @@ public class PointController {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final String SECRET_KEY = "test_ak_mnRQoOaPz8LwjZD1Oljry47BMw6v";
-//    private final String SECRET_KEY = "test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R";
 
     @GetMapping(value = "/point/charge/form")
     public String pointForm() {
@@ -78,6 +77,7 @@ public class PointController {
         }
     }
 
+    // Test
     private static class CallbackPayload {
         public CallbackPayload() {}
 

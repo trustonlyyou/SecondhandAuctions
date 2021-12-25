@@ -67,8 +67,7 @@
                             <br>
 
                             <%--              <label for="productContent">내용</label>--%>
-                            <textarea name="productContent" id="productContent" cols="30" rows="10"
-                                      class="product_textarea form-control"></textarea>
+                            <textarea name="productContent" id="productContent" cols="30" rows="10" class="product_textarea form-control"></textarea>
                         </div>
                         <div name="contentCheckMsg" id="contentCheckMsg"></div>
                         <br>
@@ -236,13 +235,6 @@
     var productContentFlag = false;
     var startPriceFlag = false;
 
-    // function numberWithCommas(startPrice) {
-    //   startPrice = startPrice.replace(/[^0-9]/g,'');   // 입력값이 숫자가 아니면 공백
-    //   startPrice = startPrice.replace(/,/g,'');          // ,값 공백처리
-    //
-    //   $("#startPrice").val(startPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",")); // 정규식을 이용해서 3자리 마다 , 추가
-    // }
-
     $(document).ready(function (e) {
         $("#startPrice").on('keyup', function () {
             var startPrice = $("#startPrice").val();
@@ -289,7 +281,7 @@
                 return false;
             }
 
-            for(var i = 0; i < productContentLength; i++){
+            for (var i = 0; i < productContentLength; i++){
                 var eachChar = productContent.charAt(i);
                 var uniChar = escape(eachChar) //유니코드 형식으로 변환
 
@@ -302,7 +294,7 @@
                 }
             }
 
-            if(totalByte > maxByte){
+            if (totalByte > maxByte){
                 alert('최대 500Byte까지만 입력가능합니다.');
                 $("#nowByte").text(totalByte);
                 $("#nowByte").css('color', 'red');

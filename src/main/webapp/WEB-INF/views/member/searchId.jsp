@@ -225,10 +225,7 @@
 
                 return false;
 
-            } else { // Ajax Phone Check (중복확인)
-
-                // phone = phone.replace(/ /gi, "").replace(/-/gi, "");
-                // $("#phone").val(phone);
+            } else {
 
                 $("#phoneCheckMsg").text("");
 
@@ -424,20 +421,5 @@
         });
 
     });
-
-    var actionPhoneForm = $("#phoneForm");
-
-    // $("#searchIdSubmitPhone").on("click", function (e) {
-    //    e.preventDefault();
-    //    actionPhoneForm.submit();
-    //
-    //    $("#memberName").val("");
-    //    $("#memberPhone").val("");
-    //    $("#inputNum").val("");
-    // });
-
-
-
-
 </script>
 </html>

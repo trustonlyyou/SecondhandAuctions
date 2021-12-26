@@ -136,7 +136,6 @@ public class MyPageService {
         return result;
     }
 
-    // 한명의 판매자만 답변을 해주는데 multi thread 가 아니지 않나? 동기화 해줄 필요 없지 않나?
     public int setAnswer(Map<String, Object> info, int productId) throws Exception {
         int check = 0;
 

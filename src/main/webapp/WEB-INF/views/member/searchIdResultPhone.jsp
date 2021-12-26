@@ -37,9 +37,8 @@
 
           <c:if test="${(''.equals(memberId))}">
             <div>
-              <h3>가입된 회원의 정보가 없습니다.<br><br> <a href="/member/join/form">회원가입</a> </h3>
+              <h3>가입된 회원의 정보가 없습니다.<br><br> <a href="/member/join/list">회원가입</a> </h3>
             </div>
-
           </c:if>
 
           <c:if test="${!''.equals(memberId)}">
@@ -61,7 +60,7 @@
           <br>
 
           <div>
-            <a href="/member/login/form" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
+            <a href="/member/login/list" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
           </div>
         </div>
       </div>

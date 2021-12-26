@@ -89,6 +89,19 @@ public class BidService {
         return result;
     }
 
+    /**
+     * solation : 트랜잭션에서 일관성없는 데이터 허용 수준을 설정한다 / DEFAULT : 기본 격리 수준 : 기본이며, DB의 lsolation Level을 따른다.
+     *
+     * propagation : 트랜잭션 동작 도중 다른 트랜잭션을 호출할 때, 어떻게 할 것인지 지정하는 옵션이다,
+     * Propagation.REQUIRED :  이미 진행중인 트랜잭션이 있다면 해당 트랜잭션 속성을 따르고, 진행중이 아니라면 새로운 트랜잭션을 생성한다.
+     *
+     * rollbackFor : 특정 예외 발생 시 rollback한다.
+     *
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class, timeout = 10)
@@ -155,7 +168,7 @@ public class BidService {
      * fixedRate 은 이전에 실행된 Task 의 시작시간으로 부터 정의된 시간만큼 지난 후 Task 를 실행한다.(밀리세컨드 단위)
      * @throws Exception
      */
-    @Scheduled(cron = "0 17 23 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
@@ -210,20 +223,12 @@ public class BidService {
             String memberId = info.get("memberId");
             String memberPhone = info.get("memberPhone");
 
-            // test
-            log.info("memberId :: '{}'", memberId);
-            log.info("memberPhone :: '{}'", memberPhone);
-
             smsService.sendSms(memberPhone, sellerText);
         }
 
         for (Map<String, String> info : biddersPhoneList) {
             String memberId = info.get("memberId");
             String memberPhone = info.get("memberPhone");
-
-            // test
-            log.info("memberId :: '{}'", memberId);
-            log.info("memberPhone :: '{}'", memberPhone);
 
             smsService.sendSms(memberPhone, bidderText);
         }

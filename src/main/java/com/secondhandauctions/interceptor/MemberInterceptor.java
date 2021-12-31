@@ -21,7 +21,7 @@ public class MemberInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        response.sendRedirect(request.getContextPath() + "/member/login/form");
+        response.sendRedirect(request.getContextPath() + "/member/login/list");
 
         return false;
     }

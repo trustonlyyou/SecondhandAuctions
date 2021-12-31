@@ -138,7 +138,7 @@ public class ShopController {
         path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
 
         // 이건 안쓰고
-        // apache ftpservice 사용한다.
+        // apache ftpservice 사용한다. FTP
         resource = new FileSystemResource(path);
 
         if (!resource.exists()) {

@@ -51,14 +51,16 @@
           </div>
         </div>
         <hr>
-        <div class="form-group row">
-          <label for="memberPassword" class="col-sm-2 col-form-label">비밀번호</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="memberPassword" value="${memberInfo.memberPassword}">
-            <input type="button" id="modifyPwd" class="btn btn-secondary btn-sm float-right" value="비밀번호 변경">
+        <c:if test="${sessionScope.token eq null}">
+          <div class="form-group row">
+            <label for="memberPassword" class="col-sm-2 col-form-label">비밀번호</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="memberPassword" value="${memberInfo.memberPassword}">
+              <input type="button" id="modifyPwd" class="btn btn-secondary btn-sm float-right" value="비밀번호 변경">
+            </div>
           </div>
-        </div>
-        <hr>
+          <hr>
+        </c:if>
         <div class="form-group row">
           <label for="memberName" class="col-sm-2 col-form-label">이름</label>
           <div class="col-sm-10">

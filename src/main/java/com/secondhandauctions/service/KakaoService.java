@@ -1,6 +1,5 @@
 package com.secondhandauctions.service;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +27,20 @@ public class KakaoService {
 
     private final String CLIENT_INFO_URL = "";
 
-    @Value("${REDIRECT_URI}")
-    private String redirectURI;
+    @Value("${JOIN_REDIRECT_URI}")
+    private String joinRedirectURI;
+
+    @Value("${LOGIN_REDIRECT_URI}")
+    private String loginRedirectURI;
 
     @Value("${OAUTH_TOKEN_URL}")
     private String oauthTokenURL;
 
     @Value("${CLIENT_INFO_URL}")
     private String clientInfoURL;
+
+    @Value("${LOGOUT_URL}")
+    private String logoutURL;
 
     /**
      *
@@ -58,7 +63,7 @@ public class KakaoService {
      * code	String	인가 코드 받기 요청으로 얻은 인가 코드
      *
      */
-    public Map getKakaoToken(String code, String client_id) throws Exception {
+    public Map getOauthToken(String code, String client_id, String redirectURI) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -139,6 +144,7 @@ public class KakaoService {
 
             memberName = (String) propertiesMap.get("nickname");
             memberEmail = (String) accountMap.get("email");
+
             log.info("memberName :: '{}'", memberName);
             log.info("memberEmail :: '{}'", memberEmail);
 
@@ -157,4 +163,73 @@ public class KakaoService {
             return Collections.emptyMap();
         }
     }
+
+//    POST /v1/user/logout HTTP/1.1
+//    Host: kapi.kakao.com
+//    Authorization: Bearer {ACCESS_TOKEN}
+    public void logoutService(String access_token) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map result = new HashMap();
+        Integer id = null;
+
+        headers.add("Authorization", "Bearer " + access_token); // 띄어쓰기 조심
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                logoutURL, HttpMethod.POST, request, String.class
+        );
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONParser parser = new JSONParser();
+            JSONObject object = null;
+
+            object = (JSONObject) parser.parse(response.getBody());
+            result = objectMapper.readValue(object.toString(), Map.class);
+
+            id = (Integer) result.get("id");
+
+            if (!StringUtils.isEmpty(id)) {
+                log.info("targetId :: '{}' is logout", id);
+            }
+        }
+    }
+
+    /**
+     * GET /oauth/logout?client_id={REST_API_KEY}&logout_redirect_uri={LOGOUT_REDIRECT_URI} HTTP/1.1
+     * Host: kauth.kakao.com
+     * ================================================================
+     * ame	Type	Description	Required
+     * client_id	String	앱 REST API 키
+     * [내 애플리케이션] > [앱 키]에서 확인 가능	O
+     * logout_redirect_uri	String	서비스 회원 로그아웃 처리를 수행할 Logout Redirect URI
+     * [내 애플리케이션] > [카카오 로그인] > [Logout Redirect URI]에 등록된 값 중 하나	O
+     * state	String	로그아웃 요청과 콜백 간에 상태를 유지하기 위해 사용하는 문자열 (정해진 형식 없음)
+     * Logout Redirect URI와 로그아웃 요청 응답에 전달됨	X
+     *
+     * kauth.kakao.com/oauth/logout?client_id={REST_API_KEY}&logout_redirect_uri={LOGOUT_REDIRECT_URI}
+     */
+//    public void logoutToKakao(String client_id, String logoutRedirectURL) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+//
+//
+//        map.add("client_id", client_id);
+//        map.add("logout_redirect_uri", logoutRedirectURL);
+//
+//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+//
+//        ResponseEntity<String> response = restTemplate.exchange(
+//                "https://kauth.kakao.com/oauth/logout?client_id={REST_API_KEY}&logout_redirect_uri={LOGOUT_REDIRECT_URI}",
+//                HttpMethod.GET,
+//                request,
+//                String.class
+//        );
+//
+//        log.info(request.toString());
+//    }
 }

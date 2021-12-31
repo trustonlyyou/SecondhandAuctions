@@ -46,14 +46,35 @@
       <br>
       <br>
       <form>
-        <div class="form-group row">
-          <div class="col-sm-10 text-center">
-            <h6>마이페이지 이용시 인증이 필요합니다.</h6>
-            <label for="memberPassword">비밀번호 &nbsp;</label>
-            <input type="password" id="memberPassword" placeholder="비밀번호를 입렵해주세요.">
-            <input id="checkSubmit" type="button" value="확인" class="btn btn-primary btn-sm">
+        <c:if test="${chk eq false}">
+          <div class="form-group row">
+            <div class="col-sm-10 text-center">
+              <h6>마이페이지 이용시 인증이 필요합니다.</h6>
+              <label for="memberPassword">비밀번호 &nbsp;</label>
+              <input type="password" id="memberPassword" placeholder="비밀번호를 입렵해주세요.">
+              <input id="checkSubmit" type="button" value="확인" class="btn btn-primary btn-sm">
+            </div>
           </div>
-        </div>
+        </c:if>
+        <c:if test="${chk eq true}">
+          <%--     todo :: 무엇으로 인증할래??     --%>
+          <h3>카카오 인증</h3>
+          <div class="form-group row">
+            <div class="col-sm-10 text-center">
+              <h6>마이페이지 이용시 인증이 필요합니다.</h6>
+              <label for="memberPhone"></label>
+              <input type="text" id="memberPhone" placeholder="핸드폰 번호를 입력해주세요.">
+              <input id="phoneCheck" class="btn btn-primary btn-sm" type="button" value="전송">
+            </div>
+
+            <div class="col-sm-10 text-center" id="phoneMsg"></div>
+
+            <div class="phoneInputCheckDiv col-sm-10 text-center">
+              <input type="text" id="inputPhoneCheck" placeholder="인증번호를 입력해주세요.">
+              <input type="button" class="btn btn-primary btn-sm" id="inputPhoneBtn" value="확인">
+            </div>
+          </div>
+        </c:if>
       </form>
     </div>
   </div>
@@ -63,6 +84,7 @@
 <script type="text/javascript">
 
   $(document).ready(function () {
+    $(".phoneInputCheckDiv").hide();
 
     // controller 는 타지만 ajax success:function 부터 안탄다.
     $("#memberPassword").on('keydown', function (e) {
@@ -81,7 +103,7 @@
       }
 
       $.ajax({
-        url: '/myPage/authority',
+        url: '/authority',
         type: 'post',
         dataType: 'json',
         contentType: 'application/json; charset=UTF-8',
@@ -89,9 +111,9 @@
 
         success: function (data) {
           // todo :: keycode 사용시 ajax 밑에 내용이 인식이 안된다.
-          var check = data.check;
+          var chk = data.chk;
 
-          if (check === 1) {
+          if (chk == true) {
             window.location.replace("/myPage/form");
           } else {
             window.alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
@@ -101,9 +123,84 @@
         error: function (request,status,error) {
           console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
           alert("다시 시도해주세요.");
-          window.location.href("/myPage/authority/form");
+          location.reload();
         }
       });
+    });
+
+    $("#memberPhone").on('keyup', function () {
+        var phone = $("#memberPhone").val();
+        var isPhone = /^((01[1|6|7|8|9])[1-9][0-9]{6,7})$|(010[1-9][0-9]{7})$/;
+
+        if (phone == "") {
+          $("#phoneMsg").text("핸드폰은 필수 입력입니다.");
+          $("#phoneMsg").css('color','red');
+          $("#phoneCheck").attr('disabled', true);
+
+          return false;
+        }
+
+        if (!isPhone.test(phone)) {
+          $("#phoneMsg").text("핸드폰 입력형식이 옳바르지 않습니다.");
+          $("#phoneMsg").css('color','red');
+          $("#phoneCheck").attr('disabled', true);
+
+          phoneFlag = false;
+
+          return false;
+        } else {
+          $("#phoneMsg").text("핸드폰 인증을 해주세요.");
+          $("#phoneMsg").css('color','green');
+          $("#phoneCheck").attr('disabled', false);
+
+          return true;
+        }
+    });
+
+    $("#phoneCheck").on('click', function () {
+        var memberPhone = $("#memberPhone").val();
+        $(".phoneInputCheckDiv").show();
+
+        alert(memberPhone);
+
+        $.ajax({
+          url: '/authority/sendSms',
+          type: 'post',
+          data: memberPhone,
+          dataType: 'json',
+          contentType: 'application/json; charset=UTF-8',
+
+          success: function (data) {
+            var chk = data.chk;
+            var key = data.key;
+
+            if (chk === true) {
+              $("#inputPhoneBtn").on('click', function () {
+                var inputKey = $("#inputPhoneCheck").val();
+
+                if (inputKey === key) {
+                  $("#phoneMsg").text("인증번호가 일치합니다.");
+                  $("#phoneMsg").css('color','green');
+                  window.location.replace("/authority/kakao");
+                } else {
+                  $("#phoneMsg").text("인증번호가 일치하지 않습니다.");
+                  $("#phoneMsg").css('color','red');
+                }
+              });
+
+            } else {
+              alert("핸드폰 번호를 다시 인증해주세요.");
+              location.reload();
+            }
+
+          },
+          error: function (request,status,error) {
+            console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            alert("다시 시도해주세요.");
+            location.reload();
+
+          }
+        });
     });
 
   });

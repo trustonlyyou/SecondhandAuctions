@@ -5,7 +5,7 @@
 
 <mapper namespace="com.secondhandauctions.dao.MemberDao">
 
-    <!--  기존 회원  -->
+    <!--  아이디 중복 체크 -->
     <select id="idCheck" parameterType="String" resultType="int">
         select
             count(*)
@@ -19,24 +19,118 @@
     <insert id="join" parameterType="com.secondhandauctions.vo.MemberVo">
         insert into member
         (
-            memberId, memberName, memberPassword, memberEmail, memberPhone
+            memberId, memberName, memberPassword, memberEmail, memberPhone, isKakao
         )
         values
         (
-            #{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberPhone}
+            #{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberPhone}, 0
         )
     </insert>
 
+    <insert id="memberIdFlag" parameterType="String">
+        insert into memberIdFlag
+        (
+            memberId
+        )
+        values
+        (
+            #{memberId}
+        )
+    </insert>
+
+    <select id="isMember" parameterType="String" resultType="Map">
+        select count(*) as isMember,
+               (select isKakao from member where memberId = #{memberId}) as isKakao
+        from member where memberId = #{memberId};
+    </select>
+
+    <update id="loginFailCountUp" parameterType="String">
+        update
+            memberIdFlag
+        set
+            failCount = failCount + 1
+        where
+            memberId = #{memberId}
+    </update>
+
+    <update id="resetFailCount" parameterType="String">
+        update memberIdFlag set failCount = 0 where memberId = #{memberId};
+    </update>
+
+    <update id="solveLock" parameterType="String" >
+        update memberIdFlag set isIdLock = 0 where memberId = #{memberId}
+    </update>
+
+    <!--  todo :: 조인해야 할 수도 있음   -->
+    <select id="loginFailCount" parameterType="String" resultType="int">
+        select
+            failCount
+        from
+            memberIdFlag
+        where
+            memberId = #{memberId}
+    </select>
+
+    <select id="loginLock" parameterType="String">
+        update memberIdFlag set isIdLock = 1 where memberId = #{memberId}
+    </select>
+
+    <insert id="joinByKakao" parameterType="Map">
+        insert into member
+        (
+         memberId, memberName, memberEmail, memberPhone, isKakao
+         )
+         values
+        (
+         #{memberId}, #{memberName}, #{memberEmail}, #{memberPhone}, 1
+         )
+    </insert>
+
     <!--  로그인  -->
-    <select id="login" parameterType="java.util.Map" resultType="int">
+    <select id="login" parameterType="Map" resultType="Map">
+        select
+            count(*) as login,
+            (select isIdLock from memberIdFlag where memberId = #{memberId}) as isLock
+        from member
+        where
+            memberId = #{memberId} and
+            memberPassword = #{memberPassword} and
+            isMemberCheck = 1;
+    </select>
+
+    <select id="isLockMemberPhone" parameterType="Map" resultType="int">
         select
             count(*)
         from
             member
         where
             memberId = #{memberId} and
-            memberPassword = #{memberPassword} and
+            memberName = #{memberName} and
+            memberPhone = #{memberPhone} and
+            isKakao = 0 and
             isMemberCheck = 1;
+    </select>
+
+    <select id="isLockMemberEmail" parameterType="Map" resultType="int">
+        select
+            count(*)
+        from
+            member
+        where
+            memberId = #{memberId} and
+            memberEmail = #{memberEmail} and
+            isKakao = 0 and
+            isMemberCheck = 1;
+    </select>
+
+    <select id="memberIdByEmail" parameterType="String" resultType="String">
+        select
+            memberId
+        from
+            member
+        where
+            memberEmail = #{memberEmail}
+        and isKakao = 1
     </select>
 
     <!--  회원 정보 가져오기  -->
@@ -83,6 +177,10 @@
             memberPhone = #{memberPhone} and
             memberName = #{memberName} and
             isMemberCheck = 1;
+    </select>
+
+    <select id="isKakaoMember" parameterType="String" resultType="Integer">
+        select isKakao from member where memberId = #{memberId} and isMemberCheck = 1;
     </select>
 
 

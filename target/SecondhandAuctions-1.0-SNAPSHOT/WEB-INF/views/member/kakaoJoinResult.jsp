@@ -10,7 +10,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>아이디 찾기 결과 | 중고 경매의 세계</title>
+  <title>카카오 회원가입 결과 | 중고 경매의 세계</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -27,38 +27,21 @@
           </div>
           <br>
           <br>
-          <h2 class="card-title text-center">아이디 찾기 결과</h2>
+          <h2 class="card-title text-center">카카오 회원가입 결과</h2>
           <hr>
           <br>
           <br>
           <br>
           <br>
           <br>
-
-          <c:if test="${(''.equals(memberId))}">
-            <div>
-              <h3>가입된 회원의 정보가 없습니다.<br><br> <a href="/member/join/list">회원가입</a> </h3>
-            </div>
-          </c:if>
-
-          <c:if test="${!''.equals(memberId)}">
-            <div>
-              <h3>회원님의 가입된 아이디 입니다.<br><br> ${memberId}</h3>
-            </div>
-          </c:if>
-
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-
           <div>
-            <a href="/member/search/password">비밀번호가 기억나지 않으세요?</a>
+            <h3>${msg}</h3>
           </div>
-
           <br>
-
+          <br>
+          <br>
+          <br>
+          <br>
           <div>
             <a href="/member/login/list" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
           </div>

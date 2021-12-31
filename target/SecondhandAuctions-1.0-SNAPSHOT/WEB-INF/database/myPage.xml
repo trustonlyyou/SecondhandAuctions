@@ -13,6 +13,7 @@
         where
             memberId = #{memberId} and
             memberPassword = #{memberPassword} and
+            isKakao = 0 and
             isMemberCheck = 1
     </select>
 

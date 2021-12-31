@@ -117,6 +117,10 @@
 
     $("#loginAjax").on("click", function (e) {
 
+        if(${sessionScope.member ne null}) {
+            window.location.replace("/");
+        }
+
         var memberId = $("#memberId").val();
         var memberPassword = $("#memberPassword").val();
 
@@ -131,13 +135,41 @@
            data: formData,
 
            success: function (data) {
-               if (data.result === 1) {
-                   window.location.replace("/"); // replace 로 처리하면 뒤로가기가 막힌다.
+               // new code
+               var maxCount = 5;
+               var isMember = data.isMember;
+
+               if (isMember == false) {
+                   alert("등록된 회원이 아닙니다.");
                } else {
-                   $("#memberPassword").val("");
-                   $("#loginAjax").attr('disabled', true);
-                   alert("아이디와 비밀번호를 확인해주세요.");
+                   var login = data.login;
+                   var isLock = data.isLock;
+
+                   if (isLock == true) { //현재 잠금 상태
+                       alert("로그인 횟수를 초과 하였습니다.");
+                       window.location.replace("/member/lock/solve");
+                   } else {
+                       if (login == true) { // 로그인 성공
+                           window.location.replace("/");
+                       } else { // 로그인 실패
+                           var failCount = data.failCount;
+                           var allowCount;
+                           allowCount = maxCount - failCount;
+                           alert("로그인 남은 횟수 : " + allowCount);
+                           $("#memberPassword").val("");
+                           $("#loginAjax").attr('disabled', true);
+                       }
+                   }
                }
+
+
+               // if (data.result === 1) {
+               //     window.location.replace("/"); // replace 로 처리하면 뒤로가기가 막힌다.
+               // } else {
+               //     $("#memberPassword").val("");
+               //     $("#loginAjax").attr('disabled', true);
+               //     alert("아이디와 비밀번호를 확인해주세요.");
+               // }
            },
            error: function (request,status,error) {
                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

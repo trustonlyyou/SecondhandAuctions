@@ -61,7 +61,7 @@
                      class="btn btn-dark btn-lg btn-block" value="비밀번호 변경" disabled>
             </div>
           </form>
-          
+
           <br>
 
           <hr>
@@ -191,16 +191,13 @@
       data: $("form").serialize(),
 
       success: function (data) {
-        var check = data.check;
+        var chk = data.check;
 
-        switch (check) {
-          case 0 :
-            window.alert("다시 시도해 주세요.");
-            window.location.replace("/member/search/password");
-            break;
-          case 1 :
-            window.location.replace("/member/modify/password/result");
-            break;
+        if (chk === false) {
+          window.alert("다시 시도해 주세요.");
+          location.reload();
+        } else {
+          window.location.replace("/member/modify/password/result");
         }
       }
     });

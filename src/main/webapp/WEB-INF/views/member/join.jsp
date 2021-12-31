@@ -142,7 +142,7 @@
              data: id,
 
              success: function (data) {
-                 if (data.result == 0) {
+                 if (data.result == true) {
                      $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
                      $("#IdCheckMsg").css('color', 'green');
 
@@ -151,14 +151,30 @@
                      if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
                          $("#join_submit").attr('disabled', false);
                      }
-
-
                  } else {
                      $("#IdCheckMsg").text("이미 존재하는 아이디 입니다.");
                      $("#IdCheckMsg").css('color','red');
 
-                     nameFlag = false;
+                     idFlag = false;
                  }
+
+                 // if (data.result == 0) {
+                 //     $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
+                 //     $("#IdCheckMsg").css('color', 'green');
+                 //
+                 //     idFlag = true;
+                 //
+                 //     if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                 //         $("#join_submit").attr('disabled', false);
+                 //     }
+                 //
+                 //
+                 // } else {
+                 //     $("#IdCheckMsg").text("이미 존재하는 아이디 입니다.");
+                 //     $("#IdCheckMsg").css('color','red');
+                 //
+                 //     nameFlag = false;
+                 // }
              },
 
              error: function (request,status,error) {
@@ -180,7 +196,7 @@
             data: email,
 
             success: function (data) {
-                if (data.result === 0) {
+                if (data.result === true) {
                     $("#mailCheck").attr("disabled", true);
                     $("#emailCheckMsg").text("메일 전송 중입니다. 잠시만 기다려주세요.");
 
@@ -255,7 +271,9 @@
             data: formData,
 
             success: function (data) {
-                if (data === 0) {
+                var chk = data.result;
+
+                if (chk == true) {
                     $("#phoneCheckMsg").text("인증번호가 전송 중 입니다. 잠시만 기다려주세요.");
                     $("#phoneInputNumCheck").attr("disabled", true);
 
@@ -266,13 +284,40 @@
                         data: memberPhone,
 
                         success: function (data) {
-                            phoneCheckKey = data.key;
+                            var phoneCheckKey = data.key;
 
                             $("#phoneCheckMsg").text("휴대폰에 인증번호가 전송되었습니다. 인증번호를 입력해주세요.");
-
                             console.log("key :: " + phoneCheckKey);
-
                             $("#phoneInputNum").attr('disabled', false);
+
+                            // phone check
+                            $("#phoneInputNum").on('keyup', function () {
+                                var inputNum = $("#phoneInputNum").val();
+
+                                if (inputNum === phoneCheckKey) {
+                                    $("#phone_check").text('인증번호가 일치합니다.');
+                                    $("#phone_check").css('color', 'green');
+
+                                    phoneFlag = true;
+
+                                    if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+                                        $("#join_submit").attr('disabled', false);
+                                    }
+
+                                    return true;
+
+                                } else {
+                                    $("#phone_check").text('인증번호가 틀립니다.');
+                                    $("#phone_check").css('color', 'red');
+
+                                    $("#join_submit").attr('disabled', true);
+
+                                    phoneFlag = false;
+
+                                    return false;
+                                }
+                            });
+
                         },
                         error: function (request,status,error) {
                             window.alert("핸드폰 인증을 다시 시도해주세요.");
@@ -280,10 +325,8 @@
                             console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         }
                     });
-                } else if (data === 1) {
-                    window.alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
                 } else {
-                    window.alert("핸드폰 번호와 이름을 확인해주세요.");
+                    window.alert("이미 회원가입이 되어있는 핸드폰 번호입니다.");
                 }
             },
             error: function (request,status,error) {
@@ -324,48 +367,6 @@
             return true;
         }
     });
-
-    // function checkSpace(str) {
-    //     if (str.search(/\s/) != -1) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-    //
-    // function isValidationPwd(str) {
-    //     var cnt = 0; // 중복된 숫자 걸러내기
-    //     var isPW = /^[A-Za-z0-9`\-=\\\[\];',\./~!@#\$%\^&\*\(\)_\+|\{\}:"<>\?]{8,16}$/;
-    //
-    //     if (str == "") {
-    //         return false;
-    //     }
-    //
-    //     var retVal = checkSpace(str);
-    //
-    //     if (retVal) {
-    //         return false;
-    //     }
-    //
-    //     if (str.length < 8) {
-    //         return false;
-    //     }
-    //
-    //     // 중복된 숫자 걸러 내기
-    //     for (var i = 0; i < str.length; ++i) {
-    //         if (str.charAt(0) == str.substring(i, i + 1))
-    //             ++cnt;
-    //     }
-    //     if (cnt == str.length) {
-    //         return false;
-    //     }
-    //
-    //     if (!isPW.test(str)) {
-    //         return false;
-    //     }
-    //
-    //     return true;
-    // }
 
     // pwd1
     $("#memberPassword").on('keyup', function () {
@@ -566,33 +567,33 @@
         }
     });
 
-    // phone check
-    $("#phoneInputNum").on('keyup', function () {
-        var inputNum = $("#phoneInputNum").val();
-
-        if (inputNum === phoneCheckKey) {
-            $("#phone_check").text('인증번호가 일치합니다.');
-            $("#phone_check").css('color', 'green');
-
-            phoneFlag = true;
-
-            if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                $("#join_submit").attr('disabled', false);
-            }
-
-            return true;
-
-        } else {
-            $("#phone_check").text('인증번호가 틀립니다.');
-            $("#phone_check").css('color', 'red');
-
-            $("#join_submit").attr('disabled', true);
-
-            phoneFlag = false;
-
-            return false;
-        }
-    });
+    // // phone check
+    // $("#phoneInputNum").on('keyup', function () {
+    //     var inputNum = $("#phoneInputNum").val();
+    //
+    //     if (inputNum === phoneCheckKey) {
+    //         $("#phone_check").text('인증번호가 일치합니다.');
+    //         $("#phone_check").css('color', 'green');
+    //
+    //         phoneFlag = true;
+    //
+    //         if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
+    //             $("#join_submit").attr('disabled', false);
+    //         }
+    //
+    //         return true;
+    //
+    //     } else {
+    //         $("#phone_check").text('인증번호가 틀립니다.');
+    //         $("#phone_check").css('color', 'red');
+    //
+    //         $("#join_submit").attr('disabled', true);
+    //
+    //         phoneFlag = false;
+    //
+    //         return false;
+    //     }
+    // });
 </script>
 
 </html>

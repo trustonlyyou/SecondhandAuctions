@@ -1,5 +1,6 @@
 package com.secondhandauctions.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,11 @@ public class InfoFormatter {
 
     public String passwordFormat(String memberPassword) {
         String formatPassword = "";
+
+        if (StringUtils.isEmpty(memberPassword)) {
+            formatPassword = "*******";
+            return formatPassword;
+        }
 
         formatPassword = memberPassword.replace(memberPassword, "******");
 

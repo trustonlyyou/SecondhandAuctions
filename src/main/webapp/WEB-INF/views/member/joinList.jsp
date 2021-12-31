@@ -29,7 +29,7 @@
                             <a href="/member/join/form" class="btn btn-primary mb-4">중고경매의 세계 회원가입</a>
                         </div>
                         <div>
-                            <a href="/member/kakao/login/init"><img width="185px" height="38px" src="/resources/image/kakao_join_btn.png"></a>
+                            <a href="/member/kakao/join/init"><img width="185px" height="38px" src="/resources/image/kakao_join_btn.png"></a>
                         </div>
 
                         <br>

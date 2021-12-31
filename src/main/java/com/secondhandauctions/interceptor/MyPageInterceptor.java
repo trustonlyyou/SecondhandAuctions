@@ -20,14 +20,14 @@ public class MyPageInterceptor extends HandlerInterceptorAdapter {
             chk = (boolean) session.getAttribute("authority");
 
             if (chk == false) {
-                response.sendRedirect(request.getContextPath() + "/myPage/authority/form");
+                response.sendRedirect(request.getContextPath() + "/authority/form");
                 return false;
             } else {
                 return true;
             }
 
         }
-        response.sendRedirect(request.getContextPath() + "/myPage/authority/form");
+        response.sendRedirect(request.getContextPath() + "/authority/form");
 
         return false;
     }

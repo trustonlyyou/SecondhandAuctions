@@ -10,8 +10,7 @@ import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -28,8 +27,6 @@ import java.util.Map;
 @Controller
 @Slf4j
 public class MyPageController {
-
-    private static final Logger logger = LoggerFactory.getLogger(MyPageController.class);
 
     @Autowired
     private MemberService memberService;
@@ -53,42 +50,78 @@ public class MyPageController {
     private EncryptionSHA256 encryptionSHA256;
 
 
-    @GetMapping(value = "/myPage/authority/form")
-    public String authorityForm() {
-        return "/myPage/myAuthority";
+    @GetMapping(value = "/authority/form")
+    public String authorityForm(HttpServletRequest request, Model model) throws Exception {
+        String memberId = commons.getMemberSession(request);
+        model.addAttribute("chk", memberService.isKakaoMember(memberId));
+
+        return "myPage/myAuthority";
     }
 
-    @PostMapping(value = "/myPage/authority", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/authority", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Integer> authorityChk(HttpServletRequest request, @RequestBody String memberPassword) throws Exception {
-        Map<String, Integer> check = new HashMap<>();
-        Map<String, Object> info = new HashMap<>();
+    public Map<String, Boolean> authorityChk(HttpServletRequest request, @RequestBody String memberPassword) throws Exception {
+        Map<String, Boolean> result = new HashMap<>();
+        Map<String, String> info = new HashMap<>();
         HttpSession session = request.getSession();
 
         String memberId = "";
         String encryptionPassword = "";
-        int result = 0;
+        boolean chk = false;
 
         memberId = commons.getMemberSession(request);
         encryptionPassword = encryptionSHA256.encrypt(memberPassword);
 
-        if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(encryptionPassword)) {
-            check.put("check", result);
+        if (commons.isEmptyStrings(memberId, memberPassword)) {
+            result.put("chk", false);
+            return result;
+        } else {
+            info.put("memberId", memberId);
+            info.put("memberPassword", encryptionPassword);
+
+            chk = myPageService.isAuthority(info);
+            log.info("authorityChk result :: '{}'", chk);
+
+            if (chk == false) {
+                result.put("chk", false);
+                return result;
+            } else {
+                session.setAttribute("authority", true);
+                result.put("chk", true);
+
+                return result;
+            }
+
         }
+    }
 
-        info.put("memberId", memberId);
-        info.put("memberPassword", encryptionPassword);
+    @PostMapping(value = "/authority/sendSms",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> authorityChkSms(@RequestBody String memberPhone) throws Exception {
+        Map<String, Object> result = new HashMap<>();
 
-        result = memberService.getLoginResult(info);
-        log.info("authorityChk result :: '{}'", result);
+        String key = smsService.authenticationNum(memberPhone);
 
-        if (result == 1) {
-            session.setAttribute("authority", true);
+        log.info(memberPhone);
+        log.info(key);
+
+        if (commons.isEmptyStrings(memberPhone, key) == true) {
+            log.error("isEmpty");
+            result.put("chk", false);
+            return result;
+        } else {
+            result.put("chk", true);
+            result.put("key", key);
+            return result;
         }
+    }
 
-        check.put("check", result);
+    @GetMapping(value = "/authority/kakao")
+    public String authorityKakao(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("authority", true);
 
-        return check;
+        return "redirect:/myPage/form";
     }
 
     @GetMapping(value = "/myPage/form")
@@ -114,7 +147,7 @@ public class MyPageController {
         memberVo.setMemberEmail(memberEmail);
         memberVo.setMemberPhone(memberPhone);
 
-        logger.info(memberVo.toString());
+        log.info(memberVo.toString());
 
         model.addAttribute("memberInfo", memberVo);
 
@@ -194,7 +227,7 @@ public class MyPageController {
             result = myPageService.getMyShopList(params);
 
         } catch (Exception e) {
-            logger.error("error :: " + e);
+            log.error(commons.printStackLog(e));
         }
 
         pagingUtil.setCriteria(criteria);

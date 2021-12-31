@@ -24,6 +24,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/member/modify/form"/>
             <mvc:mapping path="/register/product/form"/>
+            <mvc:mapping path="/authority/form"/>
             <mvc:mapping path="/myPage/**/*"/>
             <mvc:mapping path="/myShop/**/*"/>
             <mvc:mapping path="/myBid/**/*"/>

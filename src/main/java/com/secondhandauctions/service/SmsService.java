@@ -50,12 +50,10 @@ public class SmsService {
 
         try {
 //            JSONObject obj = (JSONObject) message.send(params);
-//
-//            logger.info(obj.toString());
             log.info("인증번호 :: " + numStr);
         } catch (Exception e) {
             log.error(commons.printStackLog(e));
-
+            return null;
         }
         return numStr;
     }

@@ -26,6 +26,7 @@ public class BidController {
         int resultChk = 0;
         int emailChk = 0;
 
+        // TODO: 2021/12/31  request map 이용해서 log 찍을 수 있다.
         log.info("bidMemberId :: '{}'", bidMemberId);
         log.info("target productId :: '{}'", productId);
         log.info("bidPrice :: '{}'", bidPrice);

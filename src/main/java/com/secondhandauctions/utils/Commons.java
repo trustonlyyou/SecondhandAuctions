@@ -2,6 +2,7 @@ package com.secondhandauctions.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -38,6 +39,11 @@ public class Commons {
         session.setAttribute("member", memberId);
     }
 
+    public void setKakaoToken(HttpServletRequest request, String token) {
+        HttpSession session = request.getSession();
+        session.setAttribute("token", token);
+    }
+
     public String getMemberSession(HttpServletRequest request) {
         String memberId = "";
 
@@ -47,6 +53,17 @@ public class Commons {
         return memberId;
     }
 
+    public boolean isEmptyStrings(String... strings) {
+        for (String str : strings) {
+            if (StringUtils.isEmpty(str)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // TODO: 2021/12/28 삭제
     public boolean isEmpty(List<String> list) {
         for (String str : list) {
             if ("".equals(str) || str == null) {

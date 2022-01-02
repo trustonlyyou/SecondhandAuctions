@@ -2,15 +2,24 @@ package com.secondhandauctions.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.log.Log;
+import com.secondhandauctions.service.PointService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -21,94 +30,77 @@ public class PointController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final String SECRET_KEY = "test_ak_mnRQoOaPz8LwjZD1Oljry47BMw6v";
+    @Value("${SECRET_KEY}")
+    private String SECRET_KEY;
+
+    @Autowired
+    private PointService pointService;
 
     @GetMapping(value = "/point/charge/form")
     public String pointForm() {
         return "point/charge";
     }
 
-    @RequestMapping(value = "/point/success")
-    public String confirmPoint(@RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
-                               Model model) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
+    @PostMapping(value = "/get/orderId")
+    @ResponseBody
+    public Map<String, String> settingOrderId() {
+        Map<String, String> result = new HashMap<>();
+        String orderId = pointService.getOrderId();
 
-        headers.setBasicAuth(SECRET_KEY, ""); // spring 5.2 이상부터 지원
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        result.put("orderId", orderId);
 
-        Map<String, String> payload = new HashMap<>();
-        payload.put("orderId", orderId);
-        payload.put("amount", String.valueOf(amount));
+        return result;
+    }
 
-        log.info("orderId :: '{}'", orderId);
-        log.info("amount :: '{}'", amount);
+    /**
+     * https://{origin}/success?paymentKey={paymentKey}&orderId={orderId}&amount={amount}
+     *
+     * HttpRequest request = HttpRequest.newBuilder()
+     *     .uri(URI.create("https://api.tosspayments.com/v1/payments/5zJ4xY7m0kODnyRpQWGrN2xqGlNvLrKwv1M9ENjbeoPaZdL6"))
+     *     .header("Authorization", "Basic dGVzdF9za196WExrS0V5cE5BcldtbzUwblgzbG1lYXhZRzVSOg==")
+     *     .header("Content-Type", "application/json")
+     *     .method("POST", HttpRequest.BodyPublishers.ofString("{\"amount\":15000,\"orderId\":\"5vkbgjiS5TWQTdeHPIWXN\"}"))
+     *     .build();
+     * HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+     * System.out.println(response.body());
+     *
+     */
+    @GetMapping(value = "/success")
+    public String confirmPointCharge(@RequestParam String orderId, @RequestParam Long amount,
+                                     @RequestParam String paymentKey, Model model) throws Exception {
 
-        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payload), headers); // 요청 정보
+        Map result = new HashMap();
+        JSONParser parser = new JSONParser();
+        JSONObject object = null;
+        ResponseEntity<String> response = pointService.success(orderId, amount, paymentKey);
 
-        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
-                "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
+        object = (JSONObject) parser.parse(response.getBody());
+        result = objectMapper.readValue(object.toString(), Map.class);
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            JsonNode successNode = responseEntity.getBody();
-            model.addAttribute("orderId", successNode.get("orderId").asText());
-            String secret = successNode.get("secret").asText(); // 가상계좌의 경우 입금 callback 검증을 위해서 secret을 저장하기를 권장함
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String orderName = (String) result.get("orderName");
+            log.info("orderName :: '{}'", orderName);
+            int chargePoint = 0;
+            chargePoint = pointService.getChargePoint(orderName);
+
+            log.info(String.valueOf(chargePoint));
+            // insert point service
+
+            model.addAttribute("orderName", orderName);
+
             return "point/success";
         } else {
-            JsonNode failNode = responseEntity.getBody();
-            model.addAttribute("message", failNode.get("message").asText());
-            model.addAttribute("code", failNode.get("code").asText());
+            String code = (String) result.get("code");
+            String message = (String) result.get("message");
+
+            log.error("ERROR CODE :: '{}'", code);
+            log.error("ERROR MESSAGE :: '{}'", message);
+
+            model.addAttribute("code", code);
+            model.addAttribute("message", message);
+
             return "point/fail";
         }
-
     }
-
-    @RequestMapping("/point/fail")
-    public String failPayment(@RequestParam String message, @RequestParam String code, Model model) {
-        model.addAttribute("message", message);
-        model.addAttribute("code", code);
-        return "point/fail";
-    }
-
-    @RequestMapping("/virtual-account/callback")
-    @ResponseStatus(HttpStatus.OK)
-    public void handleVirtualAccountCallback(@RequestBody CallbackPayload payload) {
-        if (payload.getStatus().equals("DONE")) {
-            // handle deposit result
-        }
-    }
-
-    // Test
-    private static class CallbackPayload {
-        public CallbackPayload() {}
-
-        private String secret;
-        private String status;
-        private String orderId;
-
-        public String getSecret() {
-            return secret;
-        }
-
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getOrderId() {
-            return orderId;
-        }
-
-        public void setOrderId(String orderId) {
-            this.orderId = orderId;
-        }
-    }
-
-
+    // TODO: 2022/01/03 계좌이체, 핸드폰 마무리 하자
 }

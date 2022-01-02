@@ -17,7 +17,9 @@
 <section>
     <h1>결제 성공</h1>
     <h3>상품명: 토스 티셔츠</h3>
-    <h3>주문번호: {{orderId}}</h3>
+    <p>
+        ${orderName}
+    </p>
 </section>
 </body>
 </html>

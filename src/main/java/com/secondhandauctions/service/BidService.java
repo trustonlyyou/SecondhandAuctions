@@ -104,7 +104,7 @@ public class BidService {
      */
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
-            rollbackFor = Exception.class, timeout = 10)
+            rollbackFor = {Exception.class, RuntimeException.class}, timeout = 10)
     public int biding(Map<String, Object> params) throws Exception {
         int insertChk = 0;
         int updateChk = 0;

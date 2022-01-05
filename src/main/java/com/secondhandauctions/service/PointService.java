@@ -1,14 +1,23 @@
 package com.secondhandauctions.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secondhandauctions.dao.PointDao;
+import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -22,6 +31,12 @@ public class PointService {
 
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
+
+    @Autowired
+    private PointDao pointDao;
+
+    @Autowired
+    private Commons commons;
 
     public String getOrderId() {
         StringBuffer orderId = new StringBuffer();
@@ -79,5 +94,89 @@ public class PointService {
         log.info("status :: '{}'", response.getStatusCode());
 
         return response;
+    }
+
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, RuntimeException.class}, timeout = 10)
+    public boolean paySuccess(Map info, HttpServletRequest request) throws Exception {
+        Map payInfo = new HashMap();
+        Map<String, Object> chargeInfo = new HashMap<>();
+
+        String payMethod = "";
+        String memberId = "";
+
+        int chargePoint = 0;
+        int payChk = 0;
+        int pointChk = 0;
+
+        memberId = commons.getMemberSession(request);
+        payMethod = (String) info.get("method");
+        chargePoint = getChargePoint((String) info.get("orderName"));
+
+        if (StringUtils.isEmpty(memberId)) {
+            log.error("Do not get memberId");
+            return false;
+        } else {
+            payInfo.put("orderId", info.get("orderId"));
+            payInfo.put("paymentKey", info.get("paymentKey"));
+            payInfo.put("orderName", info.get("orderName"));
+            payInfo.put("method", info.get("method"));
+            payInfo.put("totalAmount", info.get("totalAmount"));
+            payInfo.put("approvedAt", info.get("approvedAt"));
+            payInfo.put("chargePoint", chargePoint);
+            payInfo.put("memberId", memberId);
+
+            if ("카드".equals(payMethod) || "카드" == payMethod) {
+                Map card = (Map) info.get("card");
+
+                payInfo.put("cardCompany", card.get("company"));
+
+                commons.printLogByMap(payInfo);
+                pointDao.successCard(payInfo);
+
+                chargeInfo.put("chargePoint", chargePoint);
+                chargeInfo.put("memberId", memberId);
+
+                commons.printLogByMap(chargeInfo);
+                pointDao.pointUpMember(chargeInfo);
+
+                return true;
+            } else if ("계좌이체".equals(payMethod) || "계좌이체" == payMethod) {
+                Map transfer = (Map) info.get("transfer");
+
+                payInfo.put("transferBank", transfer.get("bank"));
+
+                commons.printLogByMap(payInfo);
+                pointDao.successTransferBank(payInfo);
+
+                chargeInfo.put("chargePoint", chargePoint);
+                chargeInfo.put("memberId", memberId);
+
+                commons.printLogByMap(chargeInfo);
+                pointDao.pointUpMember(chargeInfo);
+
+                return true;
+            } else {
+                log.info("anothor");
+
+                return false;
+            }
+        }
+    }
+
+    public Map<String, String> payErrorResponse (Map result) {
+        Map<String, String> error = new HashMap<>();
+
+        String code = (String) result.get("code");
+        String message = (String) result.get("message");
+
+        log.error("ERROR CODE :: '{}'", code);
+        log.error("ERROR MESSAGE :: '{}'", message);
+
+        error.put("code", code);
+        error.put("message", message);
+
+        return error;
     }
 }

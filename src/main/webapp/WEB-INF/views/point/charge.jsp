@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title>결제하기</title>
+  <title>포인트 결제 | 중고 경매의 세계</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -46,9 +46,14 @@
                 <span id="amount">0</span>&nbsp; / <span id="point">0</span>
               </div>
             </div>
+            <hr>
 
-            <input class="btn btn-primary btn-md" id="card" type="button" value="카드">
-            <input class="btn btn-primary btn-md" type="button" value="계좌 이체">
+            <input class="btn btn-primary btn-md" id="card" type="button" value="카드결제">
+            <input class="btn btn-primary btn-md" id="account_transfer" type="button" value="계좌이체">
+            <input class="btn btn-primary btn-md" id="virtual_account" type="button" value="가상계좌(로컬 환경 제공X)" disabled>
+            <input class="btn btn-primary btn-md" id="phone" type="button" value="휴대폰(테스트환경 제공X)" disabled>
+
+
           </form>
         </div>
       </div>
@@ -113,30 +118,101 @@
     });
   });
 
-  // $("#card").on('click', function () {
-  //   tossPayments.requestPayment('카드', {
-  //     amount: 1,
-  //     orderId: 'SH_20220102173105_1',
-  //     orderName: '토스 티셔츠 외 2건',
-  //     customerName: '박토스',
-  //     successUrl: 'http://localhost:8080/card/success',
-  //     failUrl: 'http://localhost:8080//point/fail'
-  //   })
-  // });
-  //
-  // $("#account_transfer").on("click", function () {
-  //   tossPayments.requestPayment('계좌이체', {
-  //     amount: 1,
-  //     orderId: 'uW4ERJzrYnrKbzH9kSY3H',
-  //     orderName: '포인트 결제권 1000원',
-  //     customerName: '오정환',
-  //     successUrl: window.location.origin + "/account/transfer",
-  //     failUrl: window.location.origin + "/point/fail",
-  //     bank: '기업'
-  //   })
-  // });
+  $("#phone").on('click', function () {
 
+    var chk = $('select[name=select_amount]').val();
 
+    if (chk === "") {
+      alert("결제 금액을 선택해 주세요.");
+      return false;
+    }
 
+    $.ajax({
+      url: '/get/orderId',
+      type: 'post',
+      success: function (data) {
+        var selectAmount = $('select[name=select_amount]').val();
+        var orderId = data.orderId;
+        var orderName = selectAmount + " 포인트";
+        var customerName = "오정환"
+        var amount = Math.floor(selectAmount * 1.1);
+
+        tossPayments.requestPayment('휴대폰', {
+          amount: amount,
+          orderId: orderId,
+          orderName: orderName,
+          customerName: customerName,
+          successUrl: window.location.origin + "/success",
+          failUrl: window.location.origin + "/fail",
+        })
+      }
+    });
+  });
+
+  $("#account_transfer").on('click', function () {
+    var chk = $('select[name=select_amount]').val();
+
+    if (chk === "") {
+      alert("결제 금액을 선택해 주세요.");
+      return false;
+    }
+
+    $.ajax({
+      url: '/get/orderId',
+      type: 'post',
+      success: function (data) {
+        var selectAmount = $('select[name=select_amount]').val();
+        var orderId = data.orderId;
+        var orderName = selectAmount + " 포인트";
+        var customerName = "오정환"
+        var amount = Math.floor(selectAmount * 1.1);
+
+        tossPayments.requestPayment('계좌이체', {
+          amount: amount,
+          orderId: orderId,
+          orderName: orderName,
+          customerName: customerName,
+          successUrl: window.location.origin + "/success",
+          failUrl: window.location.origin + "/fail",
+        })
+      }
+    });
+  });
+
+  $("#virtual_account").on('click', function () {
+    var chk = $('select[name=select_amount]').val();
+
+    if (chk === "") {
+      alert("결제 금액을 선택해 주세요.");
+      return false;
+    }
+
+    $.ajax({
+      url: '/get/orderId',
+      type: 'post',
+      success: function (data) {
+        var selectAmount = $('select[name=select_amount]').val();
+        var orderId = data.orderId;
+        var orderName = selectAmount + " 포인트";
+        var customerName = "오정환"
+        var amount = Math.floor(selectAmount * 1.1);
+
+        tossPayments.requestPayment('가상계좌', {
+          amount: amount,
+          orderId: orderId,
+          orderName: orderName,
+          customerName: customerName,
+          successUrl: window.location.origin + "/success",
+          failUrl: window.location.origin + "/fail",
+          validHours: 24,
+          cashReceipt: {
+            type: '소득공제',
+          },
+          virtualAccountCallbackUrl: window.location.origin + "/virtual/account/callback",
+
+        })
+      }
+    });
+  });
 </script>
 </html>

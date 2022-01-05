@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.PointDao">
+<!--    orderId-->
+<!--    orderName-->
+<!--    Method (결제 수단)-->
+<!--    totalAmount-->
+<!--    cardCompany-->
+<!--    cardNumber-->
+<!--    cardType-->
+<!--    ownerType-->
+<!--    transferBank-->
+<!--    chargePoint-->
+<!--    CancelReq-->
+<!--    memberId-->
+    <insert id="successCard" parameterType="Map">
+        insert into point
+        (
+            orderId, paymentKey, orderName, method, totalAmount, cardCompany,
+            approvedAt, chargePoint, memberId
+        )
+        values
+        (
+            #{orderId}, #{paymentKey}, #{orderName}, #{method}, #{totalAmount}, #{cardCompany},
+            #{approvedAt}, #{chargePoint}, #{memberId}
+        )
+    </insert>
+
+    <insert id="successTransferBank" parameterType="Map">
+        Insert into point
+        (
+            orderId, paymentKey, orderName, method, totalAmout, transferBank,
+            approvedAt, chargePoint, memberId
+        )
+        values
+        (
+            #{orderId}, #{paymentKey}, #{orderName}, #{method}, #{totalAmount}, #{transferBank},
+            #{approvedAt}, #{chargePoint}, #{memberId}
+        )
+    </insert>
+</mapper>

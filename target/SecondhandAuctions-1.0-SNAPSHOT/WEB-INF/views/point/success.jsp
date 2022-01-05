@@ -8,18 +8,46 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>결제 성공</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/toss/style.css" />
+    <title>결제 성공 | 중고 경매의 세계</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<section>
-    <h1>결제 성공</h1>
-    <h3>상품명: 토스 티셔츠</h3>
-    <p>
-        ${orderName}
-    </p>
-</section>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-xl-7 mx-auto">
+            <div class="card card-signin flex-row my-5">
+                <div class="card-body text-center">
+                    <div class="form-row float-left">
+                        <a href="/">메인 페이지</a>
+                    </div>
+                    <br>
+                    <br>
+                    <h2 class="card-title text-center">결제 성공</h2>
+                    <hr>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+                    <div>
+                        <h3>포인트 결제가 완료되었습니다.</h3>
+                    </div>
+
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

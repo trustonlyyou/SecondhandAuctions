@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 </head>
 <body>
+<%@include file="../includes/header.jsp"%>
 <div class="container">
     <div class="row">
         <div class="col-lg-10 col-xl-7 mx-auto">
@@ -52,6 +53,7 @@
         </div>
     </div>
 </div>
+<%@include file="../includes/footer.jsp"%>
 </body>
 </html>
 <script>

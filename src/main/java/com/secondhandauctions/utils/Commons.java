@@ -1,5 +1,6 @@
 package com.secondhandauctions.utils;
 
+import com.oracle.tools.packager.mac.MacAppBundler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -12,12 +13,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Component
+@Slf4j
 public class Commons {
 
     public static String getClientIp(HttpServletRequest request) {
@@ -95,5 +94,15 @@ public class Commons {
         date = sdf.parse(sdf.format(calendar.getTime()));
 
         return date;
+    }
+
+    public void printLogByMap(Map params) {
+        Iterator<String> iterator = params.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+
+            log.info("{} :: '{}'", key, params.get(key));
+        }
     }
 }

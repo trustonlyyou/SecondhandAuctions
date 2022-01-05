@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.log.Log;
 import com.secondhandauctions.service.PointService;
+import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -35,6 +38,9 @@ public class PointController {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private Commons commons;
 
     @GetMapping(value = "/point/charge/form")
     public String pointForm() {
@@ -67,9 +73,12 @@ public class PointController {
      */
     @GetMapping(value = "/success")
     public String confirmPointCharge(@RequestParam String orderId, @RequestParam Long amount,
-                                     @RequestParam String paymentKey, Model model) throws Exception {
-
+                                     @RequestParam String paymentKey, RedirectAttributes attributes,
+                                     HttpServletRequest request) throws Exception {
         Map result = new HashMap();
+        Map<String, Object> info = new HashMap<>();
+        boolean chk = false;
+
         JSONParser parser = new JSONParser();
         JSONObject object = null;
         ResponseEntity<String> response = pointService.success(orderId, amount, paymentKey);
@@ -78,29 +87,101 @@ public class PointController {
         result = objectMapper.readValue(object.toString(), Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            String orderName = (String) result.get("orderName");
-            log.info("orderName :: '{}'", orderName);
-            int chargePoint = 0;
-            chargePoint = pointService.getChargePoint(orderName);
+            log.info(response.getBody().toString());
 
-            log.info(String.valueOf(chargePoint));
-            // insert point service
+            chk = pointService.paySuccess(result, request);
 
-            model.addAttribute("orderName", orderName);
 
-            return "point/success";
+            if (chk == true) {
+                info.put("memberId", commons.getMemberSession(request));
+                return "redirect:/point/success";
+            } else {
+                attributes.addFlashAttribute("tossError", pointService.payErrorResponse(result));
+                return "redirect:/point/fail";
+            }
+
         } else {
-            String code = (String) result.get("code");
-            String message = (String) result.get("message");
-
-            log.error("ERROR CODE :: '{}'", code);
-            log.error("ERROR MESSAGE :: '{}'", message);
-
-            model.addAttribute("code", code);
-            model.addAttribute("message", message);
-
-            return "point/fail";
+            attributes.addFlashAttribute("tossError", pointService.payErrorResponse(result));
+            return "redirect:/point/fail";
         }
     }
-    // TODO: 2022/01/03 계좌이체, 핸드폰 마무리 하자
+
+    @GetMapping(value = "/point/success")
+    public String pointSuccess() {
+        return "point/success";
+    }
+
+    @GetMapping(value = "/point/fail")
+    public String pointFail() {
+        return "point/fail";
+    }
+
+
+
+    @RequestMapping("/virtual/account/callback")
+    @ResponseStatus(HttpStatus.OK)
+    public void handleVirtualAccountCallback(@RequestBody String secret, String status, String orderId) {
+        if (("DONE").equals(status)) {
+            log.info("call back");
+            // handle deposit result
+
+            log.info("callback secret :: '{}'", secret);
+        }
+    }
+
+    /**
+     * curl --request GET \
+     *   --url 'https://api.tosspayments.com/v1/transactions?startDate=2021-07-27&endDate=2021-07-28' \
+     *   --header 'Authorization: Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg=='
+     *
+     *
+     */
+    // TODO: 2022/01/03 리스트는 admin 만 접금 가능하다. 환불은 admin 만 가능하다. 처음에 보여줄때 날짜를 정할 수 있게 보여줄 것.
+    // TODO: 2022/01/03 DB 작업 마무리하고, 결제 완료 insert 코드 짜고, 환불 계획 세우자
+    @GetMapping(value = "/pay/list")
+    public String payList(Model model) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        LocalDateTime nowDate = LocalDateTime.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = formatter.format(nowDate);
+
+
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes()));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "https://api.tosspayments.com/v1/transactions?startDate=2022-01-01&endDate=2022-01-04",
+                HttpMethod.GET, request, String.class
+        );
+
+        Map result = new HashMap();
+        List<Map> list = new ArrayList<>();
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = null;
+
+        jsonArray = (JSONArray) parser.parse(response.getBody());
+        list = objectMapper.readValue(jsonArray.toString(), List.class);
+
+        for (Map map : list) {
+            log.info("=======================================================");
+            log.info("paymentKey :: '{}'", map.get("paymentKey"));
+            log.info("orderId :: '{}'", map.get("orderId"));
+            log.info("customerKey :: '{}'", map.get("customerKey"));
+            log.info("method :: '{}'", map.get("method"));
+            log.info("amount :: '{}'", map.get("amount"));
+        }
+
+        return "point/list";
+    }
+
+    @PostMapping
+    @ResponseBody
+    public void cancelPoint() throws Exception {
+    }
+
 }

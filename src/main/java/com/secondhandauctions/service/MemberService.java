@@ -86,7 +86,12 @@ public class MemberService {
         } else {
             isMember = memberDao.isMember((String) loginInfo.get("memberId"));
             isMemberChk = Integer.parseInt(String.valueOf(isMember.get("isMember")));
-            isKakaoChk = (int) isMember.get("isKakao");
+
+            try {
+                isKakaoChk = (int) isMember.get("isKakao");
+            } catch (NullPointerException e) {
+                isKakaoChk = 0;
+            }
 
             if (isMemberChk == 0 || isKakaoChk == 1) {
                 result.put("isMember", false);

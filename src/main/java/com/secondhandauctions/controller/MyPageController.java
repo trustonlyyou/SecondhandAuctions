@@ -627,16 +627,13 @@ public class MyPageController {
         List<String> fileNames = new ArrayList<>();
         Map<String, Object> product = new HashMap<>();
 
-        String memberId = "";
-
-        memberId = commons.getMemberSession(request);
-
-        log.info("successBidNo :: '{}'", successBidNo);
-        log.info("productId :: '{}'", productId);
+        String memberId = commons.getMemberSession(request);
 
         info.put("memberId", memberId);
         info.put("successBidNo", successBidNo);
         info.put("productId", productId);
+
+        commons.printLogByMap(info);
 
         result = myPageService.getSuccessBidDetail(info);
 

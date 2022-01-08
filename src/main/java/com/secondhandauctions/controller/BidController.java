@@ -1,6 +1,7 @@
 package com.secondhandauctions.controller;
 
 import com.secondhandauctions.service.BidService;
+import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class BidController {
     @Autowired
     private BidService bidService;
 
+    @Autowired
+    private Commons commons;
+
     @PostMapping(value = "/bid")
     @ResponseBody
     public Map<String, Integer> bidProduct(String bidMemberId, String bidPrice, int productId, String pageUrl) throws Exception {
@@ -26,16 +30,12 @@ public class BidController {
         int resultChk = 0;
         int emailChk = 0;
 
-        // TODO: 2021/12/31  request map 이용해서 log 찍을 수 있다.
-        log.info("bidMemberId :: '{}'", bidMemberId);
-        log.info("target productId :: '{}'", productId);
-        log.info("bidPrice :: '{}'", bidPrice);
-        log.info("pageUrl :: '{}'", pageUrl);
-
         info.put("bidMemberId", bidMemberId);
         info.put("bidPrice", bidPrice);
         info.put("productId", productId);
         info.put("pageUrl", pageUrl);
+
+        commons.printLogByMap(info);
 
         resultChk = bidService.setBid(info);
         log.info("bidProduct Result :: '{}'", resultChk);

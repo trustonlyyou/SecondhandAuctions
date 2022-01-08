@@ -28,6 +28,7 @@
             <mvc:mapping path="/myPage/**/*"/>
             <mvc:mapping path="/myShop/**/*"/>
             <mvc:mapping path="/myBid/**/*"/>
+            <mvc:mapping path="/point/charge/form"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

@@ -45,6 +45,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/register/product/form">상품 등록</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/point/charge/form">포인트 충전</a>
+                        </li>
                         <c:if test="${sessionScope.token eq null}">
                             <li class="nav-item">
                                 <a class="nav-link" href="/member/logout/action">로그아웃</a>

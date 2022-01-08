@@ -1,8 +1,6 @@
 package com.secondhandauctions.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.cj.log.Log;
 import com.secondhandauctions.service.PointService;
 import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -183,5 +179,7 @@ public class PointController {
     @ResponseBody
     public void cancelPoint() throws Exception {
     }
-
 }
+
+// TODO: 2022/01/06 결제완료, 결제실패 .jsp 완성 
+// TODO: 2022/01/06 Success Bid 연결 된거에서 포인트로 결재 했을 때 포인트 옮겨지는 service

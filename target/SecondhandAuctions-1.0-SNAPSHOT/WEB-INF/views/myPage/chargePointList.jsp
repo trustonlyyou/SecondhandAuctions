@@ -10,7 +10,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>중고 경매의 세계 | 포인트 충전 정보</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -19,7 +19,7 @@
 </head>
 <body>
 <%@include file="../includes/header.jsp"%>
-
+인
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
@@ -44,8 +44,8 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">주문번호</th>
-                        <th scope="col">주문일자</th>
+                        <th scope="col">결제번호</th>
+                        <th scope="col">결제일자</th>
                         <th scope="col">결제금액</th>
                         <th scope="col">결제수단</th>
                         <th scope="col">구매자</th>
@@ -95,7 +95,6 @@
         </form>
     </div>
 </div>
-<%@include file="../includes/footer.jsp"%>
 </body>
 <script>
     $(document).ready(function () {

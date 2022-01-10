@@ -51,4 +51,16 @@
             memberId = #{memberId} and
             isMemberCheck = 1;
     </update>
+
+    <update id="pointUpdateMemberTime" parameterType="Map">
+        update
+            member
+        set
+            pointUpdateDate = #{updateTime}
+        where
+            memberId = #{memberId}
+        and
+            isMemberCheck = 1
+    </update>
+
 </mapper>

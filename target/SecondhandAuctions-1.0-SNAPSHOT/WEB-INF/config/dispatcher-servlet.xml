@@ -50,6 +50,13 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+<!--    <mvc:interceptors>-->
+<!--        <mvc:interceptor>-->
+<!--            <mvc:mapping path="/admin/**/*"/>-->
+<!--            <ref bean="adminInterceptor"/>-->
+<!--        </mvc:interceptor>-->
+<!--    </mvc:interceptors>-->
+
 
 
     <!--  캐시 안됨  -->

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.AdminDao">
+    <select id="memberChargeList" parameterType="String" resultType="Map">
+        select
+            orderId, paymentKey, orderName, method, totalAmount, approvedAt, chargePoint,
+               CancelReq, point.memberId, member.memberName
+        from
+            point
+        inner join
+            member on member.memberId = point.memberId
+        where
+            isMemberCheck = 1 and
+            member.memberName like CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="payPointList" parameterType="String" resultType="Map">
+        select
+            payNo, pointPay.memberId, payPoint, toMemberId, payDate, member.memberName
+        from
+            pointPay
+        inner join
+            member on member.memberId = pointPay.memberId
+        where
+            isMemberCheck = 1 and
+            member.memberName like CONCAT('%', #{keyword}, '%')
+    </select>
+</mapper>

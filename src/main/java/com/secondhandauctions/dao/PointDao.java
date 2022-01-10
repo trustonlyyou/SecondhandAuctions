@@ -9,4 +9,6 @@ public interface PointDao {
     public int successTransferBank(Map<String, Object> info) throws Exception;
 
     public int pointUpMember(Map<String, Object> info) throws Exception;
+
+    public void pointUpdateMemberTime(Map<String, Object> info) throws Exception;
 }

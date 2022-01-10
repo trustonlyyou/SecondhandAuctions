@@ -53,7 +53,7 @@
             <input class="btn btn-primary btn-md" id="virtual_account" type="button" value="가상계좌(로컬 환경 제공X)" disabled>
             <input class="btn btn-primary btn-md" id="phone" type="button" value="휴대폰(테스트환경 제공X)" disabled>
 
-
+            <%--     todo :: alert 으로 환불 해주기.     --%>
           </form>
         </div>
       </div>
@@ -61,13 +61,6 @@
   </div>
 </div>
 
-<%--<h1>TEST</h1>--%>
-<%--  <div>--%>
-<%--      <input class="btn btn-outline-secondary btn-sm" type="button" id="card" value="카드">--%>
-<%--  </div>--%>
-<%--  <div>--%>
-<%--    <input class="btn btn-outline-secondary btn-sm" type="button" id="account_transfer" value="계좌이체">--%>
-<%--  </div>--%>
 </body>
 
 <%@include file="../includes/footer.jsp"%>

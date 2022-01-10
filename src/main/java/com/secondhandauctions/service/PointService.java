@@ -99,6 +99,7 @@ public class PointService {
     public boolean paySuccess(Map info, HttpServletRequest request) throws Exception {
         Map payInfo = new HashMap();
         Map<String, Object> chargeInfo = new HashMap<>();
+        Map<String, Object> updateMemberTime = new HashMap<>();
 
         String payMethod = "";
         String memberId = "";
@@ -142,8 +143,13 @@ public class PointService {
                     chargeInfo.put("chargePoint", chargePoint);
                     chargeInfo.put("memberId", memberId);
 
+                    updateMemberTime.put("updateTime", info.get("approvedAt"));
+                    updateMemberTime.put("memberId", memberId);
+
                     commons.printLogByMap(chargeInfo);
+
                     pointChk = pointUp(chargeInfo);
+                    pointDao.pointUpdateMemberTime(updateMemberTime);
 
                     if (pointChk == true) {
                         return true;
@@ -172,8 +178,13 @@ public class PointService {
                     chargeInfo.put("chargePoint", chargePoint);
                     chargeInfo.put("memberId", memberId);
 
+                    updateMemberTime.put("updateTime", info.get("approvedAt"));
+                    updateMemberTime.put("memberId", memberId);
+
                     commons.printLogByMap(chargeInfo);
+
                     pointChk = pointUp(chargeInfo);
+                    pointDao.pointUpdateMemberTime(updateMemberTime);
 
                     if (pointChk == true) {
                         return true;

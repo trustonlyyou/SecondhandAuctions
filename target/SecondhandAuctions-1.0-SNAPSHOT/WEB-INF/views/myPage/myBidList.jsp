@@ -117,7 +117,7 @@
 <%--        </ul>--%>
 <%--    </div>--%>
     <div>
-        <form id="actionForm" action="/shop" method="get">
+        <form id="actionForm" action="/myBid/list" method="get">
             <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
             <input type="hidden" name="perPageNum" id="amount" value="${pageMaker.criteria.perPageNum}">
         </form>

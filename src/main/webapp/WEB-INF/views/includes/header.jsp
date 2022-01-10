@@ -39,15 +39,24 @@
                         </li>
                     </c:if>
                     <c:if test="${sessionScope.member != null}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/myPage/form">마이페이지</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register/product/form">상품 등록</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/point/charge/form">포인트 충전</a>
-                        </li>
+                        <c:choose>
+                            <c:when test="${sessionScope.member eq 'admin'}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">환불관리</a>
+                                </li>
+                            </c:when>
+                            <c:when test="${sessionScope.meber ne 'admin'}">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/myPage/form">마이페이지</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/register/product/form">상품 등록</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/point/charge/form">포인트 충전</a>
+                                </li>
+                            </c:when>
+                        </c:choose>
                         <c:if test="${sessionScope.token eq null}">
                             <li class="nav-item">
                                 <a class="nav-link" href="/member/logout/action">로그아웃</a>

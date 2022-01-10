@@ -5,7 +5,7 @@ import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
-import org.apache.commons.lang.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @Service
+@Slf4j
 public class ShopService {
 
     @Autowired
@@ -84,9 +85,9 @@ public class ShopService {
         itemList = shopDao.newProductList(criteria);
 
         if (itemList.isEmpty()) {
+            log.info("itemList is empty");
             itemList = Collections.emptyList();
         }
-
         return itemList;
     }
 

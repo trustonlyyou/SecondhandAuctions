@@ -251,4 +251,36 @@
             successBidNo = #{successBidNo} and isProductCheck = 0 and ResultChk = 0;
     </select>
 
+    <select id="countMyPontChargeList" parameterType="String" resultType="int">
+        select
+            count(orderId)
+        from
+            point
+        inner join
+            member on member.memberId = point.memberId
+        where
+            member.memberId = #{memberId};
+    </select>
+
+    <select id="myPointChargeList" parameterType="Map" resultType="Map">
+        select
+            orderId, orderName, method, totalAmount, approvedAt, chargePoint, cancelReq, memberName
+        from
+            point
+        inner join
+            member on member.memberId = point.memberId
+        where
+            member.memberId = #{memberId}
+        and
+            isMemberCheck = 1
+        order by
+            approvedAt
+        desc
+            limit #{criteria.pageStart}, #{criteria.perPageNum};
+    </select>
+
+    <select id="myPoint" parameterType="String" resultType="int">
+        select myPoint from member where memberId = #{memberId} and isMemberCheck = 1
+    </select>
+
 </mapper>

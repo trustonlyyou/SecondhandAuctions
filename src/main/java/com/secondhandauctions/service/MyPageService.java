@@ -2,18 +2,14 @@ package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.MyPageDao;
 import com.secondhandauctions.utils.Commons;
-import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.attribute.standard.PresentationDirection;
 import java.nio.file.Paths;
-import java.sql.PreparedStatement;
 import java.util.*;
 
 @Service
@@ -418,5 +414,43 @@ public class MyPageService {
         result.put("fileNames", fileNames);
 
         return result;
+    }
+
+    public int getCountChargePoint(String memberId) throws Exception {
+
+        if (StringUtils.isEmpty(memberId)) {
+            return 0;
+        } else {
+            return myPageDao.countMyPontChargeList(memberId);
+        }
+    }
+
+    public List<Map<String, Object>> getChargePointList(Map<String, Object> info) throws Exception {
+        List<Map<String, Object>> reuslt = new ArrayList<>();
+
+        if (info.isEmpty()) {
+            log.info("info is null");
+            return Collections.emptyList();
+        } else {
+
+            try {
+                reuslt = myPageDao.myPointChargeList(info);
+                log.info(reuslt.toString());
+            } catch (Exception e) {
+                commons.printStackLog(e);
+                return Collections.emptyList();
+            }
+
+            return reuslt;
+        }
+    }
+
+    public int getMyPoint(String memberId) throws Exception {
+        if (StringUtils.isEmpty(memberId)) {
+            log.error("MemberId is Empty");
+            return 0;
+        } else {
+            return myPageDao.myPoint(memberId);
+        }
     }
 }

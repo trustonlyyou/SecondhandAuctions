@@ -10,7 +10,6 @@ import com.secondhandauctions.vo.MemberVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -208,27 +207,23 @@ public class MyPageController {
     }
 
     @GetMapping(value = "/myShop/list")
-    public String myShopList(@ModelAttribute Criteria criteria, HttpServletRequest request, Model model) {
+    public String myShopList(@ModelAttribute Criteria criteria,
+                             HttpServletRequest request, Model model) throws Exception {
         List<ProductVo> result = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         PagingUtil pagingUtil = new PagingUtil();
         String memberId = "";
         int count = 0;
 
-        try {
-            HttpSession session = request.getSession();
-            memberId = (String) session.getAttribute("member");
+        HttpSession session = request.getSession();
+        memberId = (String) session.getAttribute("member");
 
-            count = myPageService.getMyShopListCount(memberId);
+        count = myPageService.getMyShopListCount(memberId);
 
-            params.put("memberId", memberId);
-            params.put("criteria", criteria);
+        params.put("memberId", memberId);
+        params.put("criteria", criteria);
 
-            result = myPageService.getMyShopList(params);
-
-        } catch (Exception e) {
-            log.error(commons.printStackLog(e));
-        }
+        result = myPageService.getMyShopList(params);
 
         pagingUtil.setCriteria(criteria);
         pagingUtil.setTotalCount(count);
@@ -650,4 +645,40 @@ public class MyPageController {
 
         return "myPage/mySuccessBidDetail";
     }
+
+    @GetMapping(value = "/myPage/myPoint")
+    public String pointList(@ModelAttribute Criteria criteria,
+                            HttpServletRequest request, Model model) throws Exception {
+
+        List<Map<String, Object>> pointPayList = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
+        PagingUtil pagingUtil = new PagingUtil();
+
+        String memberId = "";
+        int totalCount = 0;
+
+        memberId = commons.getMemberSession(request);
+        totalCount = myPageService.getCountChargePoint(memberId);
+
+        info.put("memberId", memberId);
+        info.put("criteria", criteria);
+
+        pointPayList = myPageService.getChargePointList(info);
+
+        if (pointPayList.isEmpty()) {
+            log.info("point list is null");
+
+            model.addAttribute("myPoint", myPageService.getMyPoint(memberId));
+            model.addAttribute("list", null);
+        } else {
+            pagingUtil.setCriteria(criteria);
+            pagingUtil.setTotalCount(totalCount);
+
+            model.addAttribute("myPoint", myPageService.getMyPoint(memberId));
+            model.addAttribute("list", pointPayList);
+            model.addAttribute("pageMaker", pagingUtil);
+        }
+        return "myPage/chargePointList";
+    }
+
 }

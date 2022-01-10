@@ -87,7 +87,6 @@ public class PointController {
 
             chk = pointService.paySuccess(result, request);
 
-
             if (chk == true) {
                 info.put("memberId", commons.getMemberSession(request));
                 return "redirect:/point/success";
@@ -178,6 +177,17 @@ public class PointController {
     @PostMapping
     @ResponseBody
     public void cancelPoint() throws Exception {
+        /**
+         * HttpRequest request = HttpRequest.newBuilder()
+         *     .uri(URI.create("https://api.tosspayments.com/v1/payments/{paymentKey}/cancel"))
+         *     .header("Authorization", "Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg==")
+         *     .header("Content-Type", "application/json")
+         *     .method("POST", HttpRequest.BodyPublishers.ofString("{\"cancelReason\":\"고객이 취소를 원함\"}"))
+         *     .build();
+         * HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+         * System.out.println(response.body());
+         */
+
     }
 }
 

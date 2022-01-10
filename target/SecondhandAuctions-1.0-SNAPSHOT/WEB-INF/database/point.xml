@@ -41,4 +41,14 @@
             #{approvedAt}, #{chargePoint}, #{memberId}
         )
     </insert>
+
+    <update id="pointUpMember" parameterType="Map">
+        update
+            member
+        set
+            myPoint = myPoint + #{chargePoint}
+        where
+            memberId = #{memberId} and
+            isMemberCheck = 1;
+    </update>
 </mapper>

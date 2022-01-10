@@ -50,4 +50,9 @@ public interface MyPageDao {
 
     public Map<String, Object> mySuccessBidSellDetail(Map<String, Object> info) throws Exception;
 
+    public int countMyPontChargeList(String memberId) throws Exception;
+
+    public List<Map<String, Object>> myPointChargeList(Map<String, Object> info) throws Exception;
+
+    public int myPoint(String memberId) throws Exception;
 }

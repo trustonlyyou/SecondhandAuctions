@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhandauctions.dao.PointDao;
 import com.secondhandauctions.utils.Commons;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -108,7 +105,7 @@ public class PointService {
 
         int chargePoint = 0;
         int payChk = 0;
-        int pointChk = 0;
+        boolean pointChk = false;
 
         memberId = commons.getMemberSession(request);
         payMethod = (String) info.get("method");
@@ -133,35 +130,84 @@ public class PointService {
                 payInfo.put("cardCompany", card.get("company"));
 
                 commons.printLogByMap(payInfo);
-                pointDao.successCard(payInfo);
 
-                chargeInfo.put("chargePoint", chargePoint);
-                chargeInfo.put("memberId", memberId);
+                try {
+                    payChk = pointDao.successCard(payInfo);
+                } catch (Exception e) {
+                    commons.printStackLog(e);
+                    return false;
+                }
 
-                commons.printLogByMap(chargeInfo);
-                pointDao.pointUpMember(chargeInfo);
+                if (payChk == 1) {
+                    chargeInfo.put("chargePoint", chargePoint);
+                    chargeInfo.put("memberId", memberId);
 
-                return true;
+                    commons.printLogByMap(chargeInfo);
+                    pointChk = pointUp(chargeInfo);
+
+                    if (pointChk == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+
             } else if ("계좌이체".equals(payMethod) || "계좌이체" == payMethod) {
                 Map transfer = (Map) info.get("transfer");
 
                 payInfo.put("transferBank", transfer.get("bank"));
 
                 commons.printLogByMap(payInfo);
-                pointDao.successTransferBank(payInfo);
 
-                chargeInfo.put("chargePoint", chargePoint);
-                chargeInfo.put("memberId", memberId);
+                try {
+                    payChk = pointDao.successTransferBank(payInfo);
+                } catch (Exception e) {
+                    commons.printStackLog(e);
+                    return false;
+                }
 
-                commons.printLogByMap(chargeInfo);
-                pointDao.pointUpMember(chargeInfo);
+                if (payChk == 1) {
+                    chargeInfo.put("chargePoint", chargePoint);
+                    chargeInfo.put("memberId", memberId);
+
+                    commons.printLogByMap(chargeInfo);
+                    pointChk = pointUp(chargeInfo);
+
+                    if (pointChk == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                log.info("anothor");
+                return false;
+            }
+        }
+    }
+
+    public boolean pointUp (Map<String, Object> info) throws Exception {
+        int chk = 0;
+
+        if (info.isEmpty()) {
+            return false;
+        } else {
+            chk = pointDao.pointUpMember(info);
+
+            if (chk == 1) {
+                log.info("charge point success");
+                log.info("targetId :: '{}'", info.get("memberId"));
 
                 return true;
             } else {
-                log.info("anothor");
-
+                log.error("charge point fail");
                 return false;
             }
+
         }
     }
 

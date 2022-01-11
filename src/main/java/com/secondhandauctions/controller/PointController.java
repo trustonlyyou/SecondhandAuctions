@@ -174,20 +174,43 @@ public class PointController {
         return "point/list";
     }
 
-    @PostMapping
+    @PostMapping("/cancel/point/pay")
     @ResponseBody
-    public void cancelPoint() throws Exception {
-        /**
-         * HttpRequest request = HttpRequest.newBuilder()
-         *     .uri(URI.create("https://api.tosspayments.com/v1/payments/{paymentKey}/cancel"))
-         *     .header("Authorization", "Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg==")
-         *     .header("Content-Type", "application/json")
-         *     .method("POST", HttpRequest.BodyPublishers.ofString("{\"cancelReason\":\"고객이 취소를 원함\"}"))
-         *     .build();
-         * HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-         * System.out.println(response.body());
-         */
+    public Map<String, Object> cancelPoint(String paymentKey, String cancelReason, String memberId) throws Exception {
+        Map cancelResult = new HashMap();
+        Map<String, Object> result = new HashMap<>();
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        JSONParser parser = new JSONParser();
+        JSONObject object = null;
+        ResponseEntity<String> response = pointService.cancel(paymentKey, cancelReason);
+
+        boolean chk = false;
+
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            object = (JSONObject) parser.parse(response.getBody());
+            cancelResult = objectMapper.readValue(object.toString(), Map.class);
+
+            chk = pointService.payCancel(cancelResult, memberId);
+
+            if (chk == true) {
+                pointService.setCancelResult(paymentKey);
+                result.put("result", true);
+
+                return result;
+            } else {
+                result.put("result", false);
+
+                return result;
+            }
+        } else {
+            // TODO: 2022/01/11 수정
+            log.error("error body :: {}", response.getBody().toString());
+            result.put("result", false);
+
+            return result;
+        }
     }
 }
 

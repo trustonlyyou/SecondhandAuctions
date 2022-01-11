@@ -29,7 +29,7 @@
     </form>
     <hr>
     <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-8">
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -37,30 +37,65 @@
                     <th scope="col">결제금액</th>
                     <th scope="col">결제수단</th>
                     <th scope="col">구매자</th>
+                    <th scope="col">아이디</th>
                     <th scope="col">상품명</th>
                     <th scope="col">결제취소</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${chargeList}" var="point">
+                    <c:forEach items="${chargeList}" var="point" varStatus="status">
                         <tr>
                             <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${point.approvedAt}"/></td>
                             <td>${point.totalAmount}</td>
                             <td>${point.method}</td>
                             <td>${point.memberName}</td>
+                            <td>${point.memberId}</td>
                             <td>${point.orderName}</td>
                             <td>
-                                <form>
-                                    <input type="button" class="btn btn-outline-danger" value="결제취소">
-                                    <input type="hidden" value="${point.paymentKey}">
-                                </form>
+                                <c:if test="${point.CancelReq eq false}">
+                                <button type="button" class="btn btn btn-outline-danger" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유">결제취소</button>
+
+                                </c:if>
+                                <c:if test="${point.CancelReq eq true}">
+                                    <button type="button" class="btn btn btn-outline-danger" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유" disabled>결제취소</button>
+                                </c:if>
                             </td>
+                        </tr>
+                        <tr>
+                            <div class="modal fade" id="modal${status.index}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalLabel">결제취소</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="cancelForm${status.index}" name="cancelForm${status.index}">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="recipient-name" placeholder="취소 사유" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="cancelReason_${status.index}" name="cancelReason_${status.index}"></textarea>
+                                                </div>
+                                                <input type="hidden" id="paymentKey_${status.index}" name="paymentKey_${status.index}" value="${point.paymentKey}">
+                                                <input type="hidden" id="memberId_${status.index}" name="memberId_${status.index}" value="${point.memberId}"
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                            <button type="button" id="cancel_btn" class="btn btn-primary" onclick="targetNo(${status.index})">결제 취소</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-4">
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -80,7 +115,48 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </div>
-</div>
 </body>
+<script>
+
+    function targetNo(index) {
+        var paymentKeyId = "#paymentKey_" + index;
+        var cancelReasonId = "#cancelReason_" + index;
+        var memberIdId = "#memberId_" + index;
+
+        var paymentKey = $(paymentKeyId).val();
+        var cancelReason = $(cancelReasonId).val();
+        var memberId = $(memberIdId).val();
+
+        console.log(paymentKey);
+        console.log(cancelReason);
+
+        var formData = {
+            paymentKey : paymentKey,
+            cancelReason : cancelReason,
+            memberId : memberId
+        }
+
+        $.ajax({
+            url: '/cancel/point/pay',
+            type: 'post',
+            data: formData,
+            success: function (data) {
+                var result = data.result;
+
+                if (result == true) {
+                    alert("결제 취소가 완료 되었습니다.");
+                    window.location.replace("/admin/pay/info/list")
+                } else {
+                    alert("결제 취소를 실패 했습니다.");
+                    window.location.replace("/admin/pay/info/list")
+                }
+            },
+            error: function (request,status,error) {
+
+            }
+        });
+    }
+</script>
 </html>

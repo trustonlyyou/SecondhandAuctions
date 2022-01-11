@@ -157,24 +157,6 @@
 
                      idFlag = false;
                  }
-
-                 // if (data.result == 0) {
-                 //     $("#IdCheckMsg").text("사용 가능한 아이디 입니다.");
-                 //     $("#IdCheckMsg").css('color', 'green');
-                 //
-                 //     idFlag = true;
-                 //
-                 //     if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-                 //         $("#join_submit").attr('disabled', false);
-                 //     }
-                 //
-                 //
-                 // } else {
-                 //     $("#IdCheckMsg").text("이미 존재하는 아이디 입니다.");
-                 //     $("#IdCheckMsg").css('color','red');
-                 //
-                 //     nameFlag = false;
-                 // }
              },
 
              error: function (request,status,error) {

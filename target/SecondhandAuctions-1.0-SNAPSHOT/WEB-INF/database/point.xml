@@ -63,4 +63,50 @@
             isMemberCheck = 1
     </update>
 
+    <insert id="setCancelCard" parameterType="Map">
+        insert into cancelPoint
+        (
+            orderId, paymentKey, orderName, method, cancelAmount, cardCompany,
+            approvedAt, cancelPoint, cancelReason, memberId
+        )
+        values
+        (
+            #{orderId}, #{paymentKey}, #{orderName}, #{method}, #{cancelAmount}, #{cardCompany},
+            #{approvedAt}, #{cancelPoint}, #{cancelReason}, #{memberId}
+        )
+    </insert>
+
+    <insert id="setCancelTransfer" parameterType="Map">
+        insert into cancelPoint
+        (
+            orderId, paymentKey, orderName, method, cancelAmount, transferBank,
+            approvedAt, cancelPoint, cancelReason, memberId
+        )
+        values
+        (
+            #{orderId}, #{paymentKey}, #{orderName}, #{method}, #{cancelAmount}, #{transferBank},
+            #{approvedAt}, #{cancelPoint}, #{cancelReason}, #{memberId}
+        )
+    </insert>
+
+    <update id="pointDown" parameterType="Map">
+        update
+            member
+        set
+            myPoint = myPoint - #{disChargePoint}
+        where
+            memberId = #{memberId} and
+            isMemberCheck = 1;
+    </update>
+
+    <update id="cancelPay" parameterType="String">
+        update
+            point
+        set
+            cancelReq = 1
+        where paymentKey = #{paymentKey} and
+            cancelReq = 0
+    </update>
+
+
 </mapper>

@@ -11,4 +11,12 @@ public interface PointDao {
     public int pointUpMember(Map<String, Object> info) throws Exception;
 
     public void pointUpdateMemberTime(Map<String, Object> info) throws Exception;
+
+    public void setCancelCard(Map cancelInfo) throws Exception;
+
+    public void setCancelTransfer(Map cancelInfo) throws Exception;
+
+    public void pointDown(Map<String, Object> info) throws Exception;
+
+    public void cancelPay(String paymentKey) throws Exception;
 }

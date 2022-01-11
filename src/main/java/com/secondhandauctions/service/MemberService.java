@@ -194,7 +194,7 @@ public class MemberService {
         result = memberDao.isMemberEmail(memberEmail);
         log.info("isEmail result :: '{}'", result);
 
-        if (result == 1) {
+        if (result == 0) {
             return true;
         } else {
             return false;

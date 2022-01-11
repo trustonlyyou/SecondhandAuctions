@@ -14,6 +14,7 @@
             member on member.memberId = point.memberId
         where
             isMemberCheck = 1 and
+            cancelReq = 0 and
             member.memberName like CONCAT('%', #{keyword}, '%')
     </select>
 

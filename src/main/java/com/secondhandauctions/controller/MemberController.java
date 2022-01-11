@@ -515,7 +515,7 @@ public class MemberController {
 
         isMemberChk = memberService.isEmail(memberEmail); // 이메일을 이용하여 회원 check
 
-        if (isMemberChk == false) {
+        if (isMemberChk == true) {
             log.info("No members were found.");
             model.addAttribute("msg", "가입된 회원의 정보가 없습니다.");
             return "member/kakaoLoginResult";

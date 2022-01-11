@@ -1,19 +1,20 @@
 package com.secondhandauctions.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhandauctions.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -21,6 +22,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Value("${SECRET_KEY}")
+    String SECRET_KEY;
 
     @GetMapping(value = "/admin/pay/info/list")
     public String payInfo() throws Exception {
@@ -67,5 +71,93 @@ public class AdminController {
                 return "admin/memberPointChargeList";
             }
         }
+    }
+
+    @PostMapping("/admin/cancel/point/pay")
+    @ResponseBody
+    public Map<String, Object> cancelPay(String paymentKey, String cancelReason) throws Exception {
+        /**
+         * HttpRequest request = HttpRequest.newBuilder()
+         *     .uri(URI.create("https://api.tosspayments.com/v1/payments/{paymentKey}/cancel"))
+         *     .header("Authorization", "Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg==")
+         *     .header("Content-Type", "application/json")
+         *     .method("POST", HttpRequest.BodyPublishers.ofString("{\"cancelReason\":\"고객이 취소를 원함\"}"))
+         *     .build();
+         * HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+         * System.out.println(response.body());
+         */
+
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+        boolean cancelChk = false;
+
+        log.info("paymentKey :: '{}'", paymentKey);
+        log.info("cancel reason :: '{}'", cancelReason);
+
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes()));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        params.put("cancelReason", cancelReason);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(objectMapper.writeValueAsString(params), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel",
+                HttpMethod.POST, request, String.class
+        );
+
+        log.info("status :: " + response.getStatusCode());
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("body :: " + response.getBody().toString());
+
+            Map map = new HashMap();
+            JSONParser parser = new JSONParser();
+            JSONObject object = null;
+
+            object = (JSONObject) parser.parse(response.getBody());
+            map = objectMapper.readValue(object.toString(), Map.class);
+
+            List<Map> cancels = new ArrayList<>();
+
+            cancels = (List<Map>) map.get("cancels");
+
+            for (Map map1 : cancels) {
+                log.info(map1.toString());
+                log.info("time :: " + map1.get("canceledAt"));
+                log.info("reason :: " + map1.get("cancelReason"));
+            }
+
+
+//            cancelChk = adminService.setCancelResult(paymentKey);
+//
+//            if (cancelChk == true) {
+//                result.put("result", true);
+//
+//                return result;
+//            } else {
+//                result.put("result", false);
+//            }
+            return null;
+        } else {
+            log.info("body :: " + response.getBody().toString());
+            result.put("result", false);
+
+            return null;
+        }
+    }
+    // TODO: 2022/01/11 타겟 아이디 포인트 차감, CancelReq 수정, pointUpdateTime 수정
+
+    @PostMapping(value = "/admin/test")
+    @ResponseBody
+    public void test(String paymentKey, String cancelReason) throws Exception {
+        log.info("paymentKey :: " + paymentKey);
+        log.info("cancelReason :: " + cancelReason);
+
     }
 }

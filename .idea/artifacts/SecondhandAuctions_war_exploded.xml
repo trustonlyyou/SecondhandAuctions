@@ -126,6 +126,7 @@
           <element id="library" level="project" name="Maven: org.jasypt:jasypt-spring31:1.9.2" />
           <element id="library" level="project" name="Maven: org.jasypt:jasypt:1.9.2" />
           <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-websocket:5.2.3.RELEASE" />
         </element>
       </element>
       <element id="directory" name="META-INF">

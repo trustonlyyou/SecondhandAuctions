@@ -153,5 +153,6 @@
     <orderEntry type="library" name="Maven: org.jasypt:jasypt-spring31:1.9.2" level="project" />
     <orderEntry type="library" name="Maven: org.jasypt:jasypt:1.9.2" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.2.3.RELEASE" level="project" />
   </component>
 </module>

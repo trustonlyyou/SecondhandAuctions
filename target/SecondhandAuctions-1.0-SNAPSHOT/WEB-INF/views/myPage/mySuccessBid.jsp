@@ -16,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-
+    <script src="/resources/js/price.js"></script>
     <title>중고 경매의 세계 | 마이페이지</title>
 
 </head>
@@ -40,7 +40,6 @@
             <br>
             <br>
             <br>
-            <form>
                 <c:if test="${empty list}">
                     <div class="form-group row">
                         <div class="col-sm-10 text-center">
@@ -49,18 +48,28 @@
                     </div>
                 </c:if>
                 <c:if test="${not empty list}">
-                    <c:forEach items="${list}" var="bid">
+                    <c:forEach items="${list}" var="bid" varStatus="var">
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <h5>
-                                    제목 : <a href="/myBid/success/bid/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </h5>
+                                <div class="row">
+                                    <h6>
+                                        제목 : <a href="/myBid/success/bid/detail?successBidNo=${bid.successBidNo}&productId=${bid.productId}"><c:out value="${bid.productTitle}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </h6>
+                                    <input type="button" class="btn btn-outline-primary btn-sm" value="포인트로 결제하기" onclick="pointPay(${var.index})">
+                                </div>
+                            </div>
+                            <div>
+                                <form id="point_pay_${var.index}">
+                                    <input type="hidden" id="successBidNo" name="successBidNo"  value="${bid.successBidNo}">
+                                    <input type="hidden" id="seller" name="seller" value="${bid.memberId}">
+                                    <input type="hidden" id="bidder" name="bidder" value="${bid.bidMemberId}">
+                                    <input type="hidden" id="bidPrice" name="bidPrice" value="${bid.bidPrice}">
+                                </form>
                             </div>
                         </div>
                         <hr>
                     </c:forEach>
                 </c:if>
-            </form>
         </div>
     </div>
     <!-- .row -->
@@ -91,6 +100,38 @@
 </div>
 </body>
 <script type="text/javascript">
+
+
+    // 포인트로 상품 결제하기
+    function pointPay(index) {
+        console.log("index :: " + index);
+        var targetFormId = "#point_pay_" + index;
+
+        alert($(targetFormId).serialize());
+
+        $.ajax({
+            url: '/point/pay/success/bid',
+            type: 'post',
+            data: $(targetFormId).serialize(),
+
+            success: function (data) {
+                var msg = data.msg;
+                var result = data.result;
+
+                if (result == true) {
+                    alert("포인트로 결제가 완료 되었습니다.");
+                } else {
+                    if (msg === "MATCH") {
+                        alert("정보가 일치하지 않습니다. 고객센터에 문의해 주세요.");
+                    } else if (msg === "PAY") {
+                        alert("결제할 포인트가 부족합니다.");
+                    }
+                }
+            }
+        });
+    }
+
+
     var status = "${msg}";
 
     if (status) {
@@ -113,18 +154,6 @@
             actionForm.find("[name='page']").val(targetPage);
             actionForm.submit();
         });
-
-        // var deleteForm = $("#deleteForm");
-        //
-        // $("#deleteProduct").on("click", function (e) {
-        //     if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") == true) {
-        //         alert("게시물 삭제");
-        //         deleteForm.submit();
-        //     } else {
-        //         alert("게시물 삭제 취소")
-        //     }
-        //     //todo :: form 을 foreach 하면 어떻게 하냐!!! 거기서 부터 다시하자
-        // });
     });
 </script>
 </html>

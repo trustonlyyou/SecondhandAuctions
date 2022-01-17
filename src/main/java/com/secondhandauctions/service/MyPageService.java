@@ -25,23 +25,6 @@ public class MyPageService {
     @Autowired
     private Commons commons;
 
-//    public int checkPassword(Map<String, String> info) throws Exception {
-//        int check = 0;
-//
-//        if (info.isEmpty()) {
-//            return check;
-//        }
-//
-//        check = myPageDao.checkPassword(info);
-//
-//        if (check > 1 ) {
-//            check = 0;
-//            return check;
-//        }
-//
-//        return check;
-//    }
-
     public boolean isAuthority(Map<String, String> memberInfo) throws Exception {
         int chk = 0;
 

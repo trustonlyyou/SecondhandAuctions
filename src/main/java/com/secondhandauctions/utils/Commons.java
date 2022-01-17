@@ -1,6 +1,5 @@
 package com.secondhandauctions.utils;
 
-import com.oracle.tools.packager.mac.MacAppBundler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -104,5 +102,9 @@ public class Commons {
 
             log.info("{} :: '{}'", key, params.get(key));
         }
+    }
+
+    public int convertPrice(String price) {
+        return Integer.parseInt(price.replaceAll(",", ""));
     }
 }

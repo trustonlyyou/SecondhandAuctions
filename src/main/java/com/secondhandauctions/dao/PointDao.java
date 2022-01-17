@@ -19,4 +19,10 @@ public interface PointDao {
     public void pointDown(Map<String, Object> info) throws Exception;
 
     public void cancelPay(String paymentKey) throws Exception;
+
+    public int bidderSeller(Map<String, Object> info) throws Exception;
+
+    public String memberPayPriceAllow(Map<String, Object> info) throws Exception;
+
+    public void closeSuccessBid(int successBidNo) throws Exception;
 }

@@ -201,7 +201,7 @@
 
     <select id="myBidSuccessListByBidder" parameterType="Map" resultType="Map">
         select
-            successBidNo, successBid.productId, bidNo, productTitle, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
+            successBidNo, successBid.productId, bidNo, successBid.memberId, successBid.bidMemberId, productTitle, successBid.bidPrice, productMemberAllowChk, bidMemberAllowChk
         from
             successBid
         inner join

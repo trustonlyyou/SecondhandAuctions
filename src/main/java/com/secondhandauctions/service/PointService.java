@@ -381,6 +381,88 @@ public class PointService {
             pointDao.cancelPay(paymentKey);
         }
     }
-}
 
+    public boolean chkBidderSeller(Map<String, Object> info) throws Exception {
+        int result = 0;
+
+        if (info.isEmpty()) {
+            log.error("info isEmpty");
+            return false;
+        } else {
+            result = pointDao.bidderSeller(info);
+
+            if (result == 1) {
+                log.info("bidder and seller match is Ok");
+                return true;
+            } else {
+                log.info("Do not match bidder and seller");
+                return false;
+            }
+        }
+    }
+
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = Exception.class)
+    public void pointUpDownBySuccessBidProduct(Map<String, Object> info) throws Exception {
+        Map<String, Object> upPointInfo = new HashMap<>();
+        Map<String, Object> downPointInfo = new HashMap<>();
+
+        boolean priceChk = false;
+
+        int targetId = 0;
+        String bidder = "";
+        String seller = "";
+        int price = 0;
+
+        targetId = (int) info.get("successBidNo");
+        bidder = (String) info.get("bidder");
+        seller = (String) info.get("seller");
+        price = (int) info.get("bidPrice");
+
+        if (info.isEmpty()) {
+            log.info("info isEmpty");
+
+            return;
+        } else {
+            downPointInfo.put("memberId", bidder);
+            downPointInfo.put("disChargePoint", price);
+
+            upPointInfo.put("memberId", seller);
+            upPointInfo.put("chargePoint", price);
+
+            pointDao.pointDown(downPointInfo);
+            pointDao.pointUpMember(upPointInfo);
+
+            pointDao.closeSuccessBid(targetId);
+        }
+    }
+
+    public boolean memberPriceChk(Map<String, Object> info) throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        String result = "";
+
+        String memberId = (String) info.get("bidder");
+        int price = (int) info.get("bidPrice");
+
+        if (StringUtils.isEmpty(memberId) || price == 0) {
+            log.error("info isEmpty");
+            return false;
+        } else {
+            params.put("memberId", memberId);
+            params.put("price", price);
+
+            result = pointDao.memberPayPriceAllow(params);
+
+            if ("OK".equals(result)) {
+                log.info("Point pay is Ok");
+                return true;
+            } else {
+                log.info("Point pay is No");
+                return false;
+            }
+        }
+
+    }
+}
 // TODO: 2022/01/11 전반적으로 중복 코드 제거 할 것

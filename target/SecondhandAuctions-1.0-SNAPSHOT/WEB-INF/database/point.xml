@@ -108,5 +108,28 @@
             cancelReq = 0
     </update>
 
+    <select id="bidderSeller" parameterType="Map" resultType="int">
+        select
+            count(*)
+        from
+            successBid
+        where successBidNo = #{successBidNo}
+          and memberId = #{seller}
+          and bidMemberId = #{bidder}
+    </select>
 
+    <select id="memberPayPriceAllow" parameterType="Map" resultType="String">
+        select
+            if(myPoint >= #{price}, 'OK', 'NO') as result
+        from
+             member
+        where
+            memberId = #{memberId}
+        and
+            isMemberCheck = 1
+    </select>
+
+    <update id="closeSuccessBid" parameterType="int">
+        update successBid set ResultChk = 1 where successBidNo = #{successBidNo};
+    </update>
 </mapper>

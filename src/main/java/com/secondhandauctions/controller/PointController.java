@@ -174,6 +174,7 @@ public class PointController {
         return "point/list";
     }
 
+    // 포인트 결제 취소
     @PostMapping("/cancel/point/pay")
     @ResponseBody
     public Map<String, Object> cancelPoint(String paymentKey, String cancelReason, String memberId) throws Exception {
@@ -212,7 +213,63 @@ public class PointController {
             return result;
         }
     }
+// TODO: 2022/01/06 결제완료, 결제실패 .jsp 완성
+// TODO: 2022/01/06 Success Bid 연결 된거에서 포인트로 결재 했을 때 포인트 옮겨지는 service
+
+    // 포인트로 결제
+    @ResponseBody
+    @PostMapping("/point/pay/success/bid")
+    public Map<String, Object> pointPayBySuccessBid(int successBidNo, String seller, String bidder,
+                                                     String bidPrice, HttpServletRequest request) throws Exception {
+        log.info("successBidNo :: " + successBidNo);
+        log.info("seller :: " + seller);
+        log.info("bidder :: " + bidder);
+
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> info = new HashMap<>();
+
+        boolean memberChk = false;
+        boolean payChk = false;
+
+        String memberId = commons.getMemberSession(request); // bidder
+
+        log.info("memberId :: " + memberId);
+
+        if (!bidder.equals(memberId)) {
+            log.error("The memberId and bidder are different.");
+
+            result.put("msg", "MATCH");
+            result.put("result", false);
+            return result;
+        } else {
+            info.put("successBidNo", successBidNo);
+            info.put("bidder", bidder);
+            info.put("seller", seller);
+            info.put("bidPrice", commons.convertPrice(bidPrice));
+
+            memberChk = pointService.chkBidderSeller(info);
+
+            if (memberChk == false) {
+                result.put("msg", "MATCH");
+                result.put("result", false);
+                return result;
+            } else {
+                // 입찰자가 금액이 있는지 확인해야한다.
+                payChk = pointService.memberPriceChk(info);
+
+                if (payChk == false) {
+                    result.put("msg", "PAY");
+                    result.put("result", false);
+
+                    return result;
+                } else {
+                    pointService.pointUpDownBySuccessBidProduct(info);
+                    result.put("result", true);
+
+                    return result;
+                }
+            }
+        }
+    }
 }
 
-// TODO: 2022/01/06 결제완료, 결제실패 .jsp 완성 
-// TODO: 2022/01/06 Success Bid 연결 된거에서 포인트로 결재 했을 때 포인트 옮겨지는 service

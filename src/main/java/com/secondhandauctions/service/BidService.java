@@ -1,6 +1,7 @@
 package com.secondhandauctions.service;
 
 import com.secondhandauctions.dao.BidDao;
+import com.secondhandauctions.dao.ChatDao;
 import com.secondhandauctions.dao.MemberDao;
 import com.secondhandauctions.dao.ProductDao;
 import com.secondhandauctions.utils.Commons;
@@ -13,10 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -27,6 +25,9 @@ public class BidService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private ChatDao chatDao;
 
     @Autowired
     private ProductDao productDao;
@@ -168,7 +169,8 @@ public class BidService {
      * fixedRate 은 이전에 실행된 Task 의 시작시간으로 부터 정의된 시간만큼 지난 후 Task 를 실행한다.(밀리세컨드 단위)
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    //                 초 분 시 일 월 요일
+    @Scheduled(cron = "0 03 11 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
@@ -178,6 +180,7 @@ public class BidService {
          * 2. 입찰하게 있으면 성공으로 넘기기
          *
          */
+        log.info("Scheduled....");
 
         List<Integer> notSuccessBidProductId = new LinkedList<>(); // 오늘 마감 할 게시물 id 중 낙찰에 실패한
         List<Integer> successBidProductId = new LinkedList<>(); // 오늘 마강 할 게시물 id 중에 낙찰에 성공한
@@ -190,17 +193,34 @@ public class BidService {
             for (int targetId : notSuccessBidProductId) {
                 log.info("notSuccessBidProductId :: '{}'", targetId);
             }
-
             productDao.closeProducts(notSuccessBidProductId);
         }
 
+        // productId 와 successBidNo 가 다르면 어떻게 할래??
         if (!successBidProductId.isEmpty()) {
-            for (int targetId : successBidProductId) {
-                log.info("successBidProductId :: '{}'", successBidProductId);
-            }
-
             productDao.insertSuccessBidInfo(successBidProductId);
             productDao.closeProducts(successBidProductId);
+            chatDao.createChatRoom(successBidProductId);
+
+            for (int targetId : successBidProductId) {
+                log.info("successBidProductId :: '{}'", targetId);
+
+//                Map<String, String> info = chatDao.getSellerBidder(targetId);
+//                Map<String, Object> params = new HashMap<>();
+//
+//                String seller = info.get("seller");
+//                String bidder = info.get("bidder");
+//
+//                log.info("seller :: '{}'", seller);
+//                log.info("bidder :: '{}'", bidder);
+//
+//                params.put("roomNo", targetId);
+//                params.put("seller", seller);
+//                params.put("bidder", bidder);
+//
+//                chatDao.addChatRoom(params);
+//                params.clear();
+            }
         }
     }
 

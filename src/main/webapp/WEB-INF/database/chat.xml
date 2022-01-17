@@ -5,4 +5,66 @@
 
 <mapper namespace="com.secondhandauctions.dao.ChatDao">
 
+    <select id="getSellerBidder" parameterType="int" resultType="Map">
+        select
+            memberId as seller,
+            bidMemberId as bidder
+        from
+            successBid
+        where
+            productId = #{productId}
+    </select>
+
+    <insert id="createChatRoom" parameterType="List">
+        <foreach collection="list" item="item" close=";" separator=";">
+            insert into chatRoom (roomNo, bidder, seller)
+            select successBidNo, successBid.memberId as seller, bidMemberId as bidder from successBid
+            inner join product on product.productId = successBid.productId
+            where product.isProductCheck = 0 and product.productId = #{item};
+        </foreach>
+    </insert>
+
+    <insert id="addChatRoom" parameterType="Map">
+        insert into chatRoom
+        (
+        roomNo, bidder, seller, regDate
+        )
+        values
+        (
+         #{roomNo}, #{seller}, #{bidder}, now()
+         )
+    </insert>
+
+    <select id="chattingMembers" parameterType="int" resultType="Map">
+        select
+            bidder, seller
+        from
+            chatRoom
+        inner join
+            successBid on chatRoom.roomNo = successBid.successBidNo
+        where roomNo = #{roomNo};
+    </select>
+
+    <select id="chattingList" parameterType="int" resultType="com.secondhandauctions.vo.ChatMessageVo">
+        select
+            roomNo, memberId, msg, regdate
+        from
+            chatMessages
+        where
+            roomNo = #{roomNo}
+        order by
+            regdate asc
+    </select>
+
+    <insert id="insertMessage" parameterType="com.secondhandauctions.vo.ChatMessageVo">
+        insert into chatMessages
+        (
+            roomNo, memberId, regdate, msg
+        )
+        values
+        (
+            #{roomNo}, #{memberId}, now(), #{msg}
+        )
+    </insert>
+
 </mapper>

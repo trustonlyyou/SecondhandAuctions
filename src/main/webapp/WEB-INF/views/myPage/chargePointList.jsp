@@ -19,16 +19,14 @@
 </head>
 <body>
 <%@include file="../includes/header.jsp"%>
-인
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <h2 class="my-4">포인트 충전 정보</h2>
             <%@include file="../includes/myPageCategory.jsp"%>
         </div>
 
         <div class="col-lg-9">
-            <h4 class="my-4">포인트 충전 리스트 <a href="/point/charge/form" class="btn btn-primary btn-md">포인트 충전 하기</a></h4>
+            <h4 class="my-4">포인트 충전 &nbsp;<a href="/point/charge/form" class="btn btn-primary btn-md">포인트 충전 하기</a></h4>
             <h6>나의 포인트 : ${myPoint}&nbsp;포인트</h6>
             <hr style="border: solid 1px;">
 

@@ -34,9 +34,9 @@
         </div>
 
         <div class="col-lg-9">
-            <h4 class="my-4">판매 낙찰 리스트</h4>
+            <h4 class="my-4">낙찰 리스트</h4>
             <hr style="border: solid 1px;">
-            <a href="/myBid/success/sell" class="btn btn-primary btn-sm float-right">판매 낙찰 성공 물품</a>
+            <a href="/myBid/success/sell" class="btn btn-primary btn-sm float-right">판매 성공 물품</a>
             <br>
             <br>
             <br>
@@ -64,7 +64,6 @@
         </div>
     </div>
     <!-- .row -->
-    <h4>${pageMaker}</h4>
     <div>
         <ul class="pagination justify-content-end">
             <c:if test="${pageMaker.prev}">

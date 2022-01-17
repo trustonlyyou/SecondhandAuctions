@@ -104,4 +104,8 @@
                 isProductCheck = 1
         </foreach>
     </update>
+
+    <select id="successNo" parameterType="Integer" resultType="int">
+        select successBidNo from successBid where productId = #{productId}
+    </select>
 </mapper>

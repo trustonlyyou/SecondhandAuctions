@@ -58,7 +58,7 @@
                     <div class="carousel slide" data-ride="carousel" id="banner" >
                         <!-- 이미지 부분 -->
                         <div class="carousel-inner" id="images">
-                            <c:forEach var="fileName" items="${fileName}" varStatus="stauts">
+                            <c:forEach var="fileName" items="${fileNames}" varStatus="stauts">
                                 <div class="carousel-item ${stauts.index == 0 ? "active" : ""}">
                                     <img src="/detail/show?fileName=${fileName}">
                                 </div>
@@ -103,9 +103,7 @@
                         <%--                            내용<br>--%>
 
                         <label for="productContent">내용</label>
-                        <textarea name="productContent" id="productContent" cols="30" rows="10" class="productText form-control" readonly>
-                                <c:out value="${product.productContent}"/>
-                            </textarea>
+                        <textarea name="productContent" id="productContent" cols="30" rows="10" class="productText form-control" readonly><c:out value="${product.productContent}"/></textarea>
                     </div>
                     <br>
 
@@ -116,7 +114,8 @@
                     </div>
                     <br>
                     <div class="row">&nbsp;
-                        <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
+                        <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">&nbsp;
+                        <a href="/chat/${product.successBidNo}" class="btn btn-primary btn-sm">입찰자와 대화하기</a>
                     </div>
                 </div>
             </div>

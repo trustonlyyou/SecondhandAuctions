@@ -60,8 +60,6 @@
             product on image.productId = product.productId
         where
             product.productId = #{productId}
-        and
-            product.memberId = #{memberId}
     </select>
 
     <select id="myShopProductQnA" parameterType="Map" resultType="Map">

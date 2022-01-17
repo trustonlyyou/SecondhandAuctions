@@ -65,7 +65,6 @@
         </div>
     </div>
     <!-- .row -->
-    <h4>${pageMaker}</h4>
     <div>
         <ul class="pagination justify-content-end">
             <c:if test="${pageMaker.prev}">

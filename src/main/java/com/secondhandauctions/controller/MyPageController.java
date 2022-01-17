@@ -641,7 +641,9 @@ public class MyPageController {
         fileNames = (List<String>) result.get("fileNames");
 
         model.addAttribute("product", product);
-        model.addAttribute("images", fileNames);
+        model.addAttribute("fileNames", fileNames);
+
+        // TODO: 2022/01/17 이미지 안나옴
 
         return "myPage/mySuccessBidDetail";
     }

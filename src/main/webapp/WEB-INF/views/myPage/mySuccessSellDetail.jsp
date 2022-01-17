@@ -110,12 +110,13 @@
                     <br>
 
                     <div class="form-label-group">
-                        현재 가격 <c:out value="${product.startPrice}"/>
+                        현재 가격 <c:out value="${product.bidPrice}"/>
                     </div>
                     <br>
-                    <div class="row">
-                        <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">
-                    </div>
+                        <div class="row">&nbsp;
+                            <input type="button" class="listBtn btn btn-primary btn-sm float-right" value="조회 페이지">&nbsp;
+                            <a href="/chat/${product.successBidNo}" class="btn btn-primary btn-sm">입찰자와 대화하기</a>
+                        </div>
                 </div>
             </div>
 

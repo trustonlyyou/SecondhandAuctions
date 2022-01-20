@@ -26,7 +26,47 @@
         </div>
 
         <div class="col-lg-9">
-            <h4 class="my-4">포인트 충전 &nbsp;<a href="/point/charge/form" class="btn btn-primary btn-md">포인트 충전 하기</a></h4>
+            <h4 class="my-4">포인트 충전</h4>
+            <div class="row">
+                <form action="/point/charge/form" method="get">
+                    <input type="submit" class="btn btn-primary btn-sm" value="포인트 충전하기">&nbsp;
+                </form>
+                <c:if test="${account.token eq null}">
+                    <form id="authorizeFrm" name="authorizeFrm" method="get" action="https://testapi.openbanking.or.kr/oauth/2.0/authorize">
+<%--                        respnse_type = code (고정값)--%>
+<%--                        cliend_id = [발급받은 값]--%>
+<%--                        redirect_uri = [API Key 등록 시 입력한 callback_url]--%>
+<%--                        scope = [login inquiry transfer] (' ' 스페이스바로 구분)--%>
+<%--                        state = 32자리의 난수 (임의로 난수 32자리 입력하면 됨)--%>
+<%--                        auth_type = 0 (최초인증 : 0, 재인증 : 2)--%>
+
+                        <input type="hidden" name="response_type" value="code"/>
+                        <input type="hidden" name="client_id" value="a2f49b05-ce98-4c0d-876c-5d1d9e4a96f9"/>
+                        <input type="hidden" name="redirect_uri" value="http://localhost:8080/oauth/callback"/>
+                        <input type="hidden" name="scope" value="login inquiry transfer"/>
+                        <input type="hidden" name="state" value="efe5bbe603b0474ba00781c7b342e93b"/>
+                        <input type="hidden" name="auth_type" value="0"/>
+                        <input type="submit" class="btn btn-primary btn-sm" value="포인트 환전">
+                    </form>
+                    <%-- 토큰 발급--%>
+                </c:if>
+                <c:if test="${account.token ne null}">
+                    <c:if test="${account.accountChk eq true}">
+                        <form action="#" method="get">
+                            <input type="submit" class="btn btn-primary btn-sm" value="포인트 환전">
+
+                        </form>
+                    </c:if>
+                    <%-- 환불 진행 --%>
+                    <c:if test="${account.accountChk eq false}">
+                        <form action="/real/name/form">
+                            <input type="submit" class="btn btn-primary btn-sm" value="포인트 환전">
+                            <%-- 계좌 등록 --%>
+                        </form>
+                    </c:if>
+                </c:if>
+            </div>
+            <br>
             <h6>나의 포인트 : ${myPoint}&nbsp;포인트</h6>
             <hr style="border: solid 1px;">
 

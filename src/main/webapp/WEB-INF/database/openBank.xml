@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.5//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secondhandauctions.dao.OpenBankDao">
+
+    <select id="accountChk" resultType="Map" parameterType="String">
+        select
+            count(account.accountNum) as count, token
+        from
+            account
+        inner join
+            member on member.memberId = account.memberId
+        where
+            isMemberCheck = 1 and account.memberId = #{memberId};
+    </select>
+
+    <insert id="setToken" parameterType="String">
+        insert into account
+        (
+         memberId, token
+         )
+         values
+        (
+         #{memberId}, #{token}
+        )
+    </insert>
+
+    <select id="getToken" parameterType="String" resultType="String">
+        select
+            token
+        from
+            account
+        inner join
+            member on member.memberId = account.memberId
+        where
+            isMemberCheck = 1 and account.memberId = #{memberId}
+    </select>
+
+    <update id="setBankInfo" parameterType="Map">
+        update
+            account
+        set
+            bankName = #{bankName}, bankCode = #{bankCode}, accountNum = #{accountNum}
+        where
+            memberId = #{memberId};
+    </update>
+</mapper>

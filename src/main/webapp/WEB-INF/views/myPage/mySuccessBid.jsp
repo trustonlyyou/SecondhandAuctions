@@ -120,7 +120,7 @@
 
                 if (result == true) {
                     alert("포인트로 결제가 완료 되었습니다.");
-                    window.location.reload();
+                    window.location.replace("/myBid/success/bid");
                 } else {
                     if (msg === "MATCH") {
                         alert("정보가 일치하지 않습니다. 고객센터에 문의해 주세요.");

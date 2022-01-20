@@ -25,10 +25,6 @@ import java.util.*;
 @Slf4j
 public class PointController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
 
@@ -75,6 +71,7 @@ public class PointController {
         Map<String, Object> info = new HashMap<>();
         boolean chk = false;
 
+        ObjectMapper objectMapper = new ObjectMapper();
         JSONParser parser = new JSONParser();
         JSONObject object = null;
         ResponseEntity<String> response = pointService.success(orderId, amount, paymentKey);

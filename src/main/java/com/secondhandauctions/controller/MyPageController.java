@@ -1,9 +1,6 @@
 package com.secondhandauctions.controller;
 
-import com.secondhandauctions.service.EmailService;
-import com.secondhandauctions.service.MemberService;
-import com.secondhandauctions.service.MyPageService;
-import com.secondhandauctions.service.SmsService;
+import com.secondhandauctions.service.*;
 import com.secondhandauctions.utils.*;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.MemberVo;
@@ -18,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -48,6 +42,8 @@ public class MyPageController {
     @Autowired
     private EncryptionSHA256 encryptionSHA256;
 
+    @Autowired
+    private OpenBankService openBankService;
 
     @GetMapping(value = "/authority/form")
     public String authorityForm(HttpServletRequest request, Model model) throws Exception {
@@ -658,6 +654,7 @@ public class MyPageController {
 
         String memberId = "";
         int totalCount = 0;
+        Map<String, Object> accountInfo = new HashMap<>();
 
         memberId = commons.getMemberSession(request);
         totalCount = myPageService.getCountChargePoint(memberId);
@@ -666,6 +663,8 @@ public class MyPageController {
         info.put("criteria", criteria);
 
         pointPayList = myPageService.getChargePointList(info);
+        accountInfo = openBankService.isAccount(memberId);
+        model.addAttribute("account", accountInfo);
 
         if (pointPayList.isEmpty()) {
             log.info("point list is null");

@@ -18,7 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="/resources/js/product.js"></script>
 
-
+좌
     <title>상품 판매 | 중고 경매의 세계</title>
 
 </head>

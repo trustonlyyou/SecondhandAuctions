@@ -30,7 +30,6 @@
     <hr>
     <div class="row">
         <div class="col-lg-8">
-            <input type="button" id="dateTest" value="dateTest">
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -150,7 +149,7 @@
             success: function (data) {
                 var result = data.result;
 
-                if (result == true) {
+                if (result === true) {
                     $.ajax({
                         url: '/cancel/point/pay',
                         type: 'post',
@@ -186,10 +185,5 @@
             }
         });
     }
-
-    $("#dateTest").on('click', function () {
-        var memberId = 'zkem123456';
-
-    });
 </script>
 </html>

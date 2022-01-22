@@ -202,13 +202,6 @@ public class MemberController {
         return "member/join_result";
     }
 
-    // 카카오 회원가입
-    // TODO: 2021/12/24 카카오 로그인 (기존 회원 check, 추가 내용 받기(핸드폰 번호)
-    /**
-     * GET /oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code HTTP/1.1
-     * Host: kauth.kakao.com
-     */
-
     @GetMapping(value = "/kakao/join/init")
     public String initkakaoJoin() {
         StringBuffer stringBuffer = new StringBuffer();
@@ -259,11 +252,6 @@ public class MemberController {
 
         boolean itemChk = false;
         boolean chk = false;
-
-        log.info("memberName :: " + memberName);
-        log.info("memberEmail :: " + memberEmail);
-        log.info("memberId :: " + memberId);
-        log.info("memberPhone :: " + memberPhone);
 
         itemChk = commons.isEmptyStrings(memberId, memberPhone, memberName, memberEmail);
 
@@ -571,29 +559,27 @@ public class MemberController {
         String memberId = "";
         String title = "";
         String content = "";
-        int check = 0;
+        boolean check = false;
 
-        if (StringUtils.isEmpty(memberName) || StringUtils.isEmpty(memberEmail)) {
+        if (commons.isEmptyStrings(memberName, memberEmail) == true) {
             log.error("Request URI :: '{}'", request.getRequestURI());
             log.error("memberName or memberEmail is null");
 
-            result.put("check", -1);
+            result.put("check" ,false);
 
             return result;
         }
-        // 슛자를 쓰면 안되는 이유
-        //
 
         info.put("memberName", memberName);
         info.put("memberEmail", memberEmail);
 
         result = memberService.getMemberIdFromEmail(info);
 
-        check = (int) result.get("check");
+        check = (boolean) result.get("check");
 
         log.info("Search id from email check {}", check);
 
-        if (check == 1) {
+        if (check == true) {
             memberId = (String) result.get("memberId");
 
             title = "중고 경매의 세계 아이디 찾기 이메일 입니다.";
@@ -601,6 +587,8 @@ public class MemberController {
                     "아이디는 " + memberId + " 입니다.";
 
             emailService.sendEmail(memberEmail, title, content);
+        } else {
+            result.put("check", false);
         }
 
         return result;
@@ -620,24 +608,31 @@ public class MemberController {
 
         String memberId = "";
 
-        info.put("memberName", memberName);
-        info.put("memberPhone", memberPhone);
-
-        memberId = memberService.getMemberIdFromPhone(info);
-
-        if (StringUtils.isEmpty(memberId)) {
-            result.put("check", 0);
+        if (commons.isEmptyStrings(memberName, memberPhone) == true) {
+            result.put("check", false);
             result.put("memberId", "");
+            return result;
+        } else {
+            info.put("memberName", memberName);
+            info.put("memberPhone", memberPhone);
+
+            memberId = memberService.getMemberIdFromPhone(info);
+
+            if (StringUtils.isEmpty(memberId)) {
+                result.put("check", false);
+                result.put("memberId", "");
+                return result;
+            } else {
+                result.put("check", true);
+                result.put("memberId", memberId);
+
+                return result;
+            }
         }
-
-        result.put("check", 1);
-        result.put("memberId", memberId);
-
-        return result;
     }
 
     @GetMapping(value = "/searchIdResultPhone")
-    public String IdResultPhone(@RequestParam String memberId, Model model) {
+    public String IdResultPhone(@RequestParam(required = false) String memberId, Model model) {
         model.addAttribute("memberId", memberId);
 
         return "member/searchIdResultPhone";
@@ -651,12 +646,12 @@ public class MemberController {
 
     @PostMapping(value = "/search/password/phone")
     @ResponseBody
-    public Map<String, Integer> searchPasswordFromPhone(HttpServletRequest request, String memberId,
+    public Map<String, Boolean> searchPasswordFromPhone(HttpServletRequest request, String memberId,
                                                         String memberName, String memberPhone) throws Exception {
         Map<String, Object> info = new HashMap<>();
-        Map<String, Integer> result = new HashMap<>();
+        Map<String, Boolean> result = new HashMap<>();
 
-        int check = 0;
+        boolean check = false;
 
         info.put("memberId", memberId);
         info.put("memberName", memberName);
@@ -668,7 +663,7 @@ public class MemberController {
 
         result.put("check", check);
 
-        if (check == 1) {
+        if (check == true) {
             commons.setMemberSession(request, memberId);
         }
 
@@ -681,10 +676,7 @@ public class MemberController {
         Map<String, Object> info = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
 
-        int check = 0;
-
-        log.info("memberId :: " + memberIdEmail);
-        log.info("memberEmail :: " + memberEmail);
+        boolean check = false;
 
         info.put("memberId", memberIdEmail);
         info.put("memberEmail", memberEmail);
@@ -695,7 +687,7 @@ public class MemberController {
 
         result.put("check", check);
 
-        if (check == 1) {
+        if (check == true) {
             commons.setMemberSession(request, memberIdEmail);
         }
 

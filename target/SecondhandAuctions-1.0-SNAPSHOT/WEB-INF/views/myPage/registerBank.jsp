@@ -54,6 +54,7 @@
                                 <option value="097">오픈</option>
                             </select>
                         </div>
+                        <div name="bankCodeMsg" id="bankCodeMsg" class="check_font"></div>
 
                         <br>
                         <div class="input-group input-group-md">
@@ -86,6 +87,7 @@
     var nameFlag;
     var birthFlag;
     var accountFlag;
+    var bankCodeFlag;
 
     $("#memberName").on('keyup', function () {
         var memberName = $("#memberName").val();
@@ -116,7 +118,7 @@
 
             nameFlag = true;
 
-            if ((nameFlag && birthFlag && accountFlag) == true) {
+            if ((nameFlag && birthFlag && accountFlag && bankCode) == true) {
                 $("#accountSubmit").attr('disabled', false);
 
                 return true;
@@ -153,7 +155,7 @@
 
             birthFlag = true;
 
-            if ((nameFlag && birthFlag && accountFlag) == true) {
+            if ((nameFlag && birthFlag && accountFlag && bankCode) == true) {
                 $("#accountSubmit").attr('disabled', false);
 
                 return true;
@@ -190,12 +192,35 @@
 
             accountFlag = true;
 
-            if ((nameFlag && birthFlag && accountFlag) == true) {
+            if ((nameFlag && birthFlag && accountFlag && bankCode) == true) {
                 $("#accountSubmit").attr('disabled', false);
 
                 return true;
             }
         }
+    });
+
+    $("#bank_code").on('change', function () {
+       var bankCode = $("#bank_code option:selected").val();
+
+       if (bankCode === "") {
+           $("#bankCodeMsg").text("은행을 선택해주세요.");
+           $("#bankCodeMsg").css('color', 'red');
+
+           bankCodeFlag = false;
+
+           return false;
+       } else {
+           $("#bankCodeMsg").text("");
+
+           bankCodeFlag = true;
+
+           if ((nameFlag && birthFlag && accountFlag && bankCode) == true) {
+               $("#accountSubmit").attr('disabled', false);
+
+               return true;
+           }
+       }
     });
 
     $("#accountSubmit").on('click', function () {

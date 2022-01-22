@@ -44,7 +44,8 @@ public class BidService {
     @Autowired
     private Commons commons;
 
-    public int setBid(Map<String, Object> params) throws Exception {
+    // 압찰
+   public int setBid(Map<String, Object> params) throws Exception {
         List<String> checkList = new ArrayList<>();
 
         int productId = 0;
@@ -97,8 +98,6 @@ public class BidService {
      * Propagation.REQUIRED :  이미 진행중인 트랜잭션이 있다면 해당 트랜잭션 속성을 따르고, 진행중이 아니라면 새로운 트랜잭션을 생성한다.
      *
      * rollbackFor : 특정 예외 발생 시 rollback한다.
-     *
-     *
      * @param params
      * @return
      * @throws Exception
@@ -205,21 +204,21 @@ public class BidService {
             for (int targetId : successBidProductId) {
                 log.info("successBidProductId :: '{}'", targetId);
 
-//                Map<String, String> info = chatDao.getSellerBidder(targetId);
-//                Map<String, Object> params = new HashMap<>();
-//
-//                String seller = info.get("seller");
-//                String bidder = info.get("bidder");
-//
-//                log.info("seller :: '{}'", seller);
-//                log.info("bidder :: '{}'", bidder);
-//
-//                params.put("roomNo", targetId);
-//                params.put("seller", seller);
-//                params.put("bidder", bidder);
-//
-//                chatDao.addChatRoom(params);
-//                params.clear();
+                Map<String, String> info = chatDao.getSellerBidder(targetId);
+                Map<String, Object> params = new HashMap<>();
+
+                String seller = info.get("seller");
+                String bidder = info.get("bidder");
+
+                log.info("seller :: '{}'", seller);
+                log.info("bidder :: '{}'", bidder);
+
+                params.put("roomNo", targetId);
+                params.put("seller", seller);
+                params.put("bidder", bidder);
+
+                chatDao.addChatRoom(params);
+                params.clear();
             }
         }
     }

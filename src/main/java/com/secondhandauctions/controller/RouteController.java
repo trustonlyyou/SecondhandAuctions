@@ -1,7 +1,6 @@
 package com.secondhandauctions.controller;
 
 import com.secondhandauctions.service.ShopService;
-import com.secondhandauctions.utils.Commons;
 import com.secondhandauctions.utils.Criteria;
 import com.secondhandauctions.utils.PagingUtil;
 import com.secondhandauctions.vo.ShopVo;
@@ -31,28 +30,16 @@ public class RouteController {
         List<ShopVo> items = new ArrayList<>();
         PagingUtil pagingUtil = new PagingUtil();
 
-        String fileName = "";
         int count = 0;
-        String ip = "";
 
-        ip = Commons.getClientIp(request);
-
-        log.info("client ip :: {}", ip);
         log.info("status :: {}", status);
 
-        switch (status) {
-            case "" :
-            case "newList" :
-                count = shopService.getTotalCount();
-                items = shopService.getNewProductList(criteria);
+        count = shopService.getTotalCount();
 
-                break;
-
-            case "expireList" :
-                count = shopService.getTotalCount();
-                items = shopService.getExpireTimeProductList(criteria);
-
-                break;
+        if ("expireList".equals(status)) {
+            items = shopService.getExpireTimeProductList(criteria);
+        } else {
+            items = shopService.getNewProductList(criteria);
         }
 
         pagingUtil.setCriteria(criteria);
@@ -60,21 +47,6 @@ public class RouteController {
 
         model.addAttribute("list", items);
         model.addAttribute("pageMaker", pagingUtil);
-
-        if ("".equals(status)) {
-            count = shopService.getTotalCount();
-            items = shopService.getNewProductList(criteria);
-
-            pagingUtil.setCriteria(criteria);
-            pagingUtil.setTotalCount(count);
-
-            model.addAttribute("list", items);
-            model.addAttribute("pageMaker", pagingUtil);
-        }
-
-
         return "home";
     }
-
-
 }

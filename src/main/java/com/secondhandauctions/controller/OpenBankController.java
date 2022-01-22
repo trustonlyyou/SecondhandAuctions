@@ -59,7 +59,7 @@ public class OpenBankController {
                 model.addAttribute("rsp_code", tokenResult.get("rsp_code"));
                 model.addAttribute("msg", tokenResult.get("rsp_message"));
 
-                return "test/realName";
+                return "myPage/openBankError";
             } else {
                 info.put("memberId", memberId);
                 info.put("token", access_token);
@@ -73,8 +73,7 @@ public class OpenBankController {
             model.addAttribute("rsp_code", tokenResult.get("rsp_code"));
             model.addAttribute("msg", tokenResult.get("rsp_message"));
 
-            // TODO: 2022/01/21 error page
-            return "test/realName";
+            return "myPage/openBankError";
         }
     }
 

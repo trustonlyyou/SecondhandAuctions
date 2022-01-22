@@ -19,7 +19,7 @@
     <script src="/resources/js/product.js"></script>
 
 좌
-    <title>상품 판매 | 중고 경매의 세계</title>
+    <title>상품 등록 | 중고 경매의 세계</title>
 
 </head>
 <body>
@@ -41,7 +41,7 @@
                                 <label class="input-group-text" for="categoryName">카테고리</label>
                             </div>
                             <select class="custom-select" id="categoryName" name="categoryName" required>
-                                <option selected>카테고리 선택</option>
+                                <option value="none">카테고리 선택</option>
                                 <option value="digital">전자</option>
                                 <option value="computer">컴퓨터</option>
                                 <option value="cloths">의류</option>
@@ -50,7 +50,7 @@
 
                             </select>
                         </div>
-                        <div id="category_check" name="category_check" class="check_font"></div>
+                        <div id="categoryMsg" name="categoryMsg" class="check_font"></div>
                         <br>
 
                         <div class="form-label-group">
@@ -129,7 +129,8 @@
     var formData = new FormData();
     var imgIndex = 0;
     var fileIndex = 0;
-
+    var fileCount = 0;
+    var maxCount = 5;
     var regex = new RegExp("(.*?)\.(jpg|png|jpeg)$");
     var maxSize = 1048576; //1MB
 
@@ -152,6 +153,14 @@
                 window.alert("확장자는 이미지 확장자만 가능합니다.");
                 return;
             }
+
+            if (fileCount === maxCount) {
+                window.alert("이미지 파일은 최대 5장만 업로드가 가능합니다.");
+
+                return;
+            }
+
+            fileCount++;
 
             formData.append(fileIndex, file);
 
@@ -268,7 +277,7 @@
 
             $("#priceCheckMsg").text('');
 
-            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+            if ((productTitleFlag && productContentFlag && startPriceFlag && categoryFlag) == true) {
                 $("#btn_registerModal").attr('disabled', false);
             }
 
@@ -307,9 +316,11 @@
             }
 
             if (totalByte > maxByte){
-                alert('최대 500Byte까지만 입력가능합니다.');
                 $("#nowByte").text(totalByte);
                 $("#nowByte").css('color', 'red');
+
+                $("#contentCheckMsg").text("최대 500Byte까지만 입력가능합니다.");
+                $("#contentCheckMsg").css('color', 'red');
 
                 productContentFlag = false;
 
@@ -327,7 +338,7 @@
 
             console.log(productContentFlag);
 
-            if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+            if ((productTitleFlag && productContentFlag && startPriceFlag && categoryFlag) == true) {
                 $("#btn_registerModal").attr('disabled', false);
             }
 
@@ -338,8 +349,6 @@
 
     $("#productTitle").on('keyup', function () {
         var productTitle = $("#productTitle").val();
-
-        console.log(productTitle);
 
         if (productTitle == "") {
             $("#titleCheckMsg").text('제목은 필수 입력 사항 입니다.');
@@ -356,7 +365,32 @@
 
         $("#titleCheckMsg").text('');
 
-        if ((productTitleFlag && productContentFlag && startPriceFlag) == true) {
+        if ((productTitleFlag && productContentFlag && startPriceFlag && categoryFlag) == true) {
+            $("#btn_registerModal").attr('disabled', false);
+        }
+
+        return true;
+    });
+
+    $("#categoryName").on('change', function () {
+       var categoryName = $("#categoryName option:selected").val();
+
+        if (categoryName === "none") {
+            $("#categoryMsg").text("카테고리 선택은 필수 입니다.");
+            $("#categoryMsg").css('color','red');
+
+            categoryFlag = false;
+
+            $("#btn_registerModal").attr('disabled', true);
+
+            return false;
+        }
+
+        categoryFlag = true;
+
+        $("#categoryMsg").text("");
+
+        if ((productTitleFlag && productContentFlag && startPriceFlag && categoryFlag) == true) {
             $("#btn_registerModal").attr('disabled', false);
         }
 

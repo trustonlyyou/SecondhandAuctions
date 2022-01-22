@@ -237,19 +237,15 @@ public class MemberService {
 
         String memberId = "";
 
-        int check = 0;
-
         memberId = memberDao.searchIdEmail(info);
 
         if (StringUtils.isEmpty(memberId)) {
-            result.put("check", check);
+            result.put("check", false);
 
             return result;
         }
 
-        check = 1;
-
-        result.put("check", check);
+        result.put("check", true);
         result.put("memberId", memberId);
 
         return result;
@@ -273,29 +269,38 @@ public class MemberService {
     }
 
     // 핸드폰으로 비밀번호 찾기
-    public int isSearchPwdFromPhone(Map<String, Object> memberInfo) throws Exception {
+    public boolean isSearchPwdFromPhone(Map<String, Object> memberInfo) throws Exception {
         int check = 0;
 
         if (memberInfo.isEmpty()) {
-            return check;
+            return false;
+        } else {
+            check = memberDao.checkSearchPwdPhone(memberInfo);
+
+            if (check == 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
-        check = memberDao.checkSearchPwdPhone(memberInfo);
-
-        return check;
     }
 
     // 이메일로 비밀번호 찾기
-    public int isSearchPwdFromEmail(Map<String, Object> memberInfo) throws Exception {
+    public boolean isSearchPwdFromEmail(Map<String, Object> memberInfo) throws Exception {
         int check = 0;
 
         if (memberInfo.isEmpty()) {
-            return check;
+            return false;
+        } else {
+            check = memberDao.checkSearchPwdEmail(memberInfo);
+
+            if (check == 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
-
-        check = memberDao.checkSearchPwdEmail(memberInfo);
-
-        return check;
     }
 
     // 비밀 번호 수정

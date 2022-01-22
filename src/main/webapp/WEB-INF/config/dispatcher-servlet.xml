@@ -29,7 +29,8 @@
             <mvc:mapping path="/myPage/**/*"/>
             <mvc:mapping path="/myShop/**/*"/>
             <mvc:mapping path="/myBid/**/*"/>
-            <mvc:mapping path="/point/charge/form"/>
+            <mvc:mapping path="/point/**/*"/>
+            <mvc:mapping path="/real/**/*"/>
             <ref bean="memberInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -48,6 +49,13 @@
             <mvc:mapping path="/myShop/**/*"/>
             <mvc:mapping path="/myBid/**/*"/>
             <ref bean="myPageInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/chat/*"/>
+            <ref bean="chatInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

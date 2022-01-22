@@ -54,14 +54,10 @@
           <br>
 
           <div>
-            <a href="/member/search/password">비밀번호가 기억나지 않으세요?</a>
+            <a href="/member/search/id">아이디를 다시 찾아 보세요.</a>
           </div>
 
           <br>
-
-          <div>
-            <a href="/member/login/list" class="btn btn-primary btn-lg" role="button" aria-pressed="true">로그인</a>
-          </div>
         </div>
       </div>
     </div>

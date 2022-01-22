@@ -131,24 +131,7 @@
 
             actionForm.append("<input type='hidden' name='productId' value='"+targetProductId+"'>");
             actionForm.attr("action", "/shop/get").submit();
-            // actionForm.submit();
         });
-
-        // $(".btn_newList").on("click", function (e) {
-        //     $(".btn_newList").addClass("active");
-        //
-        //     if ($(".btn_expireList").hasClass("active")) {
-        //         $(".btn_expireList").removeClass("active");
-        //     }
-        // });
-        //
-        // $(".btn_expireList").on("click", function (e) {
-        //     $(".btn_expireList").addClass("active");
-        //
-        //     if ($(".btn_newList").hasClass("active")) {
-        //         $(".btn_newList").removeClass("active");
-        //     }
-        // });
     });
 </script>
 

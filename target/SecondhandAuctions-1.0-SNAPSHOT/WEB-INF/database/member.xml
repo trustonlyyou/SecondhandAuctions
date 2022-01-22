@@ -217,6 +217,7 @@
             memberName = #{memberName} and
             memberId = #{memberId} and
             memberPhone = #{memberPhone} and
+            isKakao = 0 and
             isMemberCheck = 1;
     </select>
 
@@ -228,7 +229,7 @@
         where
             memberId = #{memberId} and
             memberEmail = #{memberEmail} and
-
+            isKakao = 0 and
             isMemberCheck = 1;
     </select>
 

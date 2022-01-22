@@ -192,14 +192,11 @@
 
             success: function (data) {
 
-                switch (data.check) {
-                    case 0 :
-                        window.alert("입력하신 정보의 회원이 없습니다.");
-                        window.location.replace("/member/search/password");
-                        break;
-                    case 1 :
-                        window.location.replace("/member/password/modify/form")
-                        break;
+                if (data.check == false) {
+                    window.alert("입력하신 정보의 회원이 없습니다.");
+                    window.location.reload();
+                } else {
+                    window.location.replace("/member/password/modify/form");
                 }
             }
         });
@@ -248,16 +245,11 @@
             data: $("form").serialize(),
 
             success: function (data) {
-                window.alert("check :: " + data.check);
-
-                switch (data.check) {
-                    case 0 :
-                        window.alert("입력하신 정보의 회원이 없습니다.");
-                        window.location.replace("/member/search/password");
-                        break;
-                    case 1 :
-                        window.location.replace("/member/password/modify/form")
-                        break;
+                if (data.check == false) {
+                    window.alert("입력하신 정보의 회원이 없습니다.");
+                    window.location.reload();
+                }  else {
+                    window.location.replace("/member/password/modify/form")
                 }
             },
             error: function (request,status,error) {

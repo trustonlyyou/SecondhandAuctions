@@ -363,10 +363,11 @@
             data: formData,
 
             success: function (data) {
-                if (data.check === 1) {
+                if (data.check === false) {
                     window.location.replace("/member/searchIdResultPhone?memberId=" + data.memberId);
                 } else {
-                    window.location.replace("/member/searchIdResultPhone")
+                    window.location.replace("/member/searchIdResultPhone?memberId=" + data.memberId);
+
                 }
             },
 
@@ -400,22 +401,11 @@
             data: formData,
 
             success: function (data) {
-
-                console.log(data.check);
-
-                if (data.check === 0) {
+                if (data.check === false) {
                     window.alert("존재하지 않는 회원 입니다.");
-                    $("#memberNameToEmail").val("");
-                    $("#memberEmail").val("");
-                    $("#memberNameToEmail").focus();
-                    $("#searchIdSubmitEmail").attr('disabled', true);
-                    emailFlag = false;
-                    nameEmailFlag = false;
-                } else if (data.check === 1) {
-                    window.location.replace("/member/searchIdResult")
+                    window.location.reload();
                 } else {
-                    alert("이름과 이메일을 정확히 입력해주세요. 다시 시도해주세요.");
-                    window.location.replace("/member/search/id");
+                    window.location.replace("/member/searchIdResult")
                 }
             }
         });

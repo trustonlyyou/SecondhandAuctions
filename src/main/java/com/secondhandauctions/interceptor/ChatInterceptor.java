@@ -17,8 +17,7 @@ public class ChatInterceptor extends HandlerInterceptorAdapter {
         log.info("url :: " + url);
 
         if ("".equals(url) || url == null) {
-            // TODO: 2022/01/16 error page redirect
-//            response.sendRedirect(request.getContextPath() + "/success/list");
+            response.sendRedirect(request.getContextPath() + "/success/list");
             return false;
         } else {
             return true;

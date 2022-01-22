@@ -464,5 +464,14 @@ public class PointService {
         }
 
     }
+
+    public void pointDown(Map<String, Object> info) throws Exception {
+        if (info.isEmpty()) {
+            log.info("info isEmpty");
+            return;
+        } else {
+            pointDao.pointDown(info);
+        }
+    }
 }
 // TODO: 2022/01/11 전반적으로 중복 코드 제거 할 것

@@ -52,7 +52,7 @@
                 </c:if>
                 <c:if test="${account.token ne null}">
                     <c:if test="${account.accountChk eq true}">
-                        <form action="#" method="get">
+                        <form action="/point/exchange/form" method="get">
                             <input type="submit" class="btn btn-primary btn-sm" value="포인트 환전">
 
                         </form>

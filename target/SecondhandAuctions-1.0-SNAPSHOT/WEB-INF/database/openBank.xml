@@ -42,8 +42,30 @@
         update
             account
         set
-            bankName = #{bankName}, bankCode = #{bankCode}, accountNum = #{accountNum}
+            bankName = #{bankName}, bankCode = #{bankCode}, accountNum = #{accountNum}, accountHolder = #{accountHolder}
         where
             memberId = #{memberId};
     </update>
+
+    <select id="getBankInfo" parameterType="String" resultType="Map">
+        select
+            token, bankName, bankCode, accountHolder, accountNum
+        from
+            account
+        inner join
+            member on member.memberId = account.memberId
+        where
+            isMemberCheck = 1 and account.memberId = #{memberId}
+    </select>
+
+    <insert id="setExchangeInfo" parameterType="Map">
+        insert into exchangePoint
+        (
+            exchangeId, memberId, bankName, bankCode, accountHolder, accountName, amount
+        )
+        values
+        (
+            #{exchangeId}, #{memberId}, #{bankName}, #{bankCode}, #{accountHolder}, #{accountName}, #{amount}
+        )
+    </insert>
 </mapper>

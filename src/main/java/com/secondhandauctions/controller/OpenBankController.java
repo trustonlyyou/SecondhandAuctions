@@ -1,7 +1,10 @@
 package com.secondhandauctions.controller;
 
+import com.secondhandauctions.service.MyPageService;
 import com.secondhandauctions.service.OpenBankService;
+import com.secondhandauctions.service.PointService;
 import com.secondhandauctions.utils.Commons;
+import com.secondhandauctions.utils.OpenBankCommonsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Controller
 @Slf4j
@@ -26,6 +27,15 @@ public class OpenBankController {
 
     @Autowired
     private Commons commons;
+
+    @Autowired
+    private MyPageService myPageService;
+
+    @Autowired
+    private PointService pointService;
+
+    @Autowired
+    private OpenBankCommonsUtils openBankCommonsUtils;
 
     @GetMapping("/oauth/callback")
     public String test(Model model, String code, HttpServletRequest request) throws Exception {
@@ -84,11 +94,8 @@ public class OpenBankController {
         Map openBankResult = new HashMap();
         Map<String, Object> result = new HashMap<>();
 
-
-        Random random = new Random();
-        int num = random.nextInt(888888888) + 111111111;
-        String bank_tran_id = "M202200113" + "U" + num; // 이용기관코드 + "U"+임의 난수 9자리
-        String tran_dtime = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+        String bank_tran_id = openBankCommonsUtils.getBankTranId(); // 이용기관코드 + "U"+임의 난수 9자리
+        String tran_dtime = openBankCommonsUtils.getTranDtime();
 
         params.put("bank_tran_id", bank_tran_id);
         params.put("bank_code_std", bank_code);
@@ -99,10 +106,12 @@ public class OpenBankController {
         openBankResult = openBankService.realName(request, params);
         String responseCode = (String) openBankResult.get("rsp_code");
 
+        // TODO: 2022/01/22 예금주도 저장하자.
         if ("A0000".equals(responseCode)) {
             bankInfo.put("bankName", openBankResult.get("bank_name"));
             bankInfo.put("accountNum", openBankResult.get("account_num"));
             bankInfo.put("bankCode", openBankResult.get("bank_code_std"));
+            bankInfo.put("accountHolder", openBankResult.get("account_holder_name"));
             bankInfo.put("memberId", commons.getMemberSession(request));
 
             openBankService.setBankInfo(bankInfo);
@@ -119,33 +128,70 @@ public class OpenBankController {
         }
     }
 
-//    @GetMapping(value = "/real/name")
-//    public String realName(HttpServletRequest request, Model model) throws Exception {
-//        Map<String, Object> params = new HashMap<>();
-//        Map result = new HashMap();
-//
-//        Random random = new Random();
-//        int num = random.nextInt(888888888) + 111111111;
-//
-//        String bank_code_std = request.getParameter("bank_code");
-//        String account_num = request.getParameter("account_num");
-//        String account_holder_info = request.getParameter("memberBirth");
-//        String tran_dtime = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
-//        String bank_tran_id = "M202200113" + "U" + num; // 이용기관코드 + "U"+임의 난수 9자리
-//
-//        params.put("bank_tran_id", bank_tran_id);
-//        params.put("bank_code_std", bank_code_std);
-//        params.put("account_num", account_num);
-//        params.put("account_holder_info", account_holder_info);
-//        params.put("tran_dtime", tran_dtime);
-//
-//        log.info("===============controller param info ===============");
-//        log.info(params.toString());
-//
-//        result = openBankService.realName(request, params);
-//
-//        model.addAttribute("result", result);
-//
-//        return "test/result";
-//    }
+
+    @GetMapping(value = "/point/exchange/form")
+    public String pointExchangeForm(HttpServletRequest request, Model model) throws Exception {
+        String memberId = commons.getMemberSession(request);
+        int myPoint = myPageService.getMyPoint(memberId);
+
+        model.addAttribute("myPoint", myPoint);
+
+        return "myPage/exchange";
+    }
+
+    @PostMapping(value = "/point/exchange")
+    @ResponseBody
+    public Map<String, Object> pointExchange(HttpServletRequest request, String reqPoint) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> downPointInfo = new HashMap<>();
+        Map exchangeResult = new HashMap();
+        Map<String, Object> exchangeInfo = new HashMap<>();
+        Map res = new HashMap();
+
+        log.info("reqPoint :: " + reqPoint);
+
+        String memberId = commons.getMemberSession(request);
+        Map<String, Object> bankInfo = openBankService.getBankInfo(memberId);
+
+        if (bankInfo.isEmpty()) {
+            log.info("bankInfo isEmpty");
+            result.put("result", false);
+
+            return result;
+        } else {
+            exchangeResult = openBankService.transferAccountOfPointExchange(bankInfo, memberId, reqPoint);
+
+            log.info(exchangeResult.toString());
+
+            if ("A0000".equals(exchangeResult.get("rsp_code"))) {
+                List list = (List) exchangeResult.get("res_list");
+                res = (Map) list.get(0);
+
+                exchangeInfo.put("exchangeId", res.get("bank_tran_id"));
+                exchangeInfo.put("memberId", memberId);
+                exchangeInfo.put("bankName", res.get("bank_name"));
+                exchangeInfo.put("bankCode", res.get("bank_code_std"));
+                exchangeInfo.put("accountHolder", res.get("account_holder_name"));
+                exchangeInfo.put("accountName", res.get("account_num"));
+                exchangeInfo.put("amount", res.get("tran_amt"));
+
+                openBankService.setExchangeInfo(exchangeInfo);
+
+                downPointInfo.put("memberId", memberId);
+                downPointInfo.put("disChargePoint", res.get("tran_amt"));
+
+                pointService.pointDown(downPointInfo);
+
+                result.put("result", true);
+
+                return result;
+            } else {
+                result.put("result", "error");
+                result.put("code", exchangeResult.get("rsp_code"));
+                result.put("msg", exchangeResult.get("rsp_message"));
+
+                return result;
+            }
+        }
+    }
 }

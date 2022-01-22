@@ -11,4 +11,8 @@ public interface OpenBankDao {
     public String getToken(String memberId) throws Exception;
 
     public void setBankInfo(Map<String, Object> info) throws Exception;
+
+    public Map<String, Object> getBankInfo(String memberId) throws Exception;
+
+    public void setExchangeInfo(Map<String, Object> params) throws Exception;
 }

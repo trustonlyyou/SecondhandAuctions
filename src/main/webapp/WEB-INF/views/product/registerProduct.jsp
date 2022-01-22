@@ -238,8 +238,8 @@
     $(document).ready(function (e) {
         $("#startPrice").on('keyup', function () {
             var startPrice = $("#startPrice").val();
-            var priceReg = "/\B(?=(\d{3})+(?!\d))/g";
-            var replacePrice = "";
+            var startPriceArr = startPrice.split(",");
+            var chkPrice = startPriceArr[startPriceArr.length - 1];
 
             if (startPrice == "") {
                 $("#priceCheckMsg").text('경매 시작가는 필수 입력입니다.');
@@ -251,6 +251,18 @@
 
                 return false;
             }
+
+            if (chkPrice !== "000") {
+                $("#priceCheckMsg").text("백원, 십원, 일원 단위의 가격은 책정 할 수 없습니다.");
+                $("#priceCheckMsg").css('color', 'red');
+
+                startPriceFlag = false;
+
+                $("#btn_registerModal").attr('disabled', true);
+
+                return false;
+            }
+
 
             startPriceFlag = true;
 

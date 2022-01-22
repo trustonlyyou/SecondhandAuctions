@@ -45,4 +45,12 @@ public class AdminService {
             return result;
         }
     }
+
+    public Map<String, Object> chkPointDates(String memberId) throws Exception {
+        if (StringUtils.isEmpty(memberId)) {
+            return Collections.emptyMap();
+        } else {
+            return adminDao.dateChk(memberId);
+        }
+    }
 }

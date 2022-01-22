@@ -196,7 +196,7 @@ public class OpenBankService {
      * }
      */
 
-
+    // 포인트 환전
     public Map transferAccountOfPointExchange(Map<String, Object> bankInfo, String memberId, String reqPoint) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
@@ -252,6 +252,8 @@ public class OpenBankService {
         ResponseEntity<String> response = restTemplate.exchange(
             requestUri, HttpMethod.POST, request, String.class
         );
+
+        log.info("response :: " + response.toString());
 
         JSONParser parser = new JSONParser();
         JSONObject object = new JSONObject();

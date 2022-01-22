@@ -29,4 +29,27 @@
             isMemberCheck = 1 and
             member.memberName like CONCAT('%', #{keyword}, '%')
     </select>
+
+    <select id="dateChk" parameterType="String" resultType="Map">
+        <![CDATA[
+        select
+        if (
+        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        <
+        (select max(approvedAt) from cancelPoint where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        ) as cancelPointChk,
+
+        if (
+        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        <
+        (select max(regdate) from exchangePoint where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        ) as exchangePointChk,
+
+        if (
+        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        <
+        (select max(payDate) from pointPay where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        ) as pointPayChk
+        ]]>
+    </select>
 </mapper>

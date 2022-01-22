@@ -30,6 +30,7 @@
     <hr>
     <div class="row">
         <div class="col-lg-8">
+            <input type="button" id="dateTest" value="dateTest">
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -53,11 +54,11 @@
                             <td>${point.orderName}</td>
                             <td>
                                 <c:if test="${point.CancelReq eq false}">
-                                <button type="button" class="btn btn btn-outline-danger" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유">결제취소</button>
+                                <button type="button" class="btn btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유">결제취소</button>
 
                                 </c:if>
                                 <c:if test="${point.CancelReq eq true}">
-                                    <button type="button" class="btn btn btn-outline-danger" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유" disabled>결제취소</button>
+                                    <button type="button" class="btn btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modal${status.index}" data-whatever="취소사유" disabled>결제취소</button>
                                 </c:if>
                             </td>
                         </tr>
@@ -80,7 +81,8 @@
                                                     <textarea class="form-control" id="cancelReason_${status.index}" name="cancelReason_${status.index}"></textarea>
                                                 </div>
                                                 <input type="hidden" id="paymentKey_${status.index}" name="paymentKey_${status.index}" value="${point.paymentKey}">
-                                                <input type="hidden" id="memberId_${status.index}" name="memberId_${status.index}" value="${point.memberId}"
+                                                <input type="hidden" id="memberId_${status.index}" name="memberId_${status.index}" value="${point.memberId}">
+                                                <input type="hidden" id="orderId_${status.index}" name="orderId_${status.index}" value="${point.orderId}">
                                             </form>
                                         </div>
                                         <div class="modal-footer">
@@ -124,39 +126,70 @@
         var paymentKeyId = "#paymentKey_" + index;
         var cancelReasonId = "#cancelReason_" + index;
         var memberIdId = "#memberId_" + index;
+        var orderIdId = "#orderId_" + index;
 
         var paymentKey = $(paymentKeyId).val();
         var cancelReason = $(cancelReasonId).val();
         var memberId = $(memberIdId).val();
-
-        console.log(paymentKey);
-        console.log(cancelReason);
+        var orderId = $(orderIdId).val();
 
         var formData = {
             paymentKey : paymentKey,
             cancelReason : cancelReason,
-            memberId : memberId
+            memberId : memberId,
+            orderId : orderId
         }
 
         $.ajax({
-            url: '/cancel/point/pay',
+            url: '/admin/cancel/point/date/chk',
             type: 'post',
-            data: formData,
+            data: {
+                memberId : memberId
+            },
+
             success: function (data) {
                 var result = data.result;
 
                 if (result == true) {
-                    alert("결제 취소가 완료 되었습니다.");
-                    window.location.replace("/admin/pay/info/list")
-                } else {
-                    alert("결제 취소를 실패 했습니다.");
-                    window.location.replace("/admin/pay/info/list")
-                }
-            },
-            error: function (request,status,error) {
+                    $.ajax({
+                        url: '/cancel/point/pay',
+                        type: 'post',
+                        data: formData,
+                        success: function (data) {
+                            var result = data.result;
 
+                            if (result == true) {
+                                alert("결제 취소가 완료 되었습니다.");
+                                window.location.replace("/admin/pay/info/list")
+                            } else {
+                                alert("결제 취소를 실패 했습니다.");
+                                window.location.replace("/admin/pay/info/list")
+                            }
+                        },
+                        error: function (request,status,error) {
+
+                        }
+                    });
+                } else {
+                    var chk = data.msg;
+
+                    if ("exchangePointChk" === chk) {
+                        alert("포인트 결제 후 포인트 환전 내역이 있으므로 환불이 불가합니다.");
+                    } else if ("pointPayChk" === chk) {
+                        alert("포인트 결제 후 포인트 결제 내역이 있으므로 환불이 불가합니다.");
+                    } else if ("cancelPointChk" === chk) {
+                        alert("포인트 결제 후 포인트 취소 내역이 있으므로 환불이 불가합니다.");
+                    } else {
+                        alert(chk);
+                    }
+                }
             }
         });
     }
+
+    $("#dateTest").on('click', function () {
+        var memberId = 'zkem123456';
+
+    });
 </script>
 </html>

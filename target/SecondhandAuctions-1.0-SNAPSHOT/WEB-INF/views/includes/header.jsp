@@ -42,10 +42,10 @@
                         <c:choose>
                             <c:when test="${sessionScope.member eq 'admin'}">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">환불관리</a>
+                                    <a class="nav-link" href="/admin/pay/info/list">환불관리</a>
                                 </li>
                             </c:when>
-                            <c:when test="${sessionScope.meber ne 'admin'}">
+                            <c:when test="${sessionScope.member ne 'admin'}">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/myPage/form">마이페이지</a>
                                 </li>

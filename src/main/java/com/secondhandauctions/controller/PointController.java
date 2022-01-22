@@ -121,15 +121,6 @@ public class PointController {
         }
     }
 
-    /**
-     * curl --request GET \
-     *   --url 'https://api.tosspayments.com/v1/transactions?startDate=2021-07-27&endDate=2021-07-28' \
-     *   --header 'Authorization: Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg=='
-     *
-     *
-     */
-    // TODO: 2022/01/03 리스트는 admin 만 접금 가능하다. 환불은 admin 만 가능하다. 처음에 보여줄때 날짜를 정할 수 있게 보여줄 것.
-    // TODO: 2022/01/03 DB 작업 마무리하고, 결제 완료 insert 코드 짜고, 환불 계획 세우자
     @GetMapping(value = "/pay/list")
     public String payList(Model model) throws Exception {
         HttpHeaders headers = new HttpHeaders();

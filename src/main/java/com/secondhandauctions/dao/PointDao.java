@@ -25,4 +25,8 @@ public interface PointDao {
     public String memberPayPriceAllow(Map<String, Object> info) throws Exception;
 
     public void closeSuccessBid(int successBidNo) throws Exception;
+
+    public void cancelPointCard(Map<String, Object> params) throws Exception;
+
+    public void cancelPointTransfer(Map<String, Object> params) throws Exception;
 }

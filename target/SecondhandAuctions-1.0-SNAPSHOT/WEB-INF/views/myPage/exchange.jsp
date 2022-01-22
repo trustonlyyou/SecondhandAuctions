@@ -112,8 +112,6 @@
 
             return false;
         } else {
-            alert("환불요청");
-
             $.ajax({
                 url: '/point/exchange',
                 type: 'post',
@@ -122,12 +120,20 @@
                 },
 
                 success: function (data) {
+                    var result = data.result;
 
+                    if (result === true) {
+                        alert("포인트 환전이 완료 되었습니다.");
+                        window.location.replace('/myPage/myPoint');
+                    } else if (result === false) {
+                        alert("계좌정보가 일치하지 않습니다. 계좌정보를 확인해주세요.");
+                        window.location.replace('/myPage/myPoint');
+                    } else {
+                        alert("error code :: " + data.code + " error massage :: " + data.msg);
+                        window.location.reload();
+                    }
                 }
             });
         }
     });
-
-
-
 </script>

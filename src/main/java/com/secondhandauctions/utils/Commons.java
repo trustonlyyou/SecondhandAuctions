@@ -107,4 +107,10 @@ public class Commons {
     public int convertPrice(String price) {
         return Integer.parseInt(price.replaceAll(",", ""));
     }
+
+    public String getNowTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return simpleDateFormat.format(Calendar.getInstance().getTime());
+    }
 }

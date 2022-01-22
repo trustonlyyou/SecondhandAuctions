@@ -1,5 +1,6 @@
 package com.secondhandauctions.controller;
 
+import com.secondhandauctions.dao.PointDao;
 import com.secondhandauctions.service.MyPageService;
 import com.secondhandauctions.service.OpenBankService;
 import com.secondhandauctions.service.PointService;
@@ -33,6 +34,9 @@ public class OpenBankController {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private PointDao pointDao;
 
     @Autowired
     private OpenBankCommonsUtils openBankCommonsUtils;
@@ -84,11 +88,6 @@ public class OpenBankController {
     public Map<String, Object> realName(String memberName, String memberBirth, String account_num,
                          String bank_code, HttpServletRequest request) throws Exception {
 
-        log.info(memberName);
-        log.info(memberBirth);
-        log.info(account_num);
-        log.info(bank_code);
-
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> bankInfo = new HashMap<>();
         Map openBankResult = new HashMap();
@@ -106,7 +105,6 @@ public class OpenBankController {
         openBankResult = openBankService.realName(request, params);
         String responseCode = (String) openBankResult.get("rsp_code");
 
-        // TODO: 2022/01/22 예금주도 저장하자.
         if ("A0000".equals(responseCode)) {
             bankInfo.put("bankName", openBankResult.get("bank_name"));
             bankInfo.put("accountNum", openBankResult.get("account_num"));
@@ -144,6 +142,7 @@ public class OpenBankController {
     public Map<String, Object> pointExchange(HttpServletRequest request, String reqPoint) throws Exception {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> downPointInfo = new HashMap<>();
+        Map<String, Object> updateTimeInfo = new HashMap<>();
         Map exchangeResult = new HashMap();
         Map<String, Object> exchangeInfo = new HashMap<>();
         Map res = new HashMap();
@@ -181,6 +180,11 @@ public class OpenBankController {
                 downPointInfo.put("disChargePoint", res.get("tran_amt"));
 
                 pointService.pointDown(downPointInfo);
+                updateTimeInfo.put("memberId", commons.getMemberSession(request));
+                updateTimeInfo.put("updateTime", commons.getNowTime());
+
+                pointDao.pointUpdateMemberTime(updateTimeInfo);
+
 
                 result.put("result", true);
 

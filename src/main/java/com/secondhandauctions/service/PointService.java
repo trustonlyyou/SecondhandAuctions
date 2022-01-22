@@ -105,6 +105,7 @@ public class PointService {
         return response;
     }
 
+    // 포인트 결제
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = {Exception.class, RuntimeException.class}, timeout = 10)
@@ -248,18 +249,8 @@ public class PointService {
         return error;
     }
 
+    // 결제 취소
     public ResponseEntity<String> cancel(String paymentKey, String cancelReason) throws Exception {
-        /**
-         * HttpRequest request = HttpRequest.newBuilder()
-         *     .uri(URI.create("https://api.tosspayments.com/v1/payments/{paymentKey}/cancel"))
-         *     .header("Authorization", "Basic dGVzdF9za19KUWJnTUdaem9yekRLWmdXbWVrM2w1RTFlbTRkOg==")
-         *     .header("Content-Type", "application/json")
-         *     .method("POST", HttpRequest.BodyPublishers.ofString("{\"cancelReason\":\"고객이 취소를 원함\"}"))
-         *     .build();
-         * HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-         * System.out.println(response.body());
-         */
-
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -312,7 +303,7 @@ public class PointService {
 
         // 어차피 원소는 1개 이기 때문에 반복문 돌림
         for (Map map : cancels) {
-            log.info(map.toString());
+            log.info("response :: {}", map.toString());
 
             cancelInfo.put("approvedAt", map.get("canceledAt"));
             cancelInfo.put("cancelReason", map.get("cancelReason"));
@@ -401,12 +392,14 @@ public class PointService {
         }
     }
 
+    // 포인트로 상품 결제
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
     public void pointUpDownBySuccessBidProduct(Map<String, Object> info) throws Exception {
         Map<String, Object> upPointInfo = new HashMap<>();
         Map<String, Object> downPointInfo = new HashMap<>();
+        Map<String, Object> updateMemberTime = new HashMap<>();
 
         boolean priceChk = false;
 
@@ -431,8 +424,12 @@ public class PointService {
             upPointInfo.put("memberId", seller);
             upPointInfo.put("chargePoint", price);
 
+            updateMemberTime.put("memberId", bidder);
+            updateMemberTime.put("updateTime", commons.getNowTime());
+
             pointDao.pointDown(downPointInfo);
             pointDao.pointUpMember(upPointInfo);
+            pointDao.pointUpdateMemberTime(updateMemberTime);
 
             pointDao.closeSuccessBid(targetId);
         }

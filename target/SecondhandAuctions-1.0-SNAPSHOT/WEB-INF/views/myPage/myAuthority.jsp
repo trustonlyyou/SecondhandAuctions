@@ -31,12 +31,6 @@
     <div class="col-lg-3">
       <h2 class="my-4">마이 페이지</h2>
       <%@include file="../includes/myPageCategory.jsp"%>
-<%--      <div class="list-group list-group-flush">--%>
-<%--        <a href="/myPage" class="list-group-item">나의 정보</a>--%>
-<%--        <a href="/myShop/list" class="list-group-item">나의 판매 정보</a>--%>
-<%--        <a href="/myBid/list" class="list-group-item">입찰 물품</a>--%>
-<%--        <a href="/myBid/success/sell" class="list-group-item">낙찰 정보</a>--%>
-<%--      </div>--%>
     </div>
 
     <div class="col-lg-9">
@@ -57,7 +51,6 @@
           </div>
         </c:if>
         <c:if test="${chk eq true}">
-          <%--     todo :: 무엇으로 인증할래??     --%>
           <h3>카카오 인증</h3>
           <div class="form-group row">
             <div class="col-sm-10 text-center">
@@ -110,7 +103,6 @@
         data: memberPassword,
 
         success: function (data) {
-          // todo :: keycode 사용시 ajax 밑에 내용이 인식이 안된다.
           var chk = data.chk;
 
           if (chk == true) {
@@ -160,8 +152,6 @@
     $("#phoneCheck").on('click', function () {
         var memberPhone = $("#memberPhone").val();
         $(".phoneInputCheckDiv").show();
-
-        alert(memberPhone);
 
         $.ajax({
           url: '/authority/sendSms',

@@ -87,7 +87,7 @@ public class ProductController {
             return result;
         } else {
 
-            check = productService.uploadIwmage(uploadFiles, productId);
+            check = productService.uploadImage(uploadFiles, productId);
             result.put("check", check);
 
             log.info("image upload result :: '{}'", check);

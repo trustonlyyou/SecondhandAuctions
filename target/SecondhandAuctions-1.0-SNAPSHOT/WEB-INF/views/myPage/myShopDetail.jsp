@@ -66,9 +66,6 @@
                         </div>
                         <!-- 인디케이션 부분 -->
                         <ul class="carousel-indicators">
-<%--                            <li data-target="#banner" data-slide-to="0" class="active"></li>--%>
-<%--                            <li data-target="#banner" data-slide-to="1"></li>--%>
-<%--                            <li data-target="#banner" data-slide-to="2"></li>--%>
                             <c:forEach var="count" items="${fileName}" varStatus="status">
                                 <li data-target="#banner" data-slide-to="${status.index}" class="${status.index == 0 ? "active" : ""}"></li>
                             </c:forEach>
@@ -86,13 +83,8 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-                    <%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
-                    <!-- Form 시작 -->
                         <br>
-
-
                         <div class="form-label-group">
-<%--                            제목<br>--%>
                             <label for="productTitle">제목</label>
                             <input type="text" id="productTitle" name="productTitle" class="form-control"
                                                                      readonly value="${product.productTitle}">
@@ -223,13 +215,6 @@
         $(".deleteBtn").on("click", function (e) {
             e.preventDefault();
 
-            // if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") === true) {
-            //     deleteForm.submit();
-            // } else {
-            //     alert("게시물 삭제 취소");
-            // }
-
-
             var productId = $("#productId").val();
 
             var formData = {
@@ -262,11 +247,6 @@
                 }
             });
         });
-        //
-        // $(".answer_btn").on("click", function () {
-        //
-        // });
-
 
         $(".modifyBtn").on("click", function () {
             $("#modifyForm").submit();

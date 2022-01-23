@@ -18,12 +18,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
     <title>중고 경매의 세계 | 마이페이지</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
 </head>
 <body>
 <%@include file="../includes/header.jsp"%>
@@ -84,26 +78,6 @@
             </c:if>
         </ul>
     </div>
-
-<%--    <h4>${pageMaker}</h4>--%>
-<%--    <div>--%>
-<%--        <ul class="pagination justify-content-end">--%>
-<%--            <c:if test="${pageMaker.prev}">--%>
-<%--                <li class="page-item">--%>
-<%--                    <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">이전</a>--%>
-<%--                </li>--%>
-<%--            </c:if>--%>
-<%--            <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">--%>
-<%--                <li class="page-item ${pageMaker.criteria.page == num ? "active": ""}">--%>
-<%--                    <a class="page-link" href="${num}">${num}</a></li>--%>
-<%--            </c:forEach>--%>
-<%--            <c:if test="${pageMaker.next}">--%>
-<%--                <li class="page-item">--%>
-<%--                    <a class="page-link" href="${pageMaker.endPage + 1}" tabindex="-1">다음</a>--%>
-<%--                </li>--%>
-<%--            </c:if>--%>
-<%--        </ul>--%>
-<%--    </div>--%>
     <div>
         <form id="actionForm" action="/myShop/list" method="get">
             <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
@@ -135,18 +109,6 @@
             actionForm.find("[name='page']").val(targetPage);
             actionForm.submit();
         });
-
-        // var deleteForm = $("#deleteForm");
-        //
-        // $("#deleteProduct").on("click", function (e) {
-        //     if (confirm("해당 게시물을 정말로 취소 하시겠습니끼?") == true) {
-        //         alert("게시물 삭제");
-        //         deleteForm.submit();
-        //     } else {
-        //         alert("게시물 삭제 취소")
-        //     }
-        //     //todo :: form 을 foreach 하면 어떻게 하냐!!! 거기서 부터 다시하자
-        // });
     });
 </script>
 </html>

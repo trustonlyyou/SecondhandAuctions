@@ -224,8 +224,6 @@
 
                             if (check === true) {
                                 window.location.replace("/product/register/success");
-                            } else {
-                                
                             }
                         },
                         error: function (request, status, error) {

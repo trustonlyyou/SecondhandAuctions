@@ -66,9 +66,6 @@
                         </div>
                         <!-- 인디케이션 부분 -->
                         <ul class="carousel-indicators">
-                            <%--                            <li data-target="#banner" data-slide-to="0" class="active"></li>--%>
-                            <%--                            <li data-target="#banner" data-slide-to="1"></li>--%>
-                            <%--                            <li data-target="#banner" data-slide-to="2"></li>--%>
                             <c:forEach var="count" items="${images}" varStatus="status">
                                 <li data-target="#banner" data-slide-to="${status.index}" class="${status.index == 0 ? "active" : ""}"></li>
                             </c:forEach>
@@ -86,13 +83,10 @@
 
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-                    <%--                    <h2 class="card-title text-center">상품 조회</h2>--%>
-                    <!-- Form 시작 -->
                     <br>
 
 
                     <div class="form-label-group">
-                        <%--                            제목<br>--%>
                         <label for="productTitle">제목</label>
                         <input type="text" id="productTitle" name="productTitle" class="form-control"
                                readonly value="${product.productTitle}">
@@ -100,8 +94,6 @@
                     <br>
 
                     <div class="form-label-group">
-                        <%--                            내용<br>--%>
-
                         <label for="productContent">내용</label>
                         <textarea name="productContent" id="productContent" cols="30" rows="10" class="productText form-control" readonly><c:out value="${product.productContent}"/></textarea>
                     </div>

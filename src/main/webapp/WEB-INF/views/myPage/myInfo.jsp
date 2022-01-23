@@ -127,12 +127,6 @@
     $("#modifyPwd").on('click', function () {
       window.location.replace("/myPage/certification/password");
     });
-
-    // $.ajax({
-    //   url: '/myPage/check',
-    //   type: 'get',
-    //   data: ''
-    // });
   });
 </script>
 

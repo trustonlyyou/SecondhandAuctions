@@ -96,26 +96,6 @@
         </div>
     </div>
     <!-- .row -->
-
-<%--    <h4>${pageMaker}</h4>--%>
-<%--    <div>--%>
-<%--        <ul class="pagination justify-content-end">--%>
-<%--            <c:if test="${pageMaker.prev}">--%>
-<%--                <li class="page-item">--%>
-<%--                    <a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">이전</a>--%>
-<%--                </li>--%>
-<%--            </c:if>--%>
-<%--            <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">--%>
-<%--                <li class="page-item ${pageMaker.criteria.page == num ? "active": ""}">--%>
-<%--                    <a class="page-link" href="${num}">${num}</a></li>--%>
-<%--            </c:forEach>--%>
-<%--            <c:if test="${pageMaker.next}">--%>
-<%--                <li class="page-item">--%>
-<%--                    <a class="page-link" href="${pageMaker.endPage + 1}" tabindex="-1">다음</a>--%>
-<%--                </li>--%>
-<%--            </c:if>--%>
-<%--        </ul>--%>
-<%--    </div>--%>
     <div>
         <form id="actionForm" action="/myBid/list" method="get">
             <input type="hidden" name="page" id="pageNum" value="${pageMaker.criteria.page}">
@@ -143,9 +123,6 @@
             var targetPage = $(this).attr("href");
 
             console.log(targetPage);
-
-            // actionForm.find("[name='page']").val(targetPage);
-            // actionForm.submit();
         });
 
         $(".move").on("click", function (e) {
@@ -157,7 +134,6 @@
 
             actionForm.append("<input type='hidden' name='productId' value='"+targetProductId+"'>");
             actionForm.attr("action", "/shop/get").submit();
-            // actionForm.submit();
         });
     });
 </script>

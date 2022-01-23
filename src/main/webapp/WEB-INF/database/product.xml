@@ -91,6 +91,10 @@
         </foreach>
     </insert>
 
+    <select id="getSuccessBidNo" resultType="int" parameterType="int">
+        select successBidNo from successBid where productId = #{productId};
+    </select>
+
     <!--  게시물 마감하기  -->
     <update id="closeProducts" parameterType="Integer">
         <foreach collection="list" item="item" separator=";" close=";">

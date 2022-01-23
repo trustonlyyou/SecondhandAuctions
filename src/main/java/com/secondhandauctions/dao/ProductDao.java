@@ -1,6 +1,5 @@
 package com.secondhandauctions.dao;
 
-import com.secondhandauctions.vo.BoardVo;
 import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 
@@ -24,6 +23,8 @@ public interface ProductDao {
     public List<Integer> notSuccessBidProductIds() throws Exception;
 
     public List<Integer> successBidProductIds() throws Exception;
+
+    public int getSuccessBidNo(int productId) throws Exception;
 
     public void closeProducts(List<Integer> list) throws Exception;
 

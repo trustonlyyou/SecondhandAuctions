@@ -169,7 +169,7 @@ public class BidService {
      * @throws Exception
      */
     //                 초 분 시 일 월 요일
-    @Scheduled(cron = "0 03 11 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    @Scheduled(cron = "0 30 14 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
@@ -194,8 +194,6 @@ public class BidService {
             }
             productDao.closeProducts(notSuccessBidProductId);
         }
-
-        // productId 와 successBidNo 가 다르면 어떻게 할래??
         if (!successBidProductId.isEmpty()) {
             productDao.insertSuccessBidInfo(successBidProductId);
             productDao.closeProducts(successBidProductId);
@@ -213,7 +211,7 @@ public class BidService {
                 log.info("seller :: '{}'", seller);
                 log.info("bidder :: '{}'", bidder);
 
-                params.put("roomNo", targetId);
+                params.put("roomNo", productDao.getSuccessBidNo(targetId));
                 params.put("seller", seller);
                 params.put("bidder", bidder);
 

@@ -1,29 +1,20 @@
 package com.secondhandauctions.controller;
 
-import antlr.collections.impl.LList;
-import com.secondhandauctions.service.FileService;
 import com.secondhandauctions.service.ProductService;
 import com.secondhandauctions.utils.Commons;
-import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
@@ -47,25 +38,28 @@ public class ProductController {
     @ResponseBody
     public Map<String, Object> uploadProduct(HttpServletRequest request, ProductVo productVo) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Map<String, Integer> product = new HashMap<>();
+        Map<String, Object> product = new HashMap<>();
 
         String memberId = "";
         int productId = 0;
+        boolean chk = false;
 
         memberId = commons.getMemberSession(request);
         productVo.setMemberId(memberId);
 
         product = productService.setRegisterProduct(productVo);
+        chk = (boolean) product.get("check");
+        log.info("Product register result :: '{}'", chk);
 
-        log.info("Product register result :: '{}'", product.get("check"));
 
-        if (product.get("check") == 0) {
-            result.put("check", 0);
+        if (chk == false) {
+            result.put("check", false);
+            return result;
         }
 
-        productId = product.get("productId");
+        productId = (int) product.get("productId");
 
-        result.put("check", 1);
+        result.put("check", true);
         result.put("productId", productId);
 
         return result;
@@ -78,7 +72,7 @@ public class ProductController {
         Map<String, Object> result = new HashMap<>();
 
         String filedName = "";
-        int check = 0;
+        boolean check = false;
 
         Iterator<String> iterator = multipartRequest.getFileNames();
 
@@ -88,18 +82,19 @@ public class ProductController {
         }
 
         if (uploadFiles.isEmpty()) {
-            check = -1;
+            result.put("check", false);
+
+            return result;
+        } else {
+
+            check = productService.uploadIwmage(uploadFiles, productId);
             result.put("check", check);
+
+            log.info("image upload result :: '{}'", check);
 
             return result;
         }
 
-        check = productService.uploadImage(uploadFiles, productId);
-        result.put("check", check);
-
-        log.info("image upload result :: '{}'", check);
-
-        return result;
     }
 
     @GetMapping(value = "/product/register/success")

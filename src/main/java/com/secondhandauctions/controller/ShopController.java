@@ -11,8 +11,6 @@ import com.secondhandauctions.vo.ProductVo;
 import com.secondhandauctions.vo.ShopVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -32,8 +30,6 @@ import java.util.*;
 @Controller
 @Slf4j
 public class ShopController {
-
-    private static final Logger logger = LoggerFactory.getLogger(ShopController.class);
 
     @Autowired
     private ShopService shopService;
@@ -137,13 +133,10 @@ public class ShopController {
 
         path = Paths.get(ProductDao.UPLOAD_PATH + "/" + uploadPath + "/" + fileName).toString();
 
-        // 이건 안쓰고
-        // apache ftpservice 사용한다. FTP
         resource = new FileSystemResource(path);
 
         if (!resource.exists()) {
             log.error("error :: {}", HttpStatus.NOT_FOUND);
-
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

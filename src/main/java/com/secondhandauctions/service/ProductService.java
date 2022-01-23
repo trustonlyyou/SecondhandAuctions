@@ -7,20 +7,11 @@ import com.secondhandauctions.vo.ImageVo;
 import com.secondhandauctions.vo.ProductVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.net.URLDecoder;
-import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -33,19 +24,19 @@ public class ProductService {
     @Autowired
     private Commons commons;
 
-    public int uploadImage(List<MultipartFile> uploadFiles, int productId) throws Exception {
+    public boolean uploadImage(List<MultipartFile> uploadFiles, int productId) throws Exception {
         List<ImageVo> imageVoList = new ArrayList<>();
 
         String uploadDir = "";
         File uploadPath = null;
 
-        int check = 0;
+        boolean check = false;
 
         uploadDir = FileUtils.getUploadPath();
         uploadPath = new File(ProductDao.UPLOAD_PATH, uploadDir);
 
         if (uploadFiles.isEmpty()) {
-            return check;
+            return false;
         }
         if (!uploadPath.exists()) {
             uploadPath.mkdirs();
@@ -80,27 +71,28 @@ public class ProductService {
     }
 
     // 이미지 저장
-    public int registerImage(int productId, List<ImageVo> images) throws Exception {
-        int result = 0;
-
+    public boolean registerImage(int productId, List<ImageVo> images) throws Exception {
         if (images.isEmpty()) {
-            return result;
+            return false;
+        } else {
+            try {
+                for (ImageVo imageVo : images) {
+                    imageVo.setProductId(productId);
+                }
+
+                productDao.registerImg(images);
+                return true;
+
+            } catch (Exception e) {
+                log.error(commons.printStackLog(e));
+                return false;
+            }
         }
-
-        for (ImageVo imageVo : images) {
-            imageVo.setProductId(productId);
-        }
-
-        productDao.registerImg(images);
-
-        result = 1;
-
-        return result;
     }
 
     // 게시물 등록
-    public Map<String, Integer> setRegisterProduct(ProductVo productVo) throws Exception {
-        Map<String, Integer> result = new HashMap<>();
+    public Map<String, Object> setRegisterProduct(ProductVo productVo) throws Exception {
+        Map<String, Object> result = new HashMap<>();
         List<String> checkList = new ArrayList<>();
         boolean chk = false;
 
@@ -112,37 +104,23 @@ public class ProductService {
         String startPrice = "";
         Date expireTime = null;
 
-        memberId = productVo.getMemberId();
-        categoryName = productVo.getCategoryName();
-        productTitle = productVo.getProductTitle();
-        productContent = productVo.getProductContent();
-        startPrice = productVo.getStartPrice();
-
-        checkList.add(memberId);
-        checkList.add(categoryName);
-        checkList.add(productTitle);
-        checkList.add(productContent);
-        checkList.add(startPrice);
-
-        chk = commons.isEmpty(checkList);
-
-        if (chk == true) {
-            result.put("check", 0);
-            return result;
-        }
-
         expireTime = commons.getExpireTime();
         productVo.setExpireTime(expireTime);
 
-        // 게시물 등록
-        productDao.registerProduct(productVo);
+        try {
+            // 게시물 등록
+            productDao.registerProduct(productVo);
+            productId = productVo.getProductId();
 
-        productId = productVo.getProductId();
+            result.put("check", true);
+            result.put("productId", productId);
 
-        result.put("check", 1);
-        result.put("productId", productId);
-
-        return result;
+            return result;
+        } catch (Exception e) {
+            log.error(commons.printStackLog(e));
+            result.put("check", false);
+            return result;
+        }
     }
 
     public int updateBidPrice(Map<String, Object> params) throws Exception {

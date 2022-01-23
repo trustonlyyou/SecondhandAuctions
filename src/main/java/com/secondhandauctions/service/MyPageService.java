@@ -45,13 +45,12 @@ public class MyPageService {
     public int getMyShopListCount(String memberId) throws Exception {
         int count = 0;
 
-        if (("".equals(memberId)) || (memberId == null)) {
+        if (StringUtils.isEmpty(memberId)) {
+            return count;
+        } else {
+            count = myPageDao.count(memberId);
             return count;
         }
-
-        count = myPageDao.count(memberId);
-
-        return count;
     }
 
     public List<ProductVo> getMyShopList(Map<String, Object> params) throws Exception {
@@ -60,14 +59,14 @@ public class MyPageService {
 
         memberId = (String) params.get("memberId");
 
-        if (("".equals(memberId)) || (memberId == null)) {
-            result = Collections.emptyList();
+        if (StringUtils.isEmpty(memberId)) {
+            return Collections.emptyList();
+        } else {
+            result = myPageDao.myShopList(params);
+
             return result;
         }
 
-        result = myPageDao.myShopList(params);
-
-        return result;
     }
 
     public Map<String, Object> getMyShopDetail(Map<String, Object> info) throws Exception {
@@ -127,7 +126,7 @@ public class MyPageService {
         result = myPageDao.readQuestion(info);
 
         if (result.isEmpty()) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
 
         return result;
@@ -214,31 +213,7 @@ public class MyPageService {
     }
 
     public int setModifyProduct(ProductVo productVo) throws Exception {
-        List<String> checkList = new ArrayList<>();
         int result = 0;
-        boolean chk = false;
-
-        String categoryName = "";
-        String productTitle = "";
-        String productContent = "";
-        String startPrice = "";
-
-        // TODO: 2021/12/05 리스트로 묶어서 따로 빈값 비교 메소드 만들자 귀찮다.
-        categoryName = productVo.getCategoryName();
-        productTitle = productVo.getProductTitle();
-        productContent = productVo.getProductContent();
-        startPrice = productVo.getStartPrice();
-
-        checkList.add(categoryName);
-        checkList.add(productTitle);
-        checkList.add(productContent);
-        checkList.add(startPrice);
-
-        chk = commons.isEmpty(checkList);
-
-        if (chk == true) {
-            return result;
-        }
 
         result = myPageDao.modifyProduct(productVo);
 

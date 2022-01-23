@@ -205,34 +205,34 @@
                 var check = result.check;
                 var productId = result.productId;
 
-                if (check !== 1) {
+                if (check !== true) {
                     window.alert("게시물 등록 실패, 다시 등록해주세요..");
                     window.location.replace("/register/product/form");
-                    return;
-                }
-
-                if (check === 1) {
+                    return false;
+                } else {
                     formData.append("productId", productId);
-                }
 
-                $.ajax({
-                    url: '/upload/image',
-                    type: 'post',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                    $.ajax({
+                        url: '/upload/image',
+                        type: 'post',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
 
-                    success: function (result) {
-                        var check = result.check;
+                        success: function (result) {
+                            var check = result.check;
 
-                        if (check === 1) {
-                            window.location.replace("/product/register/success");
+                            if (check === true) {
+                                window.location.replace("/product/register/success");
+                            } else {
+                                
+                            }
+                        },
+                        error: function (request, status, error) {
+                            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         }
-                    },
-                    error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                    }
-                });
+                    });
+                }
             }
         });
     });

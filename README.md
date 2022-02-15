@@ -1,6 +1,6 @@
-# SecondhandAuction by LungHwan
+# C2C기반의 중고경매 사이트 입니다.
 
-개발 환경
+Development Environment
 - OS : MacOs(M1)
 - Development Tool : IntelliJ
 - Middle ware : Tomcat9

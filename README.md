@@ -1,6 +1,6 @@
 # C2C기반의 중고경매 사이트 입니다.
 
-Development Environment
+## Development Environment
 - OS : MacOs(M1)
 - Development Tool : IntelliJ
 - Middle ware : Tomcat9
@@ -11,4 +11,22 @@ Development Environment
     - Spring 5.2.3.RELEASE
 - DataBase : Mysql
 - API : kakao login api, coolsms api, toss payments api, 금결원 open api(test api)
-- 사용 기술 : Java, Spring, Html, CSS, BootStrap, JavaScript, jquery, Ajax, jsp, MySQL, Mybatis, hikerie DBCP
+- Ues Skills : Java, Spring, Html, CSS, BootStrap, JavaScript, jquery, Ajax, jsp, MySQL, Mybatis, hikerie DBCP
+
+***
+
+## Description of functions
+
+### Kakao Join & Login
+
+***
+
+### product bid
+
+***
+
+### Auction closed
+
+***
+
+### Chat

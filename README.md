@@ -17,6 +17,8 @@
 
 ## Description of functions
 
+***
+
 ### Kakao Join & Login
 
 ***

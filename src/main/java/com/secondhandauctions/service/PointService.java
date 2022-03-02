@@ -238,7 +238,7 @@ public class PointService {
         Map<String, String> error = new HashMap<>();
 
         String code = (String) result.get("code");
-        String message = (String) result.get("message");
+        String message = (String) result.get("WEB-INF/messages");
 
         log.error("ERROR CODE :: '{}'", code);
         log.error("ERROR MESSAGE :: '{}'", message);

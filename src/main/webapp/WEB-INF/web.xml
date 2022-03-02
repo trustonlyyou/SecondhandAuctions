@@ -12,6 +12,7 @@
             /WEB-INF/config/applicationContext.xml
             /WEB-INF/config/database-context.xml
             /WEB-INF/config/email-context.xml
+            /WEB-INF/config/message-context.xml
         </param-value>
     </context-param>
 

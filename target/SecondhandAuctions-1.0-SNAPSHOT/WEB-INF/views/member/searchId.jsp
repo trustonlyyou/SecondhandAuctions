@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -44,7 +45,9 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="type" id="phoneCheck" value="phone"
                                checked>
-                        <label class="form-check-label" for="phoneCheck">휴대폰 인증</label>
+                        <label class="form-check-label" for="phoneCheck">
+                            <spring:message code="message.phone.certification" />
+                        </label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="type" id="emailCheck" value="email">

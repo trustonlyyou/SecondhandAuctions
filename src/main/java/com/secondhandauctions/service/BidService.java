@@ -216,7 +216,6 @@ public class BidService {
                 params.put("bidder", bidder);
 
                 chatDao.addChatRoom(params);
-                params.clear();
             }
         }
     }

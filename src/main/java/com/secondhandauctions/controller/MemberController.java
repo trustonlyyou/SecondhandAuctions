@@ -236,7 +236,7 @@ public class MemberController {
             log.info("kakao join result :: '{}'", isMemberChk);
             model.addAttribute("msg", "이미 가입된 회원입니다.");
             return "member/kakaoJoinResult";
-        } else { // 추가 기입을 받자
+        } else {
             log.info("kakao join result :: '{}'", isMemberChk);
             model.addAttribute("memberName", memberName);
             model.addAttribute("memberEmail", memberEmail);
@@ -479,7 +479,6 @@ public class MemberController {
         String accessToken = "";
         String memberEmail = "";
         String memberId = "";
-        String memberNmae = "";
         boolean isMemberChk = false;
 
         try {
@@ -515,7 +514,6 @@ public class MemberController {
                 model.addAttribute("msg", "가입된 회원의 정보가 없습니다.");
                 return "member/kakaoLoginResult";
             } else {
-                // 아이디 가져와서 세션에 저장하고
                 commons.setMemberSession(request, memberId);
                 commons.setKakaoToken(request, accessToken);
                 return "redirect:/";

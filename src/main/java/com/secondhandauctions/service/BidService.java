@@ -44,51 +44,28 @@ public class BidService {
     @Autowired
     private Commons commons;
 
-    // 압찰
+    // 입찰
    public int setBid(Map<String, Object> params) throws Exception {
-        List<String> checkList = new ArrayList<>();
-
-        int productId = 0;
-        String bidMemberId = "";
-        String bidPrice = "";
-
-        boolean strCheck = false;
         int bidChk = 0;
         int result = 0;
 
         if (params.isEmpty()) {
             log.error("params isEmpty is true");
             return result;
-        }
+        } else {
+            synchronized (this) {
+                bidChk = biding(params);
 
-        productId = (int) params.get("productId");
-        bidMemberId = (String) params.get("bidMemberId");
-        bidPrice = (String) params.get("bidPrice");
+                log.info("bidChk :: '{}'", bidChk);
 
-        checkList.add(bidMemberId);
-        checkList.add(bidPrice);
-
-        strCheck = commons.isEmpty(checkList);
-
-        if (strCheck == true) {
-            log.info("null check is true");
+                if (bidChk != 1) {
+                    log.error("bidChk result :: '{}'", bidChk);
+                    return result;
+                }
+                result = 1;
+            }
             return result;
         }
-
-        synchronized (this) {
-            bidChk = biding(params);
-
-            log.info("bidChk :: '{}'", bidChk);
-
-            if (bidChk != 1) {
-                log.error("bidChk result :: '{}'", bidChk);
-                return result;
-            }
-
-            result = 1;
-        }
-
-        return result;
     }
 
     /**
@@ -130,7 +107,6 @@ public class BidService {
             log.error("Exception :: '{}'", commons.printStackLog(e));
             return 0;
         }
-
         return resultChk;
     }
 
@@ -169,7 +145,7 @@ public class BidService {
      * @throws Exception
      */
     //                 초 분 시 일 월 요일
-    @Scheduled(cron = "0 30 14 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
+    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행, return void & Don't have parameter
     @Transactional(
             isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
             rollbackFor = Exception.class)
@@ -179,8 +155,6 @@ public class BidService {
          * 2. 입찰하게 있으면 성공으로 넘기기
          *
          */
-        log.info("Scheduled....");
-
         List<Integer> notSuccessBidProductId = new LinkedList<>(); // 오늘 마감 할 게시물 id 중 낙찰에 실패한
         List<Integer> successBidProductId = new LinkedList<>(); // 오늘 마강 할 게시물 id 중에 낙찰에 성공한
 

@@ -174,7 +174,7 @@ public class KakaoService {
         Map result = new HashMap();
         Integer id = null;
 
-        headers.add("Authorization", "Bearer " + access_token); // 띄어쓰기 조심
+        headers.add("Authorization", "Bearer " + access_token);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 

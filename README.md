@@ -48,8 +48,6 @@
 
         if (response.getStatusCode() == HttpStatus.OK) {
             oAuthToken = objectMapper.readValue(response.getBody(), Map.class);
-            log.info(oAuthToken.toString());
-
             return oAuthToken;
         } else {
             log.error("status :: '{}'", response.getStatusCode().toString());
@@ -199,16 +197,126 @@
     }
 ```
 
+***
 
+### Bidding(입찰)
+ - Transaction의 격리 수준과 별개로 입찰시 해당 메소드를 동기화 해서 하나의 Thread 만 접근 시키기 위해서 @Transactional 호출 이전에 synchronized를 호출을 하였다. 
+
+##### Service 
+```C
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = {Exception.class, RuntimeException.class}, timeout = 10)
+    public int biding(Map<String, Object> params) throws Exception {
+        int insertChk = 0;
+        int updateChk = 0;
+        int resultChk = 0;
+
+        log.info((String) params.get("bidMemberId"));
+
+        if (params.isEmpty()) {
+            return resultChk;
+        }
+
+        try {
+            insertChk = bidDao.registerBid(params);
+            updateChk = productService.updateBidPrice(params);
+
+            if (insertChk == 0 || updateChk == 0) {
+                log.info("insert or update is result '{}'", resultChk);
+                return resultChk;
+            }
+
+            resultChk = 1;
+        } catch (Exception e) {
+            log.error("Exception :: '{}'", commons.printStackLog(e));
+            return 0;
+        }
+        return resultChk;
+    }
+```
+```C
+   public int setBid(Map<String, Object> params) throws Exception {
+        int bidChk = 0;
+        int result = 0;
+
+        if (params.isEmpty()) {
+            log.error("params isEmpty is true");
+            return result;
+        } else {
+            synchronized (this) {
+                bidChk = biding(params);
+
+                log.info("bidChk :: '{}'", bidChk);
+
+                if (bidChk != 1) {
+                    log.error("bidChk result :: '{}'", bidChk);
+                    return result;
+                }
+                result = 1;
+            }
+            return result;
+        }
+    }
+
+```
 
 ***
 
-### product bid
+### Auction closed(경매 마감)
+ - @Scheduled를 이용하며 특정 시간에 경매를 마감한다.
+
+
+#### Service
+```C
+    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행
+    @Transactional(
+            isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED,
+            rollbackFor = Exception.class)
+    public void closeBidOfProductAndSuccessBid() throws Exception {
+        List<Integer> notSuccessBidProductId = new LinkedList<>(); 
+        List<Integer> successBidProductId = new LinkedList<>(); 
+        
+        ...
+
+```
 
 ***
 
-### Auction closed
 
-***
+### Chat(채팅)
 
-### Chat
+ - WebSocket과 SockJS를 이용해서 구현 
+    - 포트폴리오 이전에 나의 공부중 하나 이기 때문에 STOMP를 이용하지 않고 직접 구현(향후 STOMP으로 리팩토링 예정)
+ - Hashtable는 multi-thread 환경에서 병목현상이 발생하기 때문에 ConcurrentHashMap을 사용 
+
+#### ChatHnadler
+```C
+public class ChatHandler extends TextWebSocketHandler {
+
+    ...
+
+    private Map<Integer, List<Map<String, WebSocketSession>>> chatRoomList = new ConcurrentHashMap<>();
+
+    private Map<Integer, Queue<ChatMessageVo>> chatMessage = new ConcurrentHashMap<>();
+    
+    ...
+
+```
+
+#### chatting.jsp
+```C
+  var socket;
+
+  function socketOpen(){
+    socket = SockJS('<c:url value="/chating/${roomNo}"/>');
+    socketEvent();
+  }
+
+  function socketEvent () {
+    socket.onopen = function(data){
+    }
+    
+    ...
+    
+```

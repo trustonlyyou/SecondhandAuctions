@@ -19,8 +19,8 @@
 
 ### Kakao Join & Login (REST API)
 
- - 회원가입 : oAuthToken을 발급 받고, accessToken을 이용해서 client의 정보를 얻어 기존 회원인지 아닌지 확인 
- - 로그인 : oAuthToken을 발급 받고, accessToken을 이용해서 client의 정보를 얻어 회원이라면 Token과 memberId를 세션에 
+ - 회원가입 : oAuthToken을 발급 받고, accessToken을 이용해서 client의 정보를 얻어 기존 회원인지 아닌지 확인합니다.
+ - 로그인 : oAuthToken을 발급 받고, accessToken을 이용해서 client의 정보를 얻어 회원이라면 Token과 memberId를 세션에 저장합니다.
 
 #### Service
 ```C
@@ -200,7 +200,8 @@
 ***
 
 ### Bidding(입찰)
- - Transaction의 격리 수준과 별개로 입찰시 해당 메소드를 동기화 해서 하나의 Thread 만 접근 시키기 위해서 @Transactional 호출 이전에 synchronized를 호출을 하였다. 
+ - 고객들이 특정 상품에 대해 입찰하는 Service 로직입니다.
+ - Transaction의 격리 수준과 별개로 입찰시 해당 메소드를 동기화 해서 하나의 Thread 만 접근 시키기 위해서 @Transactional 호출 이전에 synchronized를 호출을 하였습니다.
 
 ##### Service 
 ```C
@@ -264,7 +265,8 @@
 ***
 
 ### Auction closed(경매 마감)
- - @Scheduled를 이용하며 특정 시간에 경매를 마감한다.
+ - 경매물건(게시물)을 마감하는 서비스 로직입니다.
+ - @Scheduled를 이용하며 특정 시간에 경매를 마감합니다.
 
 
 #### Service
@@ -285,10 +287,8 @@
 
 
 ### Chat(채팅)
-
- - WebSocket과 SockJS를 이용해서 구현 
-    - 포트폴리오 이전에 나의 공부중 하나 이기 때문에 STOMP를 이용하지 않고 직접 구현(향후 STOMP으로 리팩토링 예정)
- - Hashtable는 multi-thread 환경에서 병목현상이 발생하기 때문에 ConcurrentHashMap을 사용 
+ - WebSocket과 SockJS를 이용해서 구현하였습니다. 
+ - Hashtable는 multi-thread 환경에서 병목현상이 발생하기 때문에 ConcurrentHashMap을 사용하였습니다.
 
 #### ChatHnadler
 ```C

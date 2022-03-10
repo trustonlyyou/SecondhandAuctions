@@ -92,7 +92,6 @@
 
   function socketEvent () {
     socket.onopen = function(data){
-      //소켓이 열리면 초기화 세팅하기
     }
 
     socket.onmessage = function(data) {

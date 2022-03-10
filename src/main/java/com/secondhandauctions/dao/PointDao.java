@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface PointDao {
 
+    public String getCustomerName(String memberId) throws Exception;
+
     public int successCard(Map<String, Object> info) throws Exception;
 
     public int successTransferBank(Map<String, Object> info) throws Exception;

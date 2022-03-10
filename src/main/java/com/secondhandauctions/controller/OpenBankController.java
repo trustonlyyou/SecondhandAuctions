@@ -42,7 +42,7 @@ public class OpenBankController {
     private OpenBankCommonsUtils openBankCommonsUtils;
 
     @GetMapping("/oauth/callback")
-    public String test(Model model, String code, HttpServletRequest request) throws Exception {
+    public String oauthCallback(Model model, String code, HttpServletRequest request) throws Exception {
         Map tokenResult = new HashMap();
         Map<String, Object> info = new HashMap<>();
 

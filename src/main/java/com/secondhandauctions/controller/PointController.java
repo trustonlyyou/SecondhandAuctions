@@ -41,11 +41,13 @@ public class PointController {
 
     @PostMapping(value = "/get/orderId")
     @ResponseBody
-    public Map<String, String> settingOrderId() {
+    public Map<String, String> settingOrderId(HttpServletRequest request) throws Exception {
         Map<String, String> result = new HashMap<>();
         String orderId = pointService.getOrderId();
+        String memberName = pointService.getMemberName(commons.getMemberSession(request));
 
         result.put("orderId", orderId);
+        result.put("customerName", memberName);
 
         return result;
     }
@@ -110,6 +112,7 @@ public class PointController {
 
 
 
+    // 지원 안함
     @RequestMapping("/virtual/account/callback")
     @ResponseStatus(HttpStatus.OK)
     public void handleVirtualAccountCallback(@RequestBody String secret, String status, String orderId) {
@@ -194,15 +197,12 @@ public class PointController {
                 return result;
             }
         } else {
-            // TODO: 2022/01/11 수정
             log.error("error body :: {}", response.getBody().toString());
             result.put("result", false);
 
             return result;
         }
     }
-// TODO: 2022/01/06 결제완료, 결제실패 .jsp 완성
-// TODO: 2022/01/06 Success Bid 연결 된거에서 포인트로 결재 했을 때 포인트 옮겨지는 service
 
     // 포인트로 결제
     @ResponseBody
@@ -242,7 +242,6 @@ public class PointController {
                 result.put("result", false);
                 return result;
             } else {
-                // 입찰자가 금액이 있는지 확인해야한다.
                 payChk = pointService.memberPriceChk(info);
 
                 if (payChk == false) {

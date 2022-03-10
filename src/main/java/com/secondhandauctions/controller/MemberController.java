@@ -73,7 +73,6 @@ public class MemberController {
         return "member/join";
     }
 
-    // TODO: 2021/12/28 joinform 에서 아이디 check ajax 수
     @PostMapping(value = "/join/idCheck", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Boolean> idCheck(@RequestBody String memberId) throws Exception {
@@ -376,8 +375,6 @@ public class MemberController {
             }
         }
    }
-    // TODO: 2021/12/30 getLoginResult Service usages MyPageController
-    // TODO: 2021/12/30 로그인 할 때 inner join 해서 isLock check 해야한다. 수정하자. 쿼리부터 시작하면 된다.
 
     @GetMapping(value = "/lock/solve")
     public String memberLockSolve() {

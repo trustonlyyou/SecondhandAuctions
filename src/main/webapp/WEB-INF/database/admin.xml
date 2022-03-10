@@ -34,22 +34,25 @@
         <![CDATA[
         select
         if (
-        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        (select max(approvedAt) from point where memberId = #{memberId} group by memberId)
         <
-        (select max(approvedAt) from cancelPoint where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        (select max(approvedAt) from cancelPoint where memberId = #{memberId} group by memberId), 'F', 'T'
         ) as cancelPointChk,
 
         if (
-        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        (select max(approvedAt) from point where memberId = #{memberId} group by memberId)
         <
-        (select max(regdate) from exchangePoint where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        (select max(regdate) from exchangePoint where memberId = #{memberId} group by memberId), 'F', 'T'
         ) as exchangePointChk,
 
         if (
-        (select max(approvedAt) from point where memberId = 'zkem123456' group by memberId)
+        (select max(approvedAt) from point where memberId = #{memberId} group by memberId)
         <
-        (select max(payDate) from pointPay where memberId = 'zkem123456' group by memberId), 'F', 'T'
+        (select max(payDate) from pointPay where memberId = #{memberId} group by memberId), 'F', 'T'
         ) as pointPayChk
         ]]>
+        <!--
+            최근 포인트 취소 내역, 포인트 환불(포인트 취소) 내역을 조회 포인트 충전 내역
+        -->
     </select>
 </mapper>

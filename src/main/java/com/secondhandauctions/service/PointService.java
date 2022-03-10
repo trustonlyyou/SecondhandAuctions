@@ -32,6 +32,23 @@ public class PointService {
     @Autowired
     private Commons commons;
 
+    public String getMemberName(String memberId) throws Exception {
+        String memberName = "";
+
+        if (StringUtils.isEmpty(memberId)) {
+            return "";
+        } else {
+            memberName = pointDao.getCustomerName(memberId);
+
+            if (StringUtils.isEmpty(memberName)) {
+                log.error("memberName is Empty");
+                return "";
+            } else {
+                return memberName;
+            }
+        }
+    }
+
     public String getOrderId() {
         StringBuffer orderId = new StringBuffer();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -471,4 +488,3 @@ public class PointService {
         }
     }
 }
-// TODO: 2022/01/11 전반적으로 중복 코드 제거 할 것

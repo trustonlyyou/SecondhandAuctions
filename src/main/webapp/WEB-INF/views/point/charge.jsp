@@ -52,8 +52,6 @@
             <input class="btn btn-primary btn-md" id="account_transfer" type="button" value="계좌이체">
             <input class="btn btn-primary btn-md" id="virtual_account" type="button" value="가상계좌(로컬 환경 제공X)" disabled>
             <input class="btn btn-primary btn-md" id="phone" type="button" value="휴대폰(테스트환경 제공X)" disabled>
-
-            <%--     todo :: alert 으로 환불 해주기.     --%>
           </form>
         </div>
       </div>
@@ -80,6 +78,8 @@
   var clientKey = 'test_ck_lpP2YxJ4K87XzoP5AwX3RGZwXLOb';
   var tossPayments = TossPayments(clientKey);
 
+
+  // 카드 결제
   $("#card").on('click', function () {
 
     var chk = $('select[name=select_amount]').val();
@@ -96,41 +96,10 @@
         var selectAmount = $('select[name=select_amount]').val();
         var orderId = data.orderId;
         var orderName = selectAmount + " 포인트";
-        var customerName = "오정환"
+        var customerName = data.customerName;
         var amount = Math.floor(selectAmount * 1.1);
 
         tossPayments.requestPayment('카드', {
-          amount: amount,
-          orderId: orderId,
-          orderName: orderName,
-          customerName: customerName,
-          successUrl: window.location.origin + "/success",
-          failUrl: window.location.origin + "/fail",
-        })
-      }
-    });
-  });
-
-  $("#phone").on('click', function () {
-
-    var chk = $('select[name=select_amount]').val();
-
-    if (chk === "") {
-      alert("결제 금액을 선택해 주세요.");
-      return false;
-    }
-
-    $.ajax({
-      url: '/get/orderId',
-      type: 'post',
-      success: function (data) {
-        var selectAmount = $('select[name=select_amount]').val();
-        var orderId = data.orderId;
-        var orderName = selectAmount + " 포인트";
-        var customerName = "오정환"
-        var amount = Math.floor(selectAmount * 1.1);
-
-        tossPayments.requestPayment('휴대폰', {
           amount: amount,
           orderId: orderId,
           orderName: orderName,
@@ -157,10 +126,43 @@
         var selectAmount = $('select[name=select_amount]').val();
         var orderId = data.orderId;
         var orderName = selectAmount + " 포인트";
-        var customerName = "오정환"
+        var customerName = data.customerName;
         var amount = Math.floor(selectAmount * 1.1);
 
         tossPayments.requestPayment('계좌이체', {
+          amount: amount,
+          orderId: orderId,
+          orderName: orderName,
+          customerName: customerName,
+          successUrl: window.location.origin + "/success",
+          failUrl: window.location.origin + "/fail",
+        })
+      }
+    });
+  });
+
+  // 테스트 환경 지원 X
+
+  $("#phone").on('click', function () {
+
+    var chk = $('select[name=select_amount]').val();
+
+    if (chk === "") {
+      alert("결제 금액을 선택해 주세요.");
+      return false;
+    }
+
+    $.ajax({
+      url: '/get/orderId',
+      type: 'post',
+      success: function (data) {
+        var selectAmount = $('select[name=select_amount]').val();
+        var orderId = data.orderId;
+        var orderName = selectAmount + " 포인트";
+        var customerName = data.customerName;
+        var amount = Math.floor(selectAmount * 1.1);
+
+        tossPayments.requestPayment('휴대폰', {
           amount: amount,
           orderId: orderId,
           orderName: orderName,
@@ -187,7 +189,7 @@
         var selectAmount = $('select[name=select_amount]').val();
         var orderId = data.orderId;
         var orderName = selectAmount + " 포인트";
-        var customerName = "오정환"
+        var customerName = data.customerName;
         var amount = Math.floor(selectAmount * 1.1);
 
         tossPayments.requestPayment('가상계좌', {

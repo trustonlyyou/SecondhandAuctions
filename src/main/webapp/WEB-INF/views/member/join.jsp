@@ -25,7 +25,6 @@
         <div class="col-lg-10 col-xl-9 mx-auto">
             <div class="card card-signin flex-row my-5">
                 <div class="card-body">
-<%--                    <button type="button" class="btn btn-link">이전 페이지</button>--%>
                     <a href="/">메인 페이지</a>
                     <h2 class="card-title text-center">회원가입</h2>
 
@@ -42,8 +41,6 @@
                         </div>
                         <div name="IdCheckMsg" id="IdCheckMsg"></div>
                         <br>
-                        <!-- 아이디 중복 체크 ajax -->
-
 
                         <div class="form-label-group">
                             비밀번호<img src="/resources/image/check.gif" alt="필수 입력사항">
@@ -548,34 +545,6 @@
 
         }
     });
-
-    // // phone check
-    // $("#phoneInputNum").on('keyup', function () {
-    //     var inputNum = $("#phoneInputNum").val();
-    //
-    //     if (inputNum === phoneCheckKey) {
-    //         $("#phone_check").text('인증번호가 일치합니다.');
-    //         $("#phone_check").css('color', 'green');
-    //
-    //         phoneFlag = true;
-    //
-    //         if ((idFlag && passwordFlag && nameFlag && emailFlag && phoneFlag) == true) {
-    //             $("#join_submit").attr('disabled', false);
-    //         }
-    //
-    //         return true;
-    //
-    //     } else {
-    //         $("#phone_check").text('인증번호가 틀립니다.');
-    //         $("#phone_check").css('color', 'red');
-    //
-    //         $("#join_submit").attr('disabled', true);
-    //
-    //         phoneFlag = false;
-    //
-    //         return false;
-    //     }
-    // });
 </script>
 
 </html>

@@ -1,5 +1,10 @@
 # C2C기반의 중고경매 사이트 입니다.
 
+## Introduce
+- 당근마켓을 이용하면서 가끔씩 중고거래를 하던 중 가격을 측정하는 측면에서 내가 측정하는 것이 아닌 경매를 통해 책정하는 것이 어떨까? 라는 아이디어로 시작한 프로젝트 입니다.
+- 1인 프로젝트(포트폴리오) 입니다.
+- Spring 기반의 Web Application 입니다.
+
 ## Development Environment
 - OS : MacOs(M1)
 - Development Tool : IntelliJ
